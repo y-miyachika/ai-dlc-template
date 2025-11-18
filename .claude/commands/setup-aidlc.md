@@ -62,7 +62,44 @@
     └── commands/          # プロジェクト共通のスラッシュコマンド
 ```
 
-### 3. 設定ファイルの作成
+### 3. pnpm workspace設定の作成
+
+#### package.json
+
+ルートのpackage.jsonを作成します：
+
+```json
+{
+  "name": "project-name",
+  "version": "1.0.0",
+  "description": "プロジェクトの説明",
+  "private": true,
+  "scripts": {
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "lint": "pnpm -r lint",
+    "format": "pnpm -r format",
+    "clean": "pnpm -r clean"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "packageManager": "pnpm@8.15.0"
+}
+```
+
+#### pnpm-workspace.yaml
+
+pnpm workspaceの設定を作成します：
+
+```yaml
+packages:
+  - 'apps/*'
+  - 'packages/*'
+```
+
+### 4. 設定ファイルの作成
 
 #### CLAUDE.md
 
@@ -89,6 +126,10 @@
 AI-DLC成果物の管理方針：
 
 ```gitignore
+# 依存関係
+node_modules/
+.pnpm-store/
+
 # AI-DLC成果物はコミットする（チーム共有）
 # docs/intents/
 # docs/units/
@@ -99,7 +140,7 @@ AI-DLC成果物の管理方針：
 *.bak
 ```
 
-### 4. 初期ガイドドキュメントの作成
+### 5. 初期ガイドドキュメントの作成
 
 #### docs/guides/getting-started.md
 
@@ -119,15 +160,17 @@ AI-DLC準拠のワークフローガイド：
 2. コンストラクションフェーズ（/design-* → /bolt）
 3. オペレーションフェーズ（/operate）
 
-### 5. セットアップ完了の確認
+### 6. セットアップ完了の確認
 
 以下の項目を確認し、ユーザーに報告します：
 
+- [ ] package.jsonが作成されている
+- [ ] pnpm-workspace.yamlが作成されている
 - [ ] ディレクトリ構造が作成されている
 - [ ] CLAUDE.mdが配置されている
 - [ ] README.mdが配置されている
 - [ ] .gitignoreが適切に設定されている
-- [ ] 初期ガイドドキュメントが作成されている
+- [ ] 初期ガイドドキュメントが作成されている（モノレポの場合）
 - [ ] .gitkeepファイルで空ディレクトリが保持されている
 
 ## 実行フロー
@@ -136,18 +179,22 @@ AI-DLC準拠のワークフローガイド：
    - 対話形式でプロジェクト情報を収集
    - 既存ディレクトリの確認
 
-2. **ディレクトリ構造の作成**
+2. **pnpm workspace設定の作成**
+   - package.jsonを作成（プロジェクト名、説明を含む）
+   - pnpm-workspace.yamlを作成
+
+3. **ディレクトリ構造の作成**
    - プロジェクトタイプに応じた構造を作成
    - 既存ディレクトリとの統合を考慮
 
-3. **設定ファイルの作成**
+4. **設定ファイルの作成**
    - CLAUDE.md, README.md, .gitignoreを作成
    - 既存ファイルがある場合は確認してから上書き
 
-4. **初期ガイドの作成**
+5. **初期ガイドの作成**（モノレポの場合）
    - getting-started.md, workflow.mdを作成
 
-5. **完了報告**
+6. **完了報告**
    - セットアップ内容のサマリーを表示
    - 次のステップを提案（/intent実行等）
 
@@ -171,21 +218,22 @@ AI-DLC準拠のワークフローガイド：
 
 ## 作成されたファイル・ディレクトリ
 
+- package.json - pnpm workspace設定
+- pnpm-workspace.yaml - workspace定義
 - docs/intents/ - インテント定義
 - docs/units/ - ユニット分解
 - docs/design-artifacts/ - 設計ドキュメント
 - CLAUDE.md - Claude Code設定
 - README.md - プロジェクト概要
-- docs/guides/getting-started.md - 開始ガイド
-- docs/guides/workflow.md - ワークフローガイド
+- .gitignore - Git除外設定
 
 ## 次のステップ
 
-1. インテント定義から開始:
-   `/intent <プロジェクトの目的や機能概要>`
+1. 依存関係のインストール:
+   `pnpm install`
 
-2. または、既存のBacklogから開始:
-   `/backlog <タスク概要>`
+2. インテント定義から開始:
+   `/intent <プロジェクトの目的や機能概要>`
 
 3. ガイドを参照:
    - docs/guides/getting-started.md

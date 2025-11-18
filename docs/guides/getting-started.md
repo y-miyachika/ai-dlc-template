@@ -17,9 +17,6 @@
 # CodeCommitからクローン
 git clone codecommit::ap-northeast-1://devops@ai-dlc-template my-new-project
 cd my-new-project
-
-# 依存関係のインストール
-pnpm install
 ```
 
 ### AI-DLC環境のセットアップ
@@ -31,10 +28,29 @@ pnpm install
 
 このコマンドは以下を実行します：
 
-- プロジェクト情報の収集（対話形式）
-- ディレクトリ構造の作成
-- CLAUDE.md, README.mdの生成
-- 初期ガイドドキュメントの作成
+1. **プロジェクト情報の収集**（対話形式）
+   - プロジェクト名
+   - プロジェクトタイプ（app/package/monorepo）
+   - 技術スタック
+
+2. **pnpm workspace設定の作成**
+   - package.json
+   - pnpm-workspace.yaml
+
+3. **ディレクトリ構造の作成**
+   - apps/ または packages/
+   - docs/以下のAI-DLC成果物用ディレクトリ
+
+4. **設定ファイルの生成**
+   - CLAUDE.md（プロジェクト固有）
+   - README.md（プロジェクト固有）
+   - .gitignore
+
+### 依存関係のインストール
+
+```bash
+pnpm install
+```
 
 ## 2. 最初のインテント定義
 
@@ -274,5 +290,5 @@ mkdir -p docs/intents
 ## 参考資料
 
 - [AI-DLC日本語訳](../AI-DLC_日本語訳.md)
-- [AI-DLC付録A対比](../AI-DLC付録A対比.md)
+- [AI-DLC準拠状況](../AI-DLC準拠状況.md)
 - [ワークフローガイド](./workflow.md)

@@ -1,7 +1,7 @@
-# AI-DLC付録Aと本実装の対比
+# AI-DLC準拠状況
 
 **作成日**: 2025-11-17
-**目的**: AI-DLC論文の付録Aに記載されたプロンプトと、本テンプレートの実装を対比し、準拠度を明確化する
+**目的**: AI-DLC論文（特に付録A）との対比により、本テンプレートの準拠率と実装状況を明確化する
 
 ---
 
@@ -9,16 +9,17 @@
 
 | AI-DLC付録Aの要素 | 本実装のコマンド | 準拠度 | 備考 |
 |-----------------|------------------------|-------|------|
-| **セットアッププロンプト** | なし | ❌ 0% | aidlc-docs/の自動構築機能なし |
+| **セットアッププロンプト** | `/setup-aidlc` | ⚠️ 70% | docs/の自動構築、対話的収集、構成ファイル生成 |
 | **ユーザーストーリー** | `/intent` | ✅ 80% | AIが質問で明確化、受入基準作成 |
 | **ユニット分解** | `/units` | ✅ 90% | DDD原則、疎結合・高凝集、依存関係図 |
 | **ドメインモデル作成** | `/design-domain` | ✅ 85% | 集約、エンティティ、値オブジェクト等を設計 |
 | **アーキテクチャ設計** | `/design-architecture` | ✅ 80% | NFR分析、パターン選択、ADR生成 |
 | **コード生成** | `/bolt` | ⚠️ 60% | TDDサイクルあり、ただし詳細プロンプトは簡略 |
 | **テスト設計** | `/design-test` | ✅ 75% | BDD/TDD統合、Phase 2で追加 |
-| **IaC/API生成** | なし | ❌ 0% | インフラコード生成機能なし |
+| **REST API生成** | `/generate-api` | ✅ 75% | Hono RPC、OpenAPI仕様生成 |
+| **IaC生成** | `/generate-iac` | ✅ 80% | Terraform、unit単位モジュール化、環境分離 |
 
-**総合準拠度**: **62%**
+**総合準拠度**: **80%** (旧: 72% → 67% → 62%)
 
 ---
 
@@ -38,28 +39,39 @@ aidlc-docs/
 └── prompts/
 ```
 
-#### 本実装
+#### 本実装 (`/setup-aidlc`)
 ```markdown
-docs/
-├── backlog/          # AI-DLCにはない（従来版）
-├── intents/          # ≒ requirements/
-├── units/            # AI-DLCにはない（新規）
-├── design-artifacts/ # ✅ 一致
-│   ├── domain/       # ✅ 一致
-│   ├── architecture/ # ✅ 一致
-│   ├── tests/        # AI-DLCにはない（Phase 2追加）
-│   └── adr/          # AI-DLCにはない（Phase 2追加）
-└── plans/            # ✅ 一致
+# /setup-aidlc が自動生成
+<project-name>/
+├── package.json          # pnpm workspace設定
+├── pnpm-workspace.yaml   # workspace定義
+├── apps/ または packages/
+├── docs/
+│   ├── intents/          # ≒ requirements/
+│   ├── units/            # AI-DLCにはない（新規）
+│   ├── design-artifacts/ # ✅ 一致
+│   │   ├── domain/       # ✅ 一致
+│   │   ├── architecture/ # ✅ 一致
+│   │   ├── tests/        # AI-DLCにはない（独自追加）
+│   │   └── adr/          # AI-DLCにはない（独自追加）
+│   └── plans/            # ✅ 一致
+├── CLAUDE.md
+├── README.md
+└── .gitignore
 ```
 
-**準拠度**: ❌ 0%
-- セットアップ自動化コマンドなし
-- フォルダ構造は手動作成
+**準拠度**: ⚠️ 70% (旧: 0%)
+- ✅ セットアップ自動化コマンド実装（`/setup-aidlc`）
+- ✅ フォルダ構造の自動作成
+- ✅ 対話形式でプロジェクト情報収集
+- ✅ package.json、pnpm-workspace.yamlの自動生成
+- ⚠️ AI-DLC付録Aほど詳細なプロンプトではない
 
 **差分**:
 - ❌ `story-artifacts/`フォルダなし（インテントに統合）
 - ❌ `prompts/`フォルダなし（`.claude/commands/`で代替）
-- ✅ `tests/`, `adr/`を独自追加（Phase 2拡張）
+- ✅ `tests/`, `adr/`を独自追加（TDD/BDD統合）
+- ✅ monorepo対応（apps/、packages/）
 
 ---
 
@@ -268,17 +280,83 @@ docs/
 
 ---
 
-### 8. IaC/REST API生成（付録A 行424-428）
+### 8. REST API生成（付録A 行424-428）
 
 #### AI-DLC（付録A）
 ```markdown
 タスク：Python Flask APIを作成
 ```
 
-#### 本実装
-- ❌ **該当なし**（インフラ生成機能は未実装）
+#### 本実装 (`/generate-api`)
+```markdown
+## AIの役割
+あなたはREST API設計とTypeScript実装の専門家です。
 
-**準拠度**: ❌ 0%
+## タスク
+1. `/bolt`で実装されたservices層を読み込み
+2. HTTP層を生成（routes/, schemas/, index.ts, types/）
+3. Zodスキーマによるバリデーション
+4. OpenAPI仕様を生成
+
+## 技術スタック
+- Hono RPC（型安全なHTTPフレームワーク）
+- Zod（スキーマバリデーション）
+- TypeScript（型安全性）
+
+出力:
+- packages/api/src/routes/ - Honoルート定義
+- packages/api/src/schemas/ - Zodスキーマ
+- docs/api/openapi.yaml - OpenAPI仕様
+```
+
+**準拠度**: ✅ 75%
+- ✅ API生成機能あり
+- ✅ OpenAPI仕様生成
+- ✅ 型安全なAPI実装
+- ⚠️ Flask→Hono RPCへの変更（TypeScript化）
+
+---
+
+### 9. IaC生成
+
+#### AI-DLC（付録A）
+- Infrastructure as Code生成への言及あり
+
+#### 本実装 (`/generate-iac`)
+```markdown
+## AIの役割
+あなたはインフラストラクチャ設計とTerraformの専門家です。
+
+## タスク
+1. アーキテクチャ設計を読み込み（docs/design-artifacts/architecture/）
+2. unit単位でTerraformモジュールを生成
+3. 環境ごとに全unitをまとめて呼び出し（dev/staging/production）
+4. unit間の依存関係をmodule outputで解決
+
+## 技術スタック
+- Terraform（AWS Provider）
+- unit単位のモジュール化
+- 環境分離（dev/staging/production）
+
+## セキュリティベストプラクティス
+- 暗号化デフォルト有効（S3、RDS、EBS）
+- IAM最小権限の原則
+- タグ戦略（Environment、Project、Unit）
+- バックアップ設定（本番環境で有効）
+
+出力:
+- {infrastructure-root}/terraform/modules/{unit}/ - Terraformモジュール
+- {infrastructure-root}/environments/dev/main.tf - 環境設定（全unit呼び出し）
+- docs/infrastructure/{unit}_IaC設計.md - IaC設計ドキュメント
+```
+
+**準拠度**: ✅ 80%
+- ✅ IaC生成機能あり
+- ✅ Terraform対応
+- ✅ セキュリティベストプラクティス適用
+- ✅ 環境分離（dev/staging/production）
+- ✅ unit間の依存関係解決
+- ⚠️ Terraform専用（CDK、CloudFormation未対応）
 
 ---
 
@@ -313,26 +391,13 @@ docs/
 
 ### 今後の実装予定
 
-1. **セットアップ自動化**
-   - `/setup-aidlc` コマンド
-   - `aidlc-docs/` フォルダ構造の自動生成
-
-2. **IaC生成**
-   - `/generate-iac` コマンド
-   - Terraform/CDK/CloudFormation対応
-   - AWS/GCP/Azure対応
-
-3. **REST API生成**
-   - `/generate-api` コマンド
-   - Flask/FastAPI/Express等のフレームワーク対応
-
-4. **運用フェーズ**
+1. **運用フェーズ**
    - `/operate` コマンド
    - テレメトリ分析
    - インシデント管理
    - プロアクティブな対応
 
-5. **自動テスト実行エージェント**
+2. **自動テスト実行エージェント**
    - AIエージェントによるテスト実行・分析
    - 失敗原因の自動特定
    - 修正提案の生成
@@ -364,7 +429,7 @@ docs/
 | リスクレジスター | ✅ | ✅ | 100% |
 | ユニット分解 | ✅ | ✅（依存関係図追加） | 110% |
 
-### コンストラクション（75%）
+### コンストラクション（88%）
 
 | 要素 | AI-DLC | 本実装 | 準拠度 |
 |-----|--------|-----------------|-------|
@@ -372,8 +437,8 @@ docs/
 | アーキテクチャ設計 | ✅ | ✅（ADR追加） | 110% |
 | コード生成 | ✅ | ✅（TDD統合） | 90% |
 | テスト設計 | △（コード生成に含む） | ✅（独立コマンド） | 150% |
-| IaC生成 | ✅ | ❌ | 0% |
-| REST API生成 | ✅ | ❌ | 0% |
+| REST API生成 | ✅ | ✅（Hono RPC） | 75% |
+| IaC生成 | ✅ | ✅（Terraform） | 80% |
 
 ### オペレーション（0%）
 
@@ -389,37 +454,39 @@ docs/
 
 ### 準拠度サマリー
 
-| フェーズ | AI-DLC要素数 | figma-strivo対応 | 準拠度 | 備考 |
+| フェーズ | AI-DLC要素数 | 本実装対応 | 準拠度 | 備考 |
 |---------|------------|----------------|-------|------|
-| **セットアップ** | 1 | 0 | 0% | 自動化なし |
+| **セットアップ** | 1 | 1 | 70% | `/setup-aidlc` 実装済み |
 | **インセプション** | 6 | 6 | 85% | BDD統合で拡張 |
-| **コンストラクション** | 6 | 4 | 75% | IaC/API生成なし |
+| **コンストラクション** | 6 | 6 | 88% | 全要素実装完了 |
 | **オペレーション** | 3 | 0 | 0% | 未実装 |
-| **総合** | 16 | 10 | **62%** | Phase 2完了 |
+| **総合** | 16 | 13 | **80%** | IaC生成追加 |
 
 ### 全機能実装後の見通し
 
-| 追加要素 | 準拠度向上 |
-|---------|----------|
-| セットアップ自動化 | +5% |
-| IaC生成 | +8% |
-| REST API生成 | +5% |
-| 運用フェーズ | +5% |
-| **合計** | **+23%** |
+| 追加要素 | 準拠度向上 | 状態 |
+|---------|----------|------|
+| ~~セットアップ自動化~~ | ~~+5%~~ | ✅ 完了 |
+| ~~REST API生成~~ | ~~+5%~~ | ✅ 完了 |
+| ~~IaC生成~~ | ~~+8%~~ | ✅ 完了 |
+| 運用フェーズ | +5% | ❌ 未実装 |
+| **残り** | **+5%** | - |
 
-**全機能実装後の予想準拠度**: 62% + 23% = **85%**
+**全機能実装後の予想準拠度**: 80% + 5% = **85%**
 
 ---
 
 ## 📚 参考資料
 
 1. [AI-DLC日本語訳](AI-DLC_日本語訳.md) - 付録A（行360-438）
-2. [プロジェクトルートのCLAUDE.md](../CLAUDE.md)
-3. [開始ガイド](guides/getting-started.md)
-4. [ワークフローガイド](guides/workflow.md)
+2. [README.md](../README.md) - プロジェクト概要
+3. [CLAUDE.md](../CLAUDE.md) - AI-DLC開発ガイド
+4. [開始ガイド](guides/getting-started.md)
+5. [ワークフローガイド](guides/workflow.md)
 
 ---
 
 **作成日**: 2025-11-17
-**総合準拠率**: **62%**（初版時点）
-**全機能実装後の目標**: **85%+**（IaC/API生成、運用フェーズ追加後）
+**最終更新**: 2025-11-18
+**総合準拠率**: **80%**（現在）← 72% ← 67% ← 62%（初版時点）
+**全機能実装後の目標**: **85%+**（運用フェーズ追加後）
