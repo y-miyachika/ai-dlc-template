@@ -81,16 +81,105 @@ Scenario:  APIレスポンスのトークン削減
 
 各テストケースを以下のレベルに分類：
 
-| レベル | 目的 | スコープ | 実行環境 |
-|--------|------|---------|---------|
-| **Unit Test** | 単一関数・メソッドの動作検証 | 1関数/クラス | In-memory, モック |
-| **Integration Test** | コンポーネント間の連携検証 | 複数コンポーネント | 実DB/API（テスト環境） |
-| **E2E Test** | エンドツーエンドのシナリオ検証 | システム全体 | 本番相当環境 |
+| レベル | 目的 | スコープ | 実行する場所 | 対象環境 | 実行タイミング |
+|--------|------|---------|------------|---------|--------------|
+| **Unit Test** | 単一関数・メソッドの動作検証 | 1関数/クラス | ローカル、CI/CD | なし（モック） | コミット時、PR作成時、いつでも |
+| **Integration Test** | コンポーネント間の連携検証 | 複数コンポーネント | ローカル、CI/CD | LocalStack/Testcontainers | Phase完了時、コミット前、PR作成時 |
+| **E2E Test** | エンドツーエンドのユーザーシナリオ検証 | システム全体 | **ローカル、CI/CD** | **デプロイ先環境（dev/staging）** ⚠️ 重要 | デプロイ完了後 |
+
+**重要な理解**:
+- E2Eテストは**どこで実行するか**ではなく、**何に対して実行するか**が重要
+- ❌ 誤解: E2E = CI/CDでしか実行しない
+- ✅ 正解: E2E = デプロイ済み実環境に対して実行（**ローカルからでもCI/CDからでもOK**）
+
+**例**:
+```bash
+# 開発者のローカルマシンから、dev環境に対してE2E実行
+pnpm test:e2e:dev  # ← ローカルで実行、対象はhttps://dev-api.example.com
+
+# CI/CDから、dev環境に対してE2E実行（自動）
+# GitHub Actionsが同じテストを自動実行
+```
+
+**LocalStackとの違い**:
+- LocalStack: ローカルで**モック環境**を起動 → Integration Test
+- E2E: ローカルから**実環境**にアクセス → E2E Test
+
+---
+
+### ステップ3.5: アーキテクチャタイプの判定（🆕）
+
+ドメイン設計とアーキテクチャ設計から、システムのアーキテクチャタイプを判定：
+
+**検出可能なアーキテクチャ**:
+- [ ] **Lambda / Event-Driven**: Lambda関数、SQS、EventBridge等
+- [ ] **REST API**: Hono、Express、FastAPI等
+- [ ] **Web Application**: Next.js、React、Vue等（SSR/SPA）
+- [ ] **Batch / CLI**: バッチ処理、CLIツール
+- [ ] **GraphQL API**: Apollo Server、Hasura等
+- [ ] **Microservices**: 複数サービス間の連携
+
+**アーキテクチャ別のE2E定義**:
+
+#### Lambda / Event-Driven
+- **Integration Test**: LocalStack DynamoDB/SQS + Lambda関数をローカル実行
+- **E2E Test**: デプロイ済みのLambda関数を実AWS APIで呼び出し
+  ```typescript
+  // E2E: デプロイ先のLambda呼び出し
+  await lambdaClient.invoke({
+    FunctionName: 'my-app-dev-orchestrator' // デプロイ済み
+  })
+  ```
+
+#### REST API
+- **Integration Test**: ローカルサーバー起動 + In-Memory DB
+- **E2E Test**: デプロイ済みのAPIエンドポイントにHTTPリクエスト
+  ```typescript
+  // E2E: デプロイ先のAPI呼び出し
+  await fetch('https://dev-api.example.com/users')
+  ```
+
+#### Web Application
+- **Integration Test**: ローカルサーバー + Playwright（localhost）
+- **E2E Test**: デプロイ済みのサイトにPlaywrightでアクセス
+  ```typescript
+  // E2E: デプロイ先のサイトにアクセス
+  await page.goto('https://dev.example.com')
+  ```
+
+#### Batch / CLI
+- **Integration Test**: ローカル実行 + Testcontainers
+- **E2E Test**: デプロイ済みのバッチジョブを実S3/DBで実行
+  ```typescript
+  // E2E: デプロイ先のバッチジョブトリガー
+  await triggerBatchJob({ inputKey: 'test.csv' })
+  ```
+
+#### GraphQL API
+- **Integration Test**: ローカルApolloサーバー + In-Memory DB
+- **E2E Test**: デプロイ済みのGraphQL Endpointにクエリ
+  ```typescript
+  // E2E: デプロイ先のGraphQLエンドポイント
+  const client = new ApolloClient({
+    uri: 'https://dev.example.com/graphql'
+  })
+  ```
+
+#### Microservices
+- **Integration Test**: ローカルQueue Emulator + 各サービス
+- **E2E Test**: デプロイ済みの全サービス + 実Message Queue
+  ```typescript
+  // E2E: デプロイ先の分散トランザクション
+  await orderService.createOrder({ /* ... */ })
+  await waitForEvent('PAYMENT_COMPLETED')
+  ```
+
+---
 
 **分類の指針**:
-- BDD受入基準 → まずE2Eテストで実装
-- E2Eテストが遅い場合 → Integrationテストに分解
-- Integration テストが複雑な場合 → Unit テストで補完
+- BDD受入基準 → まずE2Eテストで実装（デプロイ後に実行）
+- E2Eテストが遅い/コスト高 → Integrationテストに分解（ローカル実行）
+- Integration テストが複雑 → Unit テストで補完（モック使用）
 
 ---
 
@@ -225,21 +314,142 @@ tests/
 
 **内容**:
 - BDD受入基準のテストケース変換
-- テストレベルの分類
+- アーキテクチャタイプの判定（🆕）
+- テストレベルの分類（実行環境明記）
 - テストピラミッド構成
 - TDDサイクルの計画
 - モック・フィクスチャ設計
 - カバレッジ目標
 - 実装優先順位
+- E2Eテストの実行環境とCI/CD統合方法（🆕）
 
-### テスト実装テンプレート
-`tests/[ユニット名]/[機能名].test.ts`
+### テスト実装の配置
 
-**内容**:
-- Vitestベースのテストコード
-- BDD形式のdescribe/it構造
-- Given/When/Then コメント
-- モック・フィクスチャ読み込み
+```
+packages/
+├── {unit}/
+│   ├── src/
+│   └── tests/
+│       ├── unit/           # Unit Test（ローカル実行）
+│       │   └── *.test.ts
+│       └── integration/    # Integration Test（ローカル実行、LocalStack）
+│           └── *.test.ts
+└── e2e/                    # 🆕 E2E Test専用パッケージ
+    ├── package.json
+    ├── tests/
+    │   ├── lambda.e2e.test.ts       # Lambda E2E（デプロイ先実行）
+    │   ├── api.e2e.test.ts          # REST API E2E（デプロイ先実行）
+    │   └── web.e2e.test.ts          # Web E2E（デプロイ先実行）
+    ├── playwright.config.ts          # Web E2Eの場合
+    └── .env.dev                      # デプロイ先環境の設定
+```
+
+**重要**: E2Eテストは専用パッケージに分離し、デプロイ先の環境変数を使用します。
+
+### テスト実行コマンド
+
+```json
+// package.json (各unitまたはルート)
+{
+  "scripts": {
+    "test:unit": "vitest run tests/unit",
+    "test:integration": "vitest run tests/integration",
+    "test:e2e:dev": "cd ../e2e && TEST_ENV=dev vitest run",
+    "test:e2e:staging": "cd ../e2e && TEST_ENV=staging vitest run"
+  }
+}
+```
+
+### CI/CDパイプライン統合（🆕）
+
+E2Eテストはデプロイ後に実行する必要があるため、以下の順序を推奨：
+
+```yaml
+# 例: GitHub Actions
+jobs:
+  # 1. ローカルで実行可能なテスト
+  unit-and-integration:
+    runs-on: ubuntu-latest
+    steps:
+      - run: pnpm test:unit
+      - run: docker compose up -d localstack
+      - run: pnpm test:integration
+
+  # 2. dev環境にデプロイ
+  deploy-dev:
+    needs: unit-and-integration
+    runs-on: ubuntu-latest
+    steps:
+      - run: terraform apply -auto-approve
+
+  # 3. デプロイ後にE2Eテスト実行 ← 重要
+  e2e-dev:
+    needs: deploy-dev
+    runs-on: ubuntu-latest
+    env:
+      TEST_ENV: dev
+      API_URL: https://dev-api.example.com
+    steps:
+      - name: Wait for deployment
+        run: until curl -f $API_URL/health; do sleep 5; done
+      - run: pnpm test:e2e:dev
+
+  # 4. staging環境へのデプロイ（mainブランチのみ）
+  deploy-staging:
+    needs: e2e-dev
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - run: terraform apply -auto-approve
+
+  # 5. staging環境でもE2E実行
+  e2e-staging:
+    needs: deploy-staging
+    env:
+      TEST_ENV: staging
+    steps:
+      - run: pnpm test:e2e:staging
+```
+
+### E2Eテストで検証すべき項目（アーキテクチャ別）
+
+#### Lambda / Event-Driven
+- [ ] 実Lambda関数が起動するか
+- [ ] 実DynamoDB/RDSに書き込めるか
+- [ ] IAMロールの権限が正しいか
+- [ ] 環境変数が正しく設定されているか
+- [ ] タイムアウト設定が適切か
+
+#### REST API
+- [ ] 実APIエンドポイントにアクセスできるか
+- [ ] CORS設定が正しいか
+- [ ] 認証・認可が動作するか
+- [ ] レート制限が動作するか
+- [ ] エラーレスポンスが適切か
+
+#### Web Application
+- [ ] 実サイトが表示されるか
+- [ ] 静的アセット（CSS/JS/画像）が配信されるか
+- [ ] ログイン/ログアウトフローが動作するか
+- [ ] パフォーマンス（LCP、FID等）が許容範囲か
+- [ ] SEO（OGP、meta tags）が正しいか
+
+#### Batch / CLI
+- [ ] 実S3からデータを読み込めるか
+- [ ] 実DBに結果を保存できるか
+- [ ] バッチジョブが正常に完了するか
+- [ ] エラー時のリトライ処理が動作するか
+
+#### GraphQL API
+- [ ] 実GraphQL Endpointにアクセスできるか
+- [ ] Mutation/Queryが動作するか
+- [ ] Subscriptionが動作するか（該当する場合）
+- [ ] 認証・認可が動作するか
+
+#### Microservices
+- [ ] サービス間通信が動作するか
+- [ ] イベント駆動フローが動作するか
+- [ ] 最終的な整合性が保たれるか
+- [ ] サービス障害時のフォールバック処理が動作するか
 
 ---
 

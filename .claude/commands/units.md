@@ -97,6 +97,21 @@
 - 言語/フレームワーク: [例: TypeScript, React]
 - インフラ: [例: AWS Lambda, API Gateway]
 
+**実装スコープ**（🆕）:
+- [ ] ドメイン層（エンティティ、値オブジェクト、集約）
+- [ ] アプリケーション層（ユースケース、サービス）
+- [ ] インフラ層（リポジトリ実装、外部API統合）
+- [ ] **Handlers層**（Lambda/APIエントリーポイント）
+  - [ ] Orchestrator Handler（該当する場合）
+  - [ ] Worker Handler（該当する場合）
+  - [ ] API Handler（REST APIの場合）
+- [ ] 設定ファイル（環境変数、依存性注入）
+
+**Lambda関数の有無**:
+- Orchestrator Lambda: **有/無**
+- Worker Lambda: **有/無**
+- API Lambda: **有/無**
+
 **見積もり（Estimation）**:
 - 複雑度: Simple / Medium / Large
 - 想定工数: [例: 1-3日]

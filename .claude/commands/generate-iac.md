@@ -63,6 +63,83 @@ unit単位でモジュール化します：
 - unit間の依存関係は、環境ごとの `main.tf` で module の output を参照
 - 例: `module.unit1.vpc_id` を `module.unit2` に渡す
 
+---
+
+### ステップ2.5: 環境別デフォルト設定（🆕）
+
+コスト最適化とセキュリティのバランスを考慮し、環境ごとにデフォルト設定を変える：
+
+**POC/開発環境（dev）のデフォルト**:
+- X-Ray: **無効** （コスト削減）
+- Point-in-Time Recovery: **無効** （DynamoDB）
+- Multi-AZ: **無効** （RDS）
+- バックアップ: **無効**
+- インスタンスサイズ: **最小** （db.t3.micro、lambda 128MB等）
+
+**ステージング環境（staging）**:
+- X-Ray: **無効** （コスト削減）
+- Point-in-Time Recovery: **有効**
+- Multi-AZ: **無効**
+- バックアップ: **3日**
+- インスタンスサイズ: **小** （db.t3.small、lambda 256MB等）
+
+**本番環境（production）**:
+- X-Ray: **有効** （パフォーマンス監視）
+- Point-in-Time Recovery: **有効**
+- Multi-AZ: **有効** （高可用性）
+- バックアップ: **7日**
+- インスタンスサイズ: **要件に応じて** （NFRから決定）
+
+**Terraform変数で切り替え可能にする**:
+```hcl
+variable "enable_xray" {
+  description = "Enable AWS X-Ray tracing"
+  type        = bool
+  default     = false  # POCはコスト削減のため無効
+}
+
+variable "enable_pitr" {
+  description = "Enable Point-in-Time Recovery (DynamoDB)"
+  type        = bool
+  default     = false
+}
+
+variable "enable_multi_az" {
+  description = "Enable Multi-AZ deployment (RDS)"
+  type        = bool
+  default     = false
+}
+
+variable "backup_retention_days" {
+  description = "Number of days to retain backups"
+  type        = number
+  default     = 0  # 0 = バックアップ無効
+}
+```
+
+**環境ごとの tfvars で上書き**:
+```hcl
+# environments/dev/terraform.tfvars
+enable_xray = false
+enable_pitr = false
+enable_multi_az = false
+backup_retention_days = 0
+
+# environments/staging/terraform.tfvars
+enable_xray = false
+enable_pitr = true
+enable_multi_az = false
+backup_retention_days = 3
+
+# environments/production/terraform.tfvars
+enable_xray = true
+enable_pitr = true
+enable_multi_az = true
+backup_retention_days = 7
+```
+
+---
+
 ### ステップ3: ディレクトリ構造生成
 
 #### モノレポの場合
@@ -511,9 +588,19 @@ output "unit2_s3_bucket_name" {
    - すべてのリソースに `Environment`, `Project`, `Unit` タグ
    - コスト配分とリソース管理に活用
 
-### ステップ8: ドキュメント生成
+### ステップ8: ドキュメント生成（配置先統一）
 
-`docs/infrastructure/{unit}_IaC設計.md` を生成：
+**配置先ルール**（🆕）:
+- IaC設計ドキュメント: `{infrastructure-root}/docs/{unit}_IaC設計.md`
+- ❌NG: `packages/{unit}/docs/infrastructure/` （unit固有のdocsには配置しない）
+
+**理由**:
+- infrastructureパッケージは全unitのインフラを管理
+- unit間の依存関係（output参照）があるため、一元管理が必須
+
+---
+
+`{infrastructure-root}/docs/{unit}_IaC設計.md` を生成：
 
 ```markdown
 # {Unit} - Infrastructure as Code設計
@@ -641,7 +728,10 @@ graph TD
 
 ### 4. ドキュメント（新規生成）
 
-- `docs/infrastructure/{unit}_IaC設計.md`
+- `{infrastructure-root}/docs/{unit}_IaC設計.md` ← **配置先統一**（🆕）
+  - モノレポ: `packages/infrastructure/docs/{unit}_IaC設計.md`
+  - アプリ単体: `infrastructure/docs/{unit}_IaC設計.md`
+  - ❌NG: `packages/{unit}/docs/infrastructure/` には配置しない
 
 ### 5. .gitignore（存在しなければ生成）
 
