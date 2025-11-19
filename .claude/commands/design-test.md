@@ -1,189 +1,152 @@
 # テスト設計（AI-DLC準拠・TDD/BDD統合）
 
-引数として受け取ったユニット名をもとに、TDD（Test-Driven Development）とBDD（Behavior-Driven Development）を統合したテスト設計を行います。
+このコマンドは**Test Designer SubAgent**を使用して、TDDとBDDを統合したテスト設計を行います。
+
+## SubAgentについて
+
+`test-designer` SubAgentは、BDD受入基準をテストケースに変換し、テストピラミッドを構築し、TDDサイクルで実装を駆動するテスト設計を実行する専門SubAgentです。
+
+**テスト設計の原則**: テストファースト、Red-Green-Refactor、テストピラミッド
+
+詳細は `.claude/agents/test-designer/README.md` を参照してください。
+
+## 前提条件
+
+**このコマンドは `/design-architecture` の後に実行してください**
+
+- `/design-architecture` でアーキテクチャ設計が完了している
+- `docs/design-artifacts/architecture/` にアーキテクチャ設計が存在する
+- `docs/intents/` または `docs/backlog/` に受入基準（Given/When/Then形式）が定義されている
 
 ## 入力内容
+
 {{ARGS}}
 
----
+## SubAgent起動
 
-## テスト設計とは
+以下を実行します：
 
-AI-DLCにおける**品質保証フェーズ**です：
-- 受入基準（BDD）をテストケースに変換
-- テストファーストで実装を駆動（TDD）
-- 自動化可能なテストスイートの設計
-- テストカバレッジ目標の設定
-
-**目的**: 実装前にテストを設計し、品質を組み込む
-
----
-
-## 動作フロー
-
-### ステップ1: 前提情報の収集
-
-以下のドキュメントを読み込む：
-
-1. **インテント/Backlog**
-   - `docs/intents/[番号]_*.md` または `docs/backlog/[番号]_*.md`
-   - 受入基準（Given/When/Then形式）を確認
-
-2. **ユニット分解**
-   - `docs/units/[番号]_units.md`
-   - 対象ユニットの責務、依存関係を確認
-
-3. **ドメイン設計**
-   - `docs/design-artifacts/domain/[番号]_[ユニット名]_domain.md`
-   - ドメインモデル（エンティティ、集約等）を確認
-
-4. **アーキテクチャ設計**
-   - `docs/design-artifacts/architecture/[番号]_[ユニット名]_architecture.md`
-   - コンポーネント構成、データフローを確認
+1. **前提情報の収集**: Backlog/Intent、ユニット定義、ドメイン設計、アーキテクチャ設計を読み込み
+2. **BDD受入基準をテストケースに変換**: Given/When/Then形式をテストケースに変換
+3. **アーキテクチャタイプの判定**: Lambda/REST API/Web App等を判定
+4. **テストレベルの分類**: Unit/Integration/E2Eに分類
+5. **テストピラミッドの構成**: 70% Unit, 20% Integration, 10% E2Eの比率
+6. **TDDサイクルの計画**: Red-Green-Refactorサイクルを計画
+7. **モック・フィクスチャの設計**: 外部依存のモック戦略を決定
+8. **テストカバレッジ目標の設定**: Line/Branch/Function Coverage目標
+9. **テスト実装の優先順位**: High/Medium/Lowで優先順位付け
+10. **E2EテストのCI/CD統合**: デプロイ後のE2E実行フロー
+11. **ユーザー承認**: 設計案を提示し、承認を得る
+12. **ファイル保存**: テスト設計ドキュメントを保存
 
 ---
 
-### ステップ2: BDD形式の受入基準をテストケースに変換
+**実行する処理**:
 
-**受入基準の例**:
+引数として受け取ったユニット名をもとに、Test Designer SubAgentを起動します。
+
+**ユニット名**: {{ARGS}}
+
+**アーキテクチャ設計パス**: `docs/design-artifacts/architecture/`
+
+**出力先**: `docs/design-artifacts/tests/`
+
+---
+
+## SubAgent処理の詳細
+
+SubAgentは `.claude/agents/test-designer/prompt.md` に定義された手順に従って処理を実行します。
+
+**主要な処理**:
+
+1. 前提情報の収集（Backlog、ユニット定義、ドメイン設計、アーキテクチャ設計）
+2. BDD受入基準をテストケースに変換（Given/When/Then → Arrange/Act/Assert）
+3. アーキテクチャタイプの判定
+   - Lambda / Event-Driven
+   - REST API
+   - Web Application
+   - Batch / CLI
+   - GraphQL API
+   - Microservices
+4. テストレベルの分類
+   - Unit Test: 単一関数・メソッドの動作検証（モック使用）
+   - Integration Test: コンポーネント間連携検証（LocalStack/Testcontainers）
+   - E2E Test: エンドツーエンド検証（**デプロイ先環境に対して実行**）
+5. テストピラミッドの構成（70% Unit, 20% Integration, 10% E2E）
+6. TDDサイクルの計画（Red → Green → Refactor）
+7. モック・フィクスチャの設計
+8. テストカバレッジ目標（Line 80%, Branch 70%, Function 90%）
+9. テスト実装の優先順位（High/Medium/Low）
+10. E2EテストのCI/CD統合
+
+**設計詳細**: `.claude/agents/test-designer/prompt.md` を参照
+
+---
+
+## TDD/BDD統合
+
+### BDD受入基準（Given/When/Then）
+
 ```gherkin
-Scenario:  APIレスポンスのトークン削減
-  Given 100階層の
-  When 
-  Then トークン使用量が5000以内である
-  And レイアウト情報の精度が従来版と同等である
+Scenario: 注文の作成
+  Given 顧客がログインしている
+  And カートに商品が1つ以上ある
+  When 注文を確定する
+  Then 注文が作成される
+  And 在庫が減少する
 ```
 
-**変換後のテストケース構造**:
-```markdown
-### テストケース1: トークン削減の検証
+### テストケースへの変換
 
-**前提条件（Setup）**:
-- 100階層の
-- フィクスチャファイル: `fixtures/100-layer-node.json`
+```typescript
+it("Scenario: 注文の作成", async () => {
+  // Given: 顧客がログインしている
+  const customer = createCustomer({ id: "user123" });
 
-**実行（Exercise）**:
-- ` ツールを実行
-- パラメータ: `{ fileKey: "test", nodeIds: "root" }`
+  // When: 注文を確定する
+  const order = await orderService.createOrder({ customerId: customer.id });
 
-**検証（Verify）**:
-- アサーション1: レスポンストークン数が5000以内
-- アサーション2: レイアウト情報の各プロパティが期待値と一致
-- アサーション3: エラーが発生しない
-
-**後処理（Teardown）**:
-- テストデータのクリーンアップ
+  // Then: 注文が作成される
+  expect(order.id).toBeDefined();
+});
 ```
+
+### TDDサイクル（Red-Green-Refactor）
+
+1. **Red**: 失敗するテストを書く
+2. **Green**: 最小限の実装で通す
+3. **Refactor**: コードを改善
 
 ---
 
-### ステップ3: テストレベルの分類
+## テストレベル
 
-各テストケースを以下のレベルに分類：
+### Unit Test（単体テスト）
 
-| レベル | 目的 | スコープ | 実行する場所 | 対象環境 | 実行タイミング |
-|--------|------|---------|------------|---------|--------------|
-| **Unit Test** | 単一関数・メソッドの動作検証 | 1関数/クラス | ローカル、CI/CD | なし（モック） | コミット時、PR作成時、いつでも |
-| **Integration Test** | コンポーネント間の連携検証 | 複数コンポーネント | ローカル、CI/CD | LocalStack/Testcontainers | Phase完了時、コミット前、PR作成時 |
-| **E2E Test** | エンドツーエンドのユーザーシナリオ検証 | システム全体 | **ローカル、CI/CD** | **デプロイ先環境（dev/staging）** ⚠️ 重要 | デプロイ完了後 |
+- **実行環境**: ローカル、CI/CD
+- **対象環境**: なし（モック使用）
+- **例**: 値オブジェクトのバリデーション
+
+### Integration Test（統合テスト）
+
+- **実行環境**: ローカル、CI/CD
+- **対象環境**: LocalStack/Testcontainers
+- **例**: Repository + LocalStack DynamoDB
+
+### E2E Test（エンドツーエンドテスト）
+
+- **実行環境**: **ローカル、CI/CD**（どこから実行するか）
+- **対象環境**: **デプロイ先環境（dev/staging）**（何に対して実行するか）⚠️ 重要
+- **例**: デプロイ済みAPIエンドポイントへのHTTPリクエスト
 
 **重要な理解**:
-- E2Eテストは**どこで実行するか**ではなく、**何に対して実行するか**が重要
+- E2Eテストは**デプロイ先環境に対して実行**
 - ❌ 誤解: E2E = CI/CDでしか実行しない
-- ✅ 正解: E2E = デプロイ済み実環境に対して実行（**ローカルからでもCI/CDからでもOK**）
-
-**例**:
-```bash
-# 開発者のローカルマシンから、dev環境に対してE2E実行
-pnpm test:e2e:dev  # ← ローカルで実行、対象はhttps://dev-api.example.com
-
-# CI/CDから、dev環境に対してE2E実行（自動）
-# GitHub Actionsが同じテストを自動実行
-```
-
-**LocalStackとの違い**:
-- LocalStack: ローカルで**モック環境**を起動 → Integration Test
-- E2E: ローカルから**実環境**にアクセス → E2E Test
+- ✅ 正解: E2E = デプロイ済み実環境に対して実行（**ローカルからでもOK**）
 
 ---
 
-### ステップ3.5: アーキテクチャタイプの判定（🆕）
-
-ドメイン設計とアーキテクチャ設計から、システムのアーキテクチャタイプを判定：
-
-**検出可能なアーキテクチャ**:
-- [ ] **Lambda / Event-Driven**: Lambda関数、SQS、EventBridge等
-- [ ] **REST API**: Hono、Express、FastAPI等
-- [ ] **Web Application**: Next.js、React、Vue等（SSR/SPA）
-- [ ] **Batch / CLI**: バッチ処理、CLIツール
-- [ ] **GraphQL API**: Apollo Server、Hasura等
-- [ ] **Microservices**: 複数サービス間の連携
-
-**アーキテクチャ別のE2E定義**:
-
-#### Lambda / Event-Driven
-- **Integration Test**: LocalStack DynamoDB/SQS + Lambda関数をローカル実行
-- **E2E Test**: デプロイ済みのLambda関数を実AWS APIで呼び出し
-  ```typescript
-  // E2E: デプロイ先のLambda呼び出し
-  await lambdaClient.invoke({
-    FunctionName: 'my-app-dev-orchestrator' // デプロイ済み
-  })
-  ```
-
-#### REST API
-- **Integration Test**: ローカルサーバー起動 + In-Memory DB
-- **E2E Test**: デプロイ済みのAPIエンドポイントにHTTPリクエスト
-  ```typescript
-  // E2E: デプロイ先のAPI呼び出し
-  await fetch('https://dev-api.example.com/users')
-  ```
-
-#### Web Application
-- **Integration Test**: ローカルサーバー + Playwright（localhost）
-- **E2E Test**: デプロイ済みのサイトにPlaywrightでアクセス
-  ```typescript
-  // E2E: デプロイ先のサイトにアクセス
-  await page.goto('https://dev.example.com')
-  ```
-
-#### Batch / CLI
-- **Integration Test**: ローカル実行 + Testcontainers
-- **E2E Test**: デプロイ済みのバッチジョブを実S3/DBで実行
-  ```typescript
-  // E2E: デプロイ先のバッチジョブトリガー
-  await triggerBatchJob({ inputKey: 'test.csv' })
-  ```
-
-#### GraphQL API
-- **Integration Test**: ローカルApolloサーバー + In-Memory DB
-- **E2E Test**: デプロイ済みのGraphQL Endpointにクエリ
-  ```typescript
-  // E2E: デプロイ先のGraphQLエンドポイント
-  const client = new ApolloClient({
-    uri: 'https://dev.example.com/graphql'
-  })
-  ```
-
-#### Microservices
-- **Integration Test**: ローカルQueue Emulator + 各サービス
-- **E2E Test**: デプロイ済みの全サービス + 実Message Queue
-  ```typescript
-  // E2E: デプロイ先の分散トランザクション
-  await orderService.createOrder({ /* ... */ })
-  await waitForEvent('PAYMENT_COMPLETED')
-  ```
-
----
-
-**分類の指針**:
-- BDD受入基準 → まずE2Eテストで実装（デプロイ後に実行）
-- E2Eテストが遅い/コスト高 → Integrationテストに分解（ローカル実行）
-- Integration テストが複雑 → Unit テストで補完（モック使用）
-
----
-
-### ステップ4: テストピラミッドの構成
+## テストピラミッド
 
 **理想的な比率**:
 ```
@@ -195,133 +158,60 @@ pnpm test:e2e:dev  # ← ローカルで実行、対象はhttps://dev-api.exampl
 ──────────────────────────
 ```
 
-**このユニットの目標**:
-| レベル | 目標ケース数 | 理由 |
-|--------|------------|------|
-| Unit | 10件 | 主要関数のカバレッジ70%以上 |
-| Integration | 3件 | コンポーネント連携の主要パス |
-| E2E | 1件 | クリティカルな受入基準のみ |
+**分類の指針**:
+- BDD受入基準 → まずE2Eテストで実装（デプロイ後に実行）
+- E2Eテストが遅い/コスト高 → Integrationテストに分解（ローカル実行）
+- Integration テストが複雑 → Unit テストで補完（モック使用）
 
 ---
 
-### ステップ5: TDDサイクルの計画
+## アーキテクチャ別のテスト戦略
 
-各テストケースについて、以下のサイクルを計画：
+### Lambda / Event-Driven
 
-```markdown
-### テストケース1: トークン削減の検証（TDDサイクル）
+**Integration Test**: LocalStack DynamoDB/SQS + Lambda関数をローカル実行
 
-**Red（失敗するテストを書く）**:
-- テストファイル: `src/tools/
-- テストコード:
-  ```typescript
-  describe(" () => {
-    it("100階層のノードを5000トークン以内で取得できる", async () => {
-      // Arrange
-      const fixture = loadFixture("100-layer-node.json");
+**E2E Test**: デプロイ済みのLambda関数を実AWS APIで呼び出し
 
-      // Act
-      const result = await  fileKey: "test", nodeIds: "root" });
+### REST API
 
-      // Assert
-      expect(result.tokenCount).toBeLessThanOrEqual(5000);
-    });
-  });
-  ```
+**Integration Test**: ローカルサーバー起動 + In-Memory DB
 
-**Green（最小限の実装で通す）**:
-- 実装ファイル: `src/tools/
-- 実装内容: トークン削減ロジックの最小実装
+**E2E Test**: デプロイ済みのAPIエンドポイントにHTTPリクエスト
 
-**Refactor（リファクタリング）**:
-- コードの整理、パフォーマンス改善
-- テストが通ることを確認しながら改善
-```
+### Web Application
 
----
+**Integration Test**: ローカルサーバー + Playwright（localhost）
 
-### ステップ6: モック・フィクスチャの設計
+**E2E Test**: デプロイ済みのサイトにPlaywrightでアクセス
 
-**外部依存の特定**:
--  REST API
-- ファイルシステム
-- 環境変数
+### Batch / CLI
 
-**モック戦略**:
-| 依存 | モック方法 | 理由 |
-|-----|----------|------|
-|  REST API | `vi.mock()` でモック | 実APIは遅い、レート制限あり |
-| ファイルシステム | テスト用ディレクトリ | 実ファイル操作が必要 |
-| 環境変数 | `vi.stubEnv()` | 環境に依存しないテスト |
+**Integration Test**: ローカル実行 + Testcontainers
 
-**フィクスチャファイル**:
-```
-tests/
-├── fixtures/
-│   ├── 100-layer-node.json       # 100階層の
-│   ├── simple-node.json          # シンプルなノード
-│   └── error-response.json       # エラーレスポンス
-└── helpers/
-    └── loadFixture.ts            # フィクスチャ読み込みヘルパー
-```
+**E2E Test**: デプロイ済みのバッチジョブを実S3/DBで実行
+
+### GraphQL API
+
+**Integration Test**: ローカルApolloサーバー + In-Memory DB
+
+**E2E Test**: デプロイ済みのGraphQL Endpointにクエリ
+
+### Microservices
+
+**Integration Test**: ローカルQueue Emulator + 各サービス
+
+**E2E Test**: デプロイ済みの全サービス + 実Message Queue
 
 ---
 
-### ステップ7: テストカバレッジ目標の設定
-
-**目標カバレッジ**:
-| 指標 | 目標値 | 理由 |
-|-----|--------|------|
-| **Line Coverage** | 80%以上 | 主要ロジックをカバー |
-| **Branch Coverage** | 70%以上 | 条件分岐を網羅 |
-| **Function Coverage** | 90%以上 | すべての関数をテスト |
-
-**未カバーを許容する箇所**:
-- ロギング処理
-- エラーハンドリングの一部（実現困難なケース）
-- デバッグ用コード
-
----
-
-### ステップ8: テスト実装の優先順位
-
-**優先度の判定基準**:
-1. **High**: クリティカルな受入基準、リスクが高い機能
-2. **Medium**: 重要だが回避策がある機能
-3. **Low**: 補助的な機能、UI調整等
-
-**実装順序**:
-```markdown
-### Phase 1: クリティカルパス（受入基準直結）
-- [ ] テストケース1: トークン削減の検証（High）
-- [ ] テストケース2: レイアウト精度の検証（High）
-
-### Phase 2: エッジケース
-- [ ] テストケース3: エラーハンドリング（Medium）
-- [ ] テストケース4: 空ノードの処理（Medium）
-
-### Phase 3: 補助機能
-- [ ] テストケース5: ロギング（Low）
-- [ ] テストケース6: キャッシュ機能（Low）
-```
-
----
-
-## 出力先
+## 生成されるファイル
 
 ### テスト設計ドキュメント
-`docs/design-artifacts/tests/[番号]_[ユニット名]_test_design.md`
 
-**内容**:
-- BDD受入基準のテストケース変換
-- アーキテクチャタイプの判定（🆕）
-- テストレベルの分類（実行環境明記）
-- テストピラミッド構成
-- TDDサイクルの計画
-- モック・フィクスチャ設計
-- カバレッジ目標
-- 実装優先順位
-- E2Eテストの実行環境とCI/CD統合方法（🆕）
+- `docs/design-artifacts/tests/{Backlog番号}_{ユニット名}_test_design.md` - テスト設計
+
+**ファイル名例**: `046_order-management_test_design.md`
 
 ### テスト実装の配置
 
@@ -331,231 +221,103 @@ packages/
 │   ├── src/
 │   └── tests/
 │       ├── unit/           # Unit Test（ローカル実行）
-│       │   └── *.test.ts
-│       └── integration/    # Integration Test（ローカル実行、LocalStack）
-│           └── *.test.ts
-└── e2e/                    # 🆕 E2E Test専用パッケージ
-    ├── package.json
+│       └── integration/    # Integration Test（ローカル実行）
+└── e2e/                    # E2E Test専用パッケージ
     ├── tests/
-    │   ├── lambda.e2e.test.ts       # Lambda E2E（デプロイ先実行）
-    │   ├── api.e2e.test.ts          # REST API E2E（デプロイ先実行）
-    │   └── web.e2e.test.ts          # Web E2E（デプロイ先実行）
-    ├── playwright.config.ts          # Web E2Eの場合
+    │   ├── lambda.e2e.test.ts       # Lambda E2E
+    │   ├── api.e2e.test.ts          # REST API E2E
+    │   └── web.e2e.test.ts          # Web E2E
     └── .env.dev                      # デプロイ先環境の設定
 ```
 
-**重要**: E2Eテストは専用パッケージに分離し、デプロイ先の環境変数を使用します。
+---
 
-### テスト実行コマンド
+## E2EテストのCI/CD統合
 
-```json
-// package.json (各unitまたはルート)
-{
-  "scripts": {
-    "test:unit": "vitest run tests/unit",
-    "test:integration": "vitest run tests/integration",
-    "test:e2e:dev": "cd ../e2e && TEST_ENV=dev vitest run",
-    "test:e2e:staging": "cd ../e2e && TEST_ENV=staging vitest run"
-  }
-}
-```
-
-### CI/CDパイプライン統合（🆕）
-
-E2Eテストはデプロイ後に実行する必要があるため、以下の順序を推奨：
+E2Eテストはデプロイ後に実行：
 
 ```yaml
-# 例: GitHub Actions
+# GitHub Actions
 jobs:
-  # 1. ローカルで実行可能なテスト
   unit-and-integration:
     runs-on: ubuntu-latest
     steps:
       - run: pnpm test:unit
-      - run: docker compose up -d localstack
       - run: pnpm test:integration
 
-  # 2. dev環境にデプロイ
   deploy-dev:
     needs: unit-and-integration
-    runs-on: ubuntu-latest
     steps:
-      - run: terraform apply -auto-approve
+      - run: terraform apply
 
-  # 3. デプロイ後にE2Eテスト実行 ← 重要
   e2e-dev:
     needs: deploy-dev
-    runs-on: ubuntu-latest
     env:
       TEST_ENV: dev
       API_URL: https://dev-api.example.com
     steps:
-      - name: Wait for deployment
-        run: until curl -f $API_URL/health; do sleep 5; done
+      - run: until curl -f $API_URL/health; do sleep 5; done
       - run: pnpm test:e2e:dev
-
-  # 4. staging環境へのデプロイ（mainブランチのみ）
-  deploy-staging:
-    needs: e2e-dev
-    if: github.ref == 'refs/heads/main'
-    steps:
-      - run: terraform apply -auto-approve
-
-  # 5. staging環境でもE2E実行
-  e2e-staging:
-    needs: deploy-staging
-    env:
-      TEST_ENV: staging
-    steps:
-      - run: pnpm test:e2e:staging
 ```
-
-### E2Eテストで検証すべき項目（アーキテクチャ別）
-
-#### Lambda / Event-Driven
-- [ ] 実Lambda関数が起動するか
-- [ ] 実DynamoDB/RDSに書き込めるか
-- [ ] IAMロールの権限が正しいか
-- [ ] 環境変数が正しく設定されているか
-- [ ] タイムアウト設定が適切か
-
-#### REST API
-- [ ] 実APIエンドポイントにアクセスできるか
-- [ ] CORS設定が正しいか
-- [ ] 認証・認可が動作するか
-- [ ] レート制限が動作するか
-- [ ] エラーレスポンスが適切か
-
-#### Web Application
-- [ ] 実サイトが表示されるか
-- [ ] 静的アセット（CSS/JS/画像）が配信されるか
-- [ ] ログイン/ログアウトフローが動作するか
-- [ ] パフォーマンス（LCP、FID等）が許容範囲か
-- [ ] SEO（OGP、meta tags）が正しいか
-
-#### Batch / CLI
-- [ ] 実S3からデータを読み込めるか
-- [ ] 実DBに結果を保存できるか
-- [ ] バッチジョブが正常に完了するか
-- [ ] エラー時のリトライ処理が動作するか
-
-#### GraphQL API
-- [ ] 実GraphQL Endpointにアクセスできるか
-- [ ] Mutation/Queryが動作するか
-- [ ] Subscriptionが動作するか（該当する場合）
-- [ ] 認証・認可が動作するか
-
-#### Microservices
-- [ ] サービス間通信が動作するか
-- [ ] イベント駆動フローが動作するか
-- [ ] 最終的な整合性が保たれるか
-- [ ] サービス障害時のフォールバック処理が動作するか
-
----
-
-## 次のステップ
-
-テスト設計完了後、以下に進む：
-
-```bash
-# ボルト実行（TDDサイクルで実装）
-/bolt [ユニット名]
-```
-
-`/bolt` 内で、このテスト設計を参照しながら Red → Green → Refactor サイクルを実行する。
 
 ---
 
 ## ベストプラクティス
 
-### 1. テストケース名の命名規則
+### Given/When/Then コメント
 
-**良い例**:
 ```typescript
-describe(" () => {
-  describe("トークン削減機能", () => {
-    it("100階層のノードを5000トークン以内で取得できる", async () => {
-      // ...
-    });
+it("Scenario: 注文の作成", async () => {
+  // Given: 顧客がログインしている
+  const customer = createCustomer();
 
-    it("レイアウト情報の精度が従来版と同等である", async () => {
-      // ...
-    });
-  });
+  // When: 注文を確定する
+  const order = await orderService.createOrder({ customerId: customer.id });
 
-  describe("エラーハンドリング", () => {
-    it("ネットワークエラー時に適切なエラーメッセージを返す", async () => {
-      // ...
-    });
-  });
+  // Then: 注文が作成される
+  expect(order.id).toBeDefined();
 });
 ```
 
-**悪い例**:
+### Arrange-Act-Assert パターン
+
 ```typescript
-it("test1", () => { /* ... */ });
-it("動作確認", () => { /* ... */ });
-```
+it("注文が作成される", async () => {
+  // Arrange（Given）
+  const customer = createCustomer();
 
----
+  // Act（When）
+  const order = await orderService.createOrder({ customerId: customer.id });
 
-### 2. Arrange-Act-Assert パターン
-
-**推奨構造**:
-```typescript
-it("100階層のノードを5000トークン以内で取得できる", async () => {
-  // Arrange（Given）: テストデータの準備
-  const fixture = loadFixture("100-layer-node.json");
-  const mock = vi.fn().mockResolvedValue(fixture);
-
-  // Act（When）: テスト対象の実行
-  const result = await 
-    fileKey: "test",
-    nodeIds: "root"
-  });
-
-  // Assert（Then）: 期待値の検証
-  expect(result.tokenCount).toBeLessThanOrEqual(5000);
-  expect(result.layout).toEqual(expect.objectContaining({
-    width: expect.any(Number),
-    height: expect.any(Number)
-  }));
+  // Assert（Then）
+  expect(order.id).toBeDefined();
 });
 ```
 
+### テストケース名は具体的に
+
+- ✅ "100階層のノードを5000トークン以内で取得できる"
+- ❌ "test1", "動作確認"
+
 ---
 
-### 3. Given/When/Then コメントの活用
+## 実行後の次のステップ
 
-```typescript
-it("Scenario: トークン削減の検証", async () => {
-  // Given: 100階層の
-  const fixture = loadFixture("100-layer-node.json");
-
-  // When: 
-  const result = await 
-    fileKey: "test",
-    nodeIds: "root"
-  });
-
-  // Then: トークン使用量が5000以内である
-  expect(result.tokenCount).toBeLessThanOrEqual(5000);
-
-  // And: レイアウト情報の精度が従来版と同等である
-  expect(result.layout).toMatchSnapshot();
-});
+```bash
+# ボルト実行（TDDサイクルで実装）
+/bolt unit1
 ```
 
+`/bolt` 内で、このテスト設計を参照しながら Red → Green → Refactor サイクルを実行します。
+
 ---
 
-### 4. モックの使い分け
+## 注意事項
 
-| 状況 | 推奨方法 | 理由 |
-|-----|---------|------|
-| HTTP API呼び出し | `vi.mock("axios")` | 実APIは遅い、不安定 |
-| ファイル読み込み | 実ファイル（フィクスチャ） | ファイル操作の検証が必要 |
-| 時刻依存 | `vi.setSystemTime()` | 決定的なテストのため |
-| 乱数 | `vi.spyOn(Math, "random")` | 再現可能なテストのため |
+1. **テストファーストの原則**: 実装前にテストを書く
+2. **Red → Green → Refactor**: TDDサイクルを守る
+3. **E2E = デプロイ先環境に対するテスト**: ローカルからでもOK
+4. **テストコードも保守対象**: 可読性、保守性を重視
 
 ---
 
@@ -571,84 +333,7 @@ it("Scenario: トークン削減の検証", async () => {
 
 ---
 
-## トラブルシューティング
-
-### 受入基準が曖昧な場合
-
-**対処**:
-1. `/intent` または `/backlog` を確認
-2. Given/When/Then形式で書かれているか確認
-3. 曖昧な場合は、ユーザーに明確化を依頼
-
-**例**:
-```
-❌ 曖昧: "うまく動く"
-✅ 明確: "100階層のノードを5000トークン以内で取得できる"
-```
-
----
-
-### テストケースが多すぎる場合
-
-**対処**:
-1. テストピラミッドの比率を確認（70% Unit, 20% Integration, 10% E2E）
-2. 重複するテストケースを統合
-3. 優先度Low のテストケースを延期
-
----
-
-### モックが複雑になりすぎる場合
-
-**対処**:
-1. Integration テストに切り替え（実DB/API使用）
-2. テスト用のFactoryパターンを導入
-3. フィクスチャファイルを活用
-
----
-
-## テスト実装テンプレート（Vitest）
-
-```typescript
-import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
-import { loadFixture } from "../helpers/loadFixture";
-
-describe("[ユニット名]", () => {
-  describe("[機能名]", () => {
-    beforeEach(() => {
-      // テスト前の準備
-      vi.clearAllMocks();
-    });
-
-    afterEach(() => {
-      // テスト後のクリーンアップ
-    });
-
-    it("Scenario: [シナリオ名]", async () => {
-      // Given: [前提条件]
-      const fixture = loadFixture("[ファイル名].json");
-
-      // When: [実行]
-      const result = await [関数名]([引数]);
-
-      // Then: [検証]
-      expect(result).toEqual([期待値]);
-
-      // And: [追加検証]
-      expect(result).toMatchSnapshot();
-    });
-
-    it("エラーケース: [エラーシナリオ]", async () => {
-      // Given: [エラーを引き起こす条件]
-      const invalidInput = { /* ... */ };
-
-      // When/Then: [エラーが発生することを検証]
-      await expect([関数名](invalidInput)).rejects.toThrowError("[期待されるエラーメッセージ]");
-    });
-  });
-});
-```
-
----
-
-**作成日**: 2025-11-13
+**SubAgent Version**: 1.0.0
+**SubAgent Location**: `.claude/agents/test-designer/`
+**作成日**: 2025-11-19
 **AI-DLC準拠**: コンストラクションフェーズ（テスト設計・TDD/BDD統合）

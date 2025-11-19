@@ -1,0 +1,16 @@
+{
+  "name": "iac-generator",
+  "version": "1.0.0",
+  "description": "Terraform/Terragrunt Infrastructure as Code generator from architecture design. Generates secure, reusable Terraform modules with environment-specific configurations.",
+  "author": "AI-DLC Template",
+  "tags": ["infrastructure", "terraform", "terragrunt", "iac", "aws", "codegen"],
+  "requires": {
+    "architecture": "Architecture design (docs/design-artifacts/architecture/) must exist"
+  },
+  "generates": [
+    "terraform/modules/{unit}/ - Terraform modules per unit",
+    "environments/{env}/main.tf - Environment configurations",
+    "package.json - npm scripts for Terraform execution (monorepo)",
+    "docs/infrastructure/{unit}_IaC設計.md - IaC design documentation"
+  ]
+}
