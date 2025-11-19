@@ -8,11 +8,21 @@
 
 ### テンプレート構成
 
-このテンプレートは、AI-DLC方法論とスラッシュコマンドを提供します：
+このテンプレートは、AI-DLC方法論、スラッシュコマンド、再利用可能なSkill/SubAgentを提供します：
 
 ```
 ai-dlc-template/
-├── .claude/commands/      # AI-DLCスラッシュコマンド（9個）
+├── .claude/
+│   ├── commands/          # AI-DLCスラッシュコマンド（9個）
+│   ├── agents/            # SubAgents（深い思考・対話型）
+│   │   ├── intent-definer/
+│   │   ├── units-decomposer/
+│   │   ├── domain-designer/
+│   │   ├── architecture-designer/
+│   │   └── test-designer/
+│   └── skills/            # Skills（コード生成型）
+│       ├── api-generator/
+│       └── iac-generator/
 ├── docs/
 │   ├── guides/           # AI-DLC開発ガイド
 │   ├── AI-DLC_日本語訳.md
@@ -27,6 +37,23 @@ ai-dlc-template/
 - pnpm-workspace.yaml
 - apps/ または packages/ ディレクトリ
 - プロジェクト固有のCLAUDE.md、README.md
+
+### Skill/SubAgentアーキテクチャ
+
+各コマンドは、**Skill**（コード生成）または**SubAgent**（深い思考・対話）を使用します：
+
+**Skills（コード生成型）**:
+- `api-generator`: REST API実装生成（Hono RPC）
+- `iac-generator`: Infrastructure as Code生成（Terraform/Terragrunt）
+
+**SubAgents（深い思考・対話型）**:
+- `intent-definer`: インテント定義（要件明確化）
+- `units-decomposer`: ユニット分解（DDD原則）
+- `domain-designer`: ドメイン設計（エンティティ、集約等）
+- `architecture-designer`: アーキテクチャ設計（NFR駆動、ADR生成）
+- `test-designer`: テスト設計（TDD/BDD統合）
+
+詳細は各Skill/SubAgentの `README.md` を参照してください。
 
 ## AI-DLCスラッシュコマンド
 
@@ -45,42 +72,42 @@ ai-dlc-template/
 
 ### インセプションフェーズ
 
-**`/intent`**
+**`/intent`** → `intent-definer` SubAgent
 - 用途: AI-DLC準拠のインテント定義（要件明確化）
 - 引数: タスクの概要（自由記述）
-- 動作: AIが4つの質問で明確化 → ユーザーストーリー、NFR、リスク定義
 - 出力: docs/intents/に連番付きMarkdownファイル
 - 例: `/intent ユーザー認証機能の実装`
+- 詳細: `.claude/agents/intent-definer/README.md`
 
-**`/units`**
+**`/units`** → `units-decomposer` SubAgent
 - 用途: インテント/Backlogをユニットに分解（疎結合・高凝集）
 - 引数: Intent番号（省略時は最新）
-- 動作: DDDのサブドメイン概念でユニット分解、依存関係図作成
 - 出力: docs/units/に分解結果を保存
 - 例: `/units 001` または `/units`
+- 詳細: `.claude/agents/units-decomposer/README.md`
 
 ### コンストラクションフェーズ
 
-**`/design-domain`**
-- 用途: ユニットのドメイン設計（DDD原則）
+**`/design-domain`** → `domain-designer` SubAgent
+- 用途: ユニットのドメイン設計（DDD戦術的設計パターン）
 - 引数: ユニット名（例: `unit1`, `001-unit1`）
-- 動作: エンティティ、集約、値オブジェクト、ドメインイベント等を設計
 - 出力: docs/design-artifacts/domain/にドメインモデルを保存
 - 例: `/design-domain unit1`
+- 詳細: `.claude/agents/domain-designer/README.md`
 
-**`/design-architecture`**
-- 用途: NFR考慮のアーキテクチャ設計（論理設計）
+**`/design-architecture`** → `architecture-designer` SubAgent
+- 用途: NFR考慮のアーキテクチャ設計（NFR駆動、ADR生成）
 - 引数: ユニット名（例: `unit1`, `001-unit1`）
-- 動作: NFR分析 → アーキテクチャパターン選択 → トレードオフ分析 → ADR生成
-- 出力: docs/design-artifacts/architecture/にアーキテクチャ設計、docs/design-artifacts/adr/にADRを保存
+- 出力: docs/design-artifacts/architecture/にアーキテクチャ設計、docs/design-artifacts/adr/にADR
 - 例: `/design-architecture unit1`
+- 詳細: `.claude/agents/architecture-designer/README.md`
 
-**`/design-test`**
-- 用途: テスト設計（TDD/BDD統合）
+**`/design-test`** → `test-designer` SubAgent
+- 用途: テスト設計（TDD/BDD統合、テストピラミッド構築）
 - 引数: ユニット名（例: `unit1`, `001-unit1`）
-- 動作: BDD受入基準 → TDDテストケース → テスト実装計画
 - 出力: docs/design-artifacts/tests/にテスト設計を保存
 - 例: `/design-test unit1`
+- 詳細: `.claude/agents/test-designer/README.md`
 
 **`/bolt`**
 - 用途: 高速反復サイクル（計画→実装を1サイクルで）
@@ -90,37 +117,21 @@ ai-dlc-template/
 
 ### インフラ・API生成
 
-**`/generate-api`**
-- 用途: REST API実装生成（Hono RPC）
+**`/generate-api`** → `api-generator` Skill
+- 用途: REST API実装生成（Hono RPC、OpenAPI）
 - 引数: ユニット名（例: `unit1`）
 - 前提条件: `/bolt` でservices層が実装済みであること
-- 動作:
-  1. 既存のservices層を読み込み（packages/api/src/services/）
-  2. HTTP層を生成（routes/, schemas/, index.ts, types/）
-  3. OpenAPI仕様を生成（docs/api/openapi.yaml）
-- 出力:
-  - packages/api/src/routes/ - Honoルート定義
-  - packages/api/src/schemas/ - Zodスキーマ
-  - packages/api/src/index.ts - Honoアプリケーション
-  - packages/api/src/types/index.ts - 型エクスポート
-  - docs/api/openapi.yaml - OpenAPI仕様
-  - docs/api/{unit}_API設計.md - API設計ドキュメント
+- 出力: packages/api/src/ にHTTP層、docs/api/ にOpenAPI仕様
 - 例: `/generate-api unit1`
+- 詳細: `.claude/skills/api-generator/README.md`
 
-**`/generate-iac`**
-- 用途: Infrastructure as Code生成（Terraform）
+**`/generate-iac`** → `iac-generator` Skill
+- 用途: Infrastructure as Code生成（Terraform/Terragrunt）
 - 引数: ユニット名（例: `unit1`）
 - 前提条件: `/design-architecture` でアーキテクチャ設計が完了していること
-- 動作:
-  1. アーキテクチャ設計を読み込み（docs/design-artifacts/architecture/）
-  2. unit単位でTerraformモジュールを生成
-  3. 環境ごとに全unitをまとめて呼び出し（dev/staging/production）
-  4. unit間の依存関係をmodule outputで解決
-- 出力:
-  - {infrastructure-root}/terraform/modules/{unit}/ - Terraformモジュール
-  - {infrastructure-root}/environments/dev/main.tf - 環境設定（全unit呼び出し）
-  - docs/infrastructure/{unit}_IaC設計.md - IaC設計ドキュメント
+- 出力: terraform/modules/{unit}/ にモジュール、environments/ に環境設定
 - 例: `/generate-iac unit1`
+- 詳細: `.claude/skills/iac-generator/README.md`
 
 ### オペレーションフェーズ（未実装）
 

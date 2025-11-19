@@ -19,6 +19,9 @@ AI-DLCは、AWSが提唱する**AI駆動型開発ライフサイクル**の方�
 
 - **AI-DLC準拠率 80%**: AWS論文の付録Aに対する準拠率（IaC生成追加）
 - **3つのフェーズをカバー**: Inception（要件定義）、Construction（設計・実装）、Operations（運用）
+- **Skill/SubAgentアーキテクチャ**: 再利用可能なSkill（コード生成）とSubAgent（深い思考・対話）
+  - 2つのSkills: `api-generator`, `iac-generator`
+  - 5つのSubAgents: `intent-definer`, `units-decomposer`, `domain-designer`, `architecture-designer`, `test-designer`
 - **スラッシュコマンド**: Claude Code用の9個の開発支援コマンド（+1個未実装）
 - **自動セットアップ**: `/setup-aidlc`で必要な構成を自動生成
 - **TDD/BDD統合**: テストファーストの開発サイクル
@@ -100,16 +103,26 @@ pnpm install
 
 ```
 ai-dlc-template/
-├── .claude/commands/            # AI-DLCスラッシュコマンド（9個）
-│   ├── setup-aidlc.md          # プロジェクトセットアップ
-│   ├── intent.md               # インテント定義
-│   ├── units.md                # ユニット分解
-│   ├── design-domain.md        # ドメイン設計
-│   ├── design-architecture.md  # アーキテクチャ設計
-│   ├── design-test.md          # テスト設計
-│   ├── bolt.md                 # 実装サイクル
-│   ├── generate-api.md         # REST API生成
-│   └── generate-iac.md         # IaC生成
+├── .claude/
+│   ├── commands/               # AI-DLCスラッシュコマンド（9個）
+│   │   ├── setup-aidlc.md
+│   │   ├── intent.md
+│   │   ├── units.md
+│   │   ├── design-domain.md
+│   │   ├── design-architecture.md
+│   │   ├── design-test.md
+│   │   ├── bolt.md
+│   │   ├── generate-api.md
+│   │   └── generate-iac.md
+│   ├── agents/                 # SubAgents（深い思考・対話型）
+│   │   ├── intent-definer/     # インテント定義
+│   │   ├── units-decomposer/   # ユニット分解
+│   │   ├── domain-designer/    # ドメイン設計
+│   │   ├── architecture-designer/  # アーキテクチャ設計
+│   │   └── test-designer/      # テスト設計
+│   └── skills/                 # Skills（コード生成型）
+│       ├── api-generator/      # REST API生成
+│       └── iac-generator/      # IaC生成
 ├── docs/                       # AI-DLC方法論ドキュメント
 │   ├── AI-DLC_日本語訳.md      # 論文完全翻訳
 │   ├── AI-DLC準拠状況.md       # 準拠率分析・実装状況
@@ -123,24 +136,41 @@ ai-dlc-template/
 
 **注**: `apps/`, `packages/`, `package.json`, `pnpm-workspace.yaml` は `/setup-aidlc` 実行時に自動生成されます。
 
+### Skill/SubAgentアーキテクチャ
+
+各コマンドは、再利用可能な**Skill**（コード生成）または**SubAgent**（深い思考・対話）を使用：
+
+**Skills（コード生成型）**:
+- `api-generator`: REST API実装生成（Hono RPC、OpenAPI）
+- `iac-generator`: Infrastructure as Code生成（Terraform/Terragrunt）
+
+**SubAgents（深い思考・対話型）**:
+- `intent-definer`: インテント定義（要件明確化）
+- `units-decomposer`: ユニット分解（DDD原則）
+- `domain-designer`: ドメイン設計（エンティティ、集約等）
+- `architecture-designer`: アーキテクチャ設計（NFR駆動、ADR生成）
+- `test-designer`: テスト設計（TDD/BDD統合）
+
+詳細は各Skill/SubAgentの `README.md` を参照してください。
+
 ## 📖 利用可能なスラッシュコマンド
 
 ### セットアップ
 - `/setup-aidlc` - プロジェクトのAI-DLC環境セットアップ
 
 ### インセプションフェーズ（要件定義）
-- `/intent` - インテント定義（要件の明確化）
-- `/units` - ユニット分解（疎結合・高凝集）
+- `/intent` → `intent-definer` SubAgent - インテント定義（要件の明確化）
+- `/units` → `units-decomposer` SubAgent - ユニット分解（疎結合・高凝集）
 
 ### コンストラクションフェーズ（設計・実装）
-- `/design-domain` - ドメイン設計（DDD原則）
-- `/design-architecture` - アーキテクチャ設計（NFR考慮）
-- `/design-test` - テスト設計（TDD/BDD統合）
+- `/design-domain` → `domain-designer` SubAgent - ドメイン設計（DDD戦術的設計）
+- `/design-architecture` → `architecture-designer` SubAgent - アーキテクチャ設計（NFR駆動、ADR生成）
+- `/design-test` → `test-designer` SubAgent - テスト設計（TDD/BDD統合）
 - `/bolt` - 実装（高速反復サイクル）
 
 ### インフラ・API生成
-- `/generate-api` - REST API実装生成（Hono RPC）
-- `/generate-iac` - Infrastructure as Code生成（Terraform）
+- `/generate-api` → `api-generator` Skill - REST API実装生成（Hono RPC、OpenAPI）
+- `/generate-iac` → `iac-generator` Skill - Infrastructure as Code生成（Terraform/Terragrunt）
 
 ### オペレーションフェーズ（未実装）
 - `/operate` - 運用サポート（テレメトリ分析等）
