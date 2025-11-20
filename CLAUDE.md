@@ -258,9 +258,18 @@ docs/
 
 **monorepoの場合:**
 ```
-apps/<app-name>/docs/  # 各アプリ固有のAI-DLC成果物
-packages/<pkg-name>/docs/  # 各パッケージ固有のAI-DLC成果物
+docs/                      # AI-DLC成果物はルートに集約
+├── intents/              # インテント定義
+├── units/                # ユニット分解
+├── design-artifacts/     # 全ユニットの設計ドキュメント
+│   ├── domain/           # 001〜
+│   ├── architecture/     # 001〜
+│   ├── tests/            # 001〜
+│   └── adr/              # ADR
+└── plans/                # 実装計画
 ```
+
+**理由**: 横断的な参照が容易、ユニット間の依存関係を把握しやすい
 
 ## コーディング規約
 
