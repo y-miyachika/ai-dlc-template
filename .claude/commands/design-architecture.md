@@ -110,6 +110,14 @@ SubAgentは `.claude/agents/architecture-designer/prompt.md` に定義された�
 ### 信頼性（Reliability）
 - エラー率、リカバリー時間
 
+### 外部API制約（External API Constraints）
+- **レート制限**: APIの呼び出し回数制限（例: CodeCommit 15req/sec）
+- **同時接続数制限**: 並列リクエストの上限
+- **クォータ**: 日次/月次の呼び出し上限
+- **対策パターン**: 同時実行数制限、Exponential Backoff、キュー + バッチ処理
+
+**⚠️ 重要**: 外部APIを呼び出すアーキテクチャでは、必ずレート制限を確認し、同時実行数を保守的に設定すること（例: Lambda 100→2-5）
+
 ---
 
 ## アーキテクチャパターン
