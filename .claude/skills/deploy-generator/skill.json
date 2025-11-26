@@ -1,0 +1,15 @@
+{
+  "name": "deploy-generator",
+  "version": "1.0.0",
+  "description": "Generates deployment configuration based on detected infrastructure. Supports S3+CloudFront, Vercel, AWS Lambda, and more.",
+  "author": "AI-DLC Template",
+  "tags": ["deploy", "cicd", "infrastructure", "aws", "vercel", "codegen"],
+  "requires": {
+    "infrastructure": "Infrastructure configuration (terraform/, package.json, or similar) should exist"
+  },
+  "generates": [
+    ".github/workflows/deploy.yml - GitHub Actions deployment workflow",
+    "scripts/deploy.sh - Deployment script",
+    "docs/deploy/README.md - Deployment documentation"
+  ]
+}

@@ -13,7 +13,7 @@
 ```
 ai-dlc-template/
 ├── .claude/
-│   ├── commands/          # AI-DLCスラッシュコマンド（9個）
+│   ├── commands/          # AI-DLCスラッシュコマンド（15個）
 │   ├── agents/            # SubAgents（深い思考・対話型）
 │   │   ├── intent-definer/
 │   │   ├── units-decomposer/
@@ -22,7 +22,8 @@ ai-dlc-template/
 │   │   └── test-designer/
 │   └── skills/            # Skills（コード生成型）
 │       ├── api-generator/
-│       └── iac-generator/
+│       ├── iac-generator/
+│       └── deploy-generator/
 ├── docs/
 │   ├── guides/           # AI-DLC開発ガイド
 │   ├── AI-DLC_日本語訳.md
@@ -45,6 +46,7 @@ ai-dlc-template/
 **Skills（コード生成型）**:
 - `api-generator`: REST API実装生成（Hono RPC）
 - `iac-generator`: Infrastructure as Code生成（Terraform/Terragrunt）
+- `deploy-generator`: デプロイ設定生成（GitHub Actions、スクリプト）
 
 **SubAgents（深い思考・対話型）**:
 - `intent-definer`: インテント定義（要件明確化）
@@ -115,7 +117,7 @@ ai-dlc-template/
 - 動作: 計画がなければ作成 → 承認 → TDDサイクルで実装 → テスト → 次ステップ提案
 - 例: `/bolt unit1`
 
-**`/retro`**
+**`/retro`**（Retrospective）
 - 用途: 会話の振り返りと改善提案
 - 引数: なし
 - 動作: CLAUDE.mdへの追記提案、新規コマンド提案、既存コマンド改善提案
@@ -156,6 +158,20 @@ ai-dlc-template/
 - 出力: terraform/modules/{unit}/ にモジュール、environments/ に環境設定
 - 例: `/generate-iac unit1`
 - 詳細: `.claude/skills/iac-generator/README.md`
+
+**`/generate-deploy`** → `deploy-generator` Skill
+- 用途: デプロイ設定生成（GitHub Actions、デプロイスクリプト）
+- 引数: ユニット名（例: `unit1`）
+- 前提条件: `/design-architecture` でアーキテクチャ設計が完了していること
+- 出力: .github/workflows/deploy.yml、scripts/deploy.sh、docs/deploy/README.md
+- 例: `/generate-deploy unit1`
+- 詳細: `.claude/skills/deploy-generator/README.md`
+
+**`/sync-docs`**
+- 用途: 設計ドキュメントと実装の同期チェック
+- 引数: パッケージ名またはUnit番号（省略時は全体）
+- 動作: 変更ファイル検出 → 関連ドキュメント特定 → 乖離チェック → 更新提案
+- 例: `/sync-docs` または `/sync-docs api`
 
 ### オペレーションフェーズ（未実装）
 

@@ -13,6 +13,28 @@ git status
 git diff --stat
 ```
 
+### 1.5. テストカバレッジチェック（警告のみ）
+
+**新規/変更ファイルに対応するテストがあるか確認**
+
+以下のパターンでテストファイルの存在をチェック：
+- `src/services/foo.ts` → `src/services/foo.test.ts` または `tests/services/foo.test.ts`
+- `src/domain/entities/bar.ts` → `src/domain/entities/bar.test.ts`
+
+**テストが見つからない場合**:
+```
+⚠️ テストカバレッジ警告
+
+以下のファイルに対応するテストが見つかりません:
+- src/services/newFeature.ts
+- src/domain/entities/newEntity.ts
+
+コミットは可能ですが、テストの追加を検討してください。
+続行しますか？ [y/N]
+```
+
+**注意**: これは警告のみで、コミットを強制的にブロックしません。
+
 ### 2. コミットメッセージの生成
 
 以下の形式でコミットメッセージを生成：
