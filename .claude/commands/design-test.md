@@ -16,7 +16,7 @@
 
 - `/design-architecture` でアーキテクチャ設計が完了している
 - `docs/design-artifacts/architecture/` にアーキテクチャ設計が存在する
-- `docs/intents/` または `docs/backlog/` に受入基準（Given/When/Then形式）が定義されている
+- `docs/intents/` に受入基準（Given/When/Then形式）が定義されている
 
 ## 入力内容
 

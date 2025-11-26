@@ -16,7 +16,7 @@
 
 - `/design-domain` でドメイン設計が完了している
 - `docs/design-artifacts/domain/` にドメイン設計が存在する
-- `docs/intents/` または `docs/backlog/` にNFRが定義されている
+- `docs/intents/` にNFRが定義されている
 
 ## 入力内容
 

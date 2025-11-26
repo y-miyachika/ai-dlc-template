@@ -29,38 +29,43 @@
 ```
 <project-name>/
 ├── docs/
-│   ├── backlog/            # タスク定義（シンプル版）
-│   ├── intents/            # インテント定義（AI-DLC準拠版）
-│   ├── requirements/       # 要件定義
-│   ├── units/             # ユニット分解
-│   ├── design-artifacts/  # 設計ドキュメント
-│   │   ├── domain/        # ドメイン設計
-│   │   ├── architecture/  # アーキテクチャ設計
-│   │   ├── tests/         # テスト設計
-│   │   └── adr/          # アーキテクチャ決定記録
-│   └── plans/            # 実装計画
-├── src/                   # ソースコード
-├── tests/                 # テストコード
+│   ├── intents/            # インテント定義
+│   ├── units/              # ユニット分解
+│   ├── design-artifacts/   # 設計ドキュメント
+│   │   ├── domain/         # ドメイン設計
+│   │   ├── architecture/   # アーキテクチャ設計
+│   │   ├── tests/          # テスト設計
+│   │   └── adr/            # アーキテクチャ決定記録
+│   └── plans/              # 実装計画
+├── src/                    # ソースコード
+├── tests/                  # テストコード
 └── .claude/
-    └── commands/          # プロジェクト固有のスラッシュコマンド
+    └── commands/           # プロジェクト固有のスラッシュコマンド
 ```
 
 **モノレポの場合（monorepo）:**
 
 ```
 <project-name>/
-├── docs/
-│   ├── guides/           # 共通開発ガイド
-│   └── README.md         # プロジェクト概要
+├── docs/                   # AI-DLC成果物はルートに集約
+│   ├── intents/            # インテント定義
+│   ├── units/              # ユニット分解
+│   ├── design-artifacts/   # 設計ドキュメント（全ユニット）
+│   │   ├── domain/         # 001〜
+│   │   ├── architecture/   # 001〜
+│   │   ├── tests/          # 001〜
+│   │   └── adr/            # ADR
+│   ├── plans/              # 実装計画
+│   └── guides/             # 共通開発ガイド
 ├── apps/
-│   └── <app-name>/
-│       └── docs/         # アプリ固有のAI-DLC成果物
+│   └── <app-name>/         # アプリケーション
 ├── packages/
-│   └── <package-name>/
-│       └── docs/         # パッケージ固有のAI-DLC成果物
+│   └── <package-name>/     # 共有パッケージ
 └── .claude/
-    └── commands/          # プロジェクト共通のスラッシュコマンド
+    └── commands/           # プロジェクト共通のスラッシュコマンド
 ```
+
+**理由**: ルート集約により横断的な参照が容易、ユニット間の依存関係を把握しやすい
 
 ### 3. pnpm workspace設定の作成
 
@@ -130,12 +135,22 @@ AI-DLC成果物の管理方針：
 node_modules/
 .pnpm-store/
 
-# AI-DLC成果物はコミットする（チーム共有）
+# ビルド成果物
+dist/
+.next/
+out/
+
+# 環境変数（機密情報を含む場合）
+.env.local
+.env.*.local
+
+# AI-DLC成果物はコミットする（チーム共有のためコメントアウト）
 # docs/intents/
 # docs/units/
 # docs/design-artifacts/
+# docs/plans/
 
-# 一時ファイルは除外
+# 一時ファイル
 *.tmp
 *.bak
 ```

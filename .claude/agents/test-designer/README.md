@@ -13,7 +13,7 @@ BDD受入基準をテストケースに変換し、テストピラミッドを�
 - ユニット分解が完了している（`/units` 実行済み）
 - ドメイン設計が完了している（`/design-domain` 実行済み）
 - アーキテクチャ設計が完了している（`/design-architecture` 実行済み）
-- `docs/intents/` または `docs/backlog/` に受入基準（Given/When/Then形式）が定義されている
+- `docs/intents/` に受入基準（Given/When/Then形式）が定義されている
 
 ### 実行
 

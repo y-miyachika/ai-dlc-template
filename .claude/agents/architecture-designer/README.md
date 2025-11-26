@@ -12,7 +12,7 @@ NFRを満たす最適なアーキテクチャパターンを選択し、トレ�
 
 - ユニット分解が完了している（`/units` 実行済み）
 - ドメイン設計が完了している（`/design-domain` 実行済み）
-- `docs/intents/` または `docs/backlog/` にNFRが定義されている
+- `docs/intents/` にNFRが定義されている
 
 ### 実行
 

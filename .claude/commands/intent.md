@@ -128,25 +128,6 @@ SubAgentは `.claude/agents/intent-definer/prompt.md` に定義された手順�
 
 ---
 
-## 従来の `/backlog` との違い
-
-| 項目 | `/backlog`（従来版） | `/intent`（AI-DLC準拠版） |
-|-----|---------------------|------------------------|
-| **構造** | シンプル | 体系的・詳細 |
-| **質問** | なし | AIが4つの質問を主導 |
-| **ユーザーストーリー** | 自由記述 | As a/I want/So that形式 |
-| **NFR** | なし | 詳細な表形式 |
-| **リスク** | 補足事項に含む | リスクレジスターで体系化 |
-| **成功指標** | なし | 定量的・定性的指標 |
-| **保存先** | `docs/backlog/` | `docs/intents/` |
-| **実装** | コマンド直接 | SubAgent経由 |
-
-**使い分け**:
-- **シンプルなタスク**: `/backlog` で十分
-- **複雑な機能・重要なタスク**: `/intent` を推奨
-
----
-
 **SubAgent Version**: 1.0.0
 **SubAgent Location**: `.claude/agents/intent-definer/`
 **作成日**: 2025-11-12
