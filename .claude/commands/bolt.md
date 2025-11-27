@@ -21,7 +21,9 @@ AI-DLCにおける**最小の反復サイクル**です：
 
 ### ステップ1: テスト設計の確認（TDD統合）✨NEW
 
-1. `docs/design-artifacts/tests/[番号]_[ユニット名]_test_design.md` が存在するか確認
+1. `docs/design-artifacts/tests/{Intent}-{Unit}-{名前}.md` が存在するか確認
+   - 例: `docs/design-artifacts/tests/002-001-login-api.md`
+   - 命名規則: Intent番号3桁-Unit番号3桁-ユニット名
 2. **存在しない場合**: `/design-test` 相当の処理を実行
    - 受入基準（BDD）をテストケースに変換
    - テストレベル分類（Unit/Integration/E2E）
@@ -33,7 +35,9 @@ AI-DLCにおける**最小の反復サイクル**です：
 
 ### ステップ2: 実装計画の作成（必須）
 
-1. `docs/plans/[番号]_[ユニット名]_実装計画.md` が存在するか確認
+1. `docs/plans/{Intent}-{Unit}-{名前}.md` が存在するか確認
+   - 例: `docs/plans/002-001-login-api.md`
+   - 命名規則: Intent番号3桁-Unit番号3桁-ユニット名
 2. **存在しない場合**: 必ず作成する（スキップ禁止）
    - 既存コード構造を確認
    - 実装手順を詳細化（**テスト設計を参照**）

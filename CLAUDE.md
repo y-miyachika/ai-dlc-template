@@ -287,6 +287,44 @@ docs/                      # AI-DLC成果物はルートに集約
 
 **理由**: 横断的な参照が容易、ユニット間の依存関係を把握しやすい
 
+### AI-DLCドキュメント命名規則
+
+**Intent.Unit形式を使用**（例: `002-001-strivo-effect-visualizer.md`）
+
+| 種類 | 命名パターン | 例 |
+|------|-------------|-----|
+| Intent | `{Intent番号}_タイトル.md` | `002_ユーザー認証.md` |
+| Units | `{Intent番号}_ユニット分解.md` | `002_ユニット分解.md` |
+| design-artifacts | `{Intent番号}-{Unit番号}-名前.md` | `002-001-login-api.md` |
+| plans | `{Intent番号}-{Unit番号}-名前.md` | `002-001-login-api.md` |
+
+- Intent番号・Unit番号は3桁ゼロ埋め
+- Unit番号`000`はshared/共通拡張用（例: `002-000-shared-domain.md`）
+
+### Unit完了チェックリスト
+
+Unit実装完了時（`/commit-unit`前）に確認：
+
+- [ ] テスト全パス
+- [ ] `docs/plans/{Intent}-{Unit}-*.md` 作成・更新済み
+- [ ] `docs/design-artifacts/` の関連ドキュメント確認
+- [ ] 型エラーなし
+
+### ローカル開発環境（プロジェクト固有）
+
+プロジェクトでDynamoDB等のAWSリソースを使う場合：
+
+```bash
+# packages/api/.env.example を .env にコピーして設定
+cp packages/api/.env.example packages/api/.env
+
+# 環境変数例
+DYNAMODB_TABLE_NAME=your-table-name
+AWS_REGION=ap-northeast-1
+```
+
+**注意**: `.env`は`.gitignore`に含める
+
 ## コーディング規約
 
 ### TypeScript
