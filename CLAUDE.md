@@ -193,6 +193,7 @@ ai-dlc-template/
 | [E2Eテストフロー](docs/guides/e2e-testing-flow.md) | テスト実行タイミング、P0/P1/P2優先度分類 |
 | [外部API制約](docs/guides/external-api-constraints.md) | レート制限、クォータ、SLA対応パターン |
 | [プロジェクトテンプレート](docs/guides/project-templates.md) | モノレポ/シングルアプリ/マイクロサービス別ガイド |
+| [品質チェックリスト](.claude/agents/quality-checklist.md) | SubAgent/Skill出力の品質基準 |
 | [ワークフロー](docs/guides/workflow.md) | AI-DLC 3フェーズの詳細 |
 | [開始ガイド](docs/guides/getting-started.md) | 最初のステップ |
 | [ベストプラクティス](docs/guides/best-practices.md) | 推奨パターン |
