@@ -96,6 +96,8 @@ POST /api/users
 
 ## カスタマイズ
 
+出力パスのカスタマイズは[Skill共通設定ガイド](../config.md)を参照してください。
+
 ### 認証・認可の追加
 
 ```typescript

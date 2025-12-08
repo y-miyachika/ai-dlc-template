@@ -426,4 +426,4 @@ paths:
 
 - [ワークフローDAG](./workflow-dag.md) - コマンド間の依存関係
 - [実装スコープ](./implementation-scope.md) - 完了条件
-- [Skill共通設定](./.claude/skills/config.md) - 出力パスのカスタマイズ
+- [Skill共通設定](../../.claude/skills/config.md) - 出力パスのカスタマイズ
