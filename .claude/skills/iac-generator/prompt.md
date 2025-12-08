@@ -10,6 +10,26 @@
 
 ---
 
+## 設定
+
+出力パスは `.claude/skill-config.json` でカスタマイズ可能です。
+詳細は [Skill共通設定ガイド](../config.md) を参照してください。
+
+**デフォルト設定**:
+```json
+{
+  "iac-generator": {
+    "outputDir": "terraform",
+    "modulesDir": "modules",
+    "environmentsDir": "environments"
+  }
+}
+```
+
+設定ファイルが存在しない場合は、プロジェクト構成を自動判定します（ステップ0参照）。
+
+---
+
 ## 入力
 
 ### 必須
@@ -18,7 +38,7 @@
 
 ### オプション
 - **NFR定義**: パフォーマンス、セキュリティ、可用性要件
-- **出力先**: 自動判定（packages/infrastructure/ または infrastructure/）
+- **出力先**: 設定ファイル → 自動判定の優先順位で決定
 
 ---
 
