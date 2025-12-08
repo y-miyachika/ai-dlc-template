@@ -141,6 +141,10 @@ claude skill api-generator --services-path src/services
   - OpenAPI仕様生成
   - Hono RPCクライアント対応
 
+## 品質基準
+
+出力品質を確保するため、[品質チェックリスト](../../agents/quality-checklist.md)を参照してください。
+
 ## ライセンス
 
 MIT

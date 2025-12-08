@@ -256,6 +256,10 @@ claude skill iac-generator --unit unit1
   - unit間依存関係解決
   - セキュリティベストプラクティス統合
 
+## 品質基準
+
+出力品質を確保するため、[品質チェックリスト](../../agents/quality-checklist.md)を参照してください。
+
 ## ライセンス
 
 MIT
