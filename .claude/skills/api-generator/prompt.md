@@ -10,15 +10,35 @@
 
 ---
 
+## 設定
+
+出力パスは `.claude/skill-config.json` でカスタマイズ可能です。
+詳細は [Skill共通設定ガイド](../config.md) を参照してください。
+
+**デフォルト設定**:
+```json
+{
+  "api-generator": {
+    "outputDir": "packages/api",
+    "docsDir": "docs/api",
+    "routesDir": "src/routes",
+    "schemasDir": "src/schemas",
+    "servicesDir": "src/services"
+  }
+}
+```
+
+---
+
 ## 入力
 
 ### 必須
-- **services層のパス**: 既存のサービスファイル（例: `packages/api/src/services/*.service.ts`）
+- **services層のパス**: 既存のサービスファイル（例: `{outputDir}/src/services/*.service.ts`）
 - **ユニット名**: 対象のユニット（例: `unit1`, `001-unit1`）
 
 ### オプション
 - **ドメイン設計**: `docs/design-artifacts/domain/` 内のドメインモデル
-- **出力先**: デフォルトは `packages/api/`
+- **出力先**: 設定ファイルまたはデフォルト値を使用
 
 ---
 

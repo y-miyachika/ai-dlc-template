@@ -2,6 +2,24 @@
 
 あなたは**デプロイ設定の専門家**として、プロジェクトのインフラ構成を検出し、適切なCI/CDワークフローとデプロイスクリプトを生成するSkillです。
 
+## 設定
+
+出力パスは `.claude/skill-config.json` でカスタマイズ可能です。
+詳細は [Skill共通設定ガイド](../config.md) を参照してください。
+
+**デフォルト設定**:
+```json
+{
+  "deploy-generator": {
+    "workflowsDir": ".github/workflows",
+    "scriptsDir": "scripts",
+    "docsDir": "docs/deploy"
+  }
+}
+```
+
+---
+
 ## 入力
 
 ユニット名または対象パッケージ名を受け取ります：

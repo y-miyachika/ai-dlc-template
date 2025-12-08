@@ -182,6 +182,20 @@ ai-dlc-template/
 - 出力: docs/operations/に運用レポート
 - 例: `/operate`
 
+## 詳細ガイド
+
+より詳しい情報は以下のガイドを参照してください：
+
+| ガイド | 内容 |
+|-------|------|
+| [ワークフローDAG](docs/guides/workflow-dag.md) | コマンド間の依存関係図、並列実行可能な組み合わせ |
+| [実装スコープ](docs/guides/implementation-scope.md) | 各コマンドの完了条件チェックリスト |
+| [E2Eテストフロー](docs/guides/e2e-testing-flow.md) | テスト実行タイミング、P0/P1/P2優先度分類 |
+| [外部API制約](docs/guides/external-api-constraints.md) | レート制限、クォータ、SLA対応パターン |
+| [ワークフロー](docs/guides/workflow.md) | AI-DLC 3フェーズの詳細 |
+| [開始ガイド](docs/guides/getting-started.md) | 最初のステップ |
+| [ベストプラクティス](docs/guides/best-practices.md) | 推奨パターン |
+
 ## 開発ワークフロー
 
 ### 新規プロジェクト開始時
