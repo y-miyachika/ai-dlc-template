@@ -96,6 +96,8 @@ POST /api/users
 
 ## カスタマイズ
 
+出力パスのカスタマイズは[Skill共通設定ガイド](../config.md)を参照してください。
+
 ### 認証・認可の追加
 
 ```typescript
@@ -140,6 +142,10 @@ claude skill api-generator --services-path src/services
   - Hono + Zod ベースのAPI生成
   - OpenAPI仕様生成
   - Hono RPCクライアント対応
+
+## 品質基準
+
+出力品質を確保するため、[品質チェックリスト](../../agents/quality-checklist.md)を参照してください。
 
 ## ライセンス
 

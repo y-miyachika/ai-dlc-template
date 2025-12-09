@@ -308,6 +308,8 @@ graph TD
 
 ## 参考資料
 
+- [実装スコープ](./implementation-scope.md) - 各コマンドの完了条件
+- [E2Eテストフロー](./e2e-testing-flow.md) - テスト実行タイミング
 - [ワークフローガイド](./workflow.md) - フェーズ詳細
 - [開始ガイド](./getting-started.md) - 最初のステップ
 - [ベストプラクティス](./best-practices.md) - 推奨パターン
