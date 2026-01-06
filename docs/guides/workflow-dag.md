@@ -81,14 +81,19 @@ graph TD
 
 **\*注意**: 3つの設計コマンドは**同一ユニットに対しては順次実行を推奨**。異なるユニット間では並列実行可能。
 
+```mermaid
+flowchart LR
+    subgraph same["推奨順序（同一ユニット）"]
+        D1["/design-domain unit1"] --> A1["/design-architecture unit1"] --> T1["/design-test unit1"]
+    end
 ```
-推奨順序（同一ユニット）:
-/design-domain unit1 → /design-architecture unit1 → /design-test unit1
 
-並列可能（異なるユニット）:
-/design-domain unit1  |  /design-domain unit2
-         ↓            |           ↓
-/design-architecture  |  /design-architecture
+```mermaid
+flowchart TB
+    subgraph parallel["並列可能（異なるユニット）"]
+        D1["/design-domain unit1"] --> A1["/design-architecture unit1"]
+        D2["/design-domain unit2"] --> A2["/design-architecture unit2"]
+    end
 ```
 
 ### 4. コンストラクションフェーズ - 実装
@@ -114,163 +119,116 @@ graph TD
 
 ### 新規プロジェクト開発フロー
 
-```
-/setup-aidlc
-     │
-     ▼
-/intent "機能概要"
-     │
-     ▼
-/units 001
-     │
-     ├─────────────────┬─────────────────┐
-     ▼                 ▼                 ▼
-/design-domain    /design-arch      /design-test
-    unit1            unit1              unit1
-     │                 │                 │
-     └─────────────────┼─────────────────┘
-                       ▼
-                  /bolt unit1
-                       │
-     ┌─────────────────┼─────────────────┐
-     ▼                 ▼                 ▼
-/generate-api     /generate-iac    /generate-deploy
-    unit1            unit1              unit1
-     │                 │                 │
-     └─────────────────┼─────────────────┘
-                       ▼
-                /commit-unit 1
-                       │
-                       ▼
-              次のユニット（unit2）へ
+```mermaid
+flowchart TB
+    setup["/setup-aidlc"] --> intent["/intent 機能概要"]
+    intent --> units["/units 001"]
+
+    units --> domain["/design-domain unit1"]
+    units --> arch["/design-arch unit1"]
+    units --> test["/design-test unit1"]
+
+    domain --> bolt["/bolt unit1"]
+    arch --> bolt
+    test --> bolt
+
+    bolt --> api["/generate-api unit1"]
+    bolt --> iac["/generate-iac unit1"]
+    bolt --> deploy["/generate-deploy unit1"]
+
+    api --> commit["/commit-unit 1"]
+    iac --> commit
+    deploy --> commit
+
+    commit --> next["次のユニット（unit2）へ"]
 ```
 
 ### マルチユニット並列開発フロー
 
 複数ユニットが**独立**している場合、並列開発が可能です：
 
-```
-/units 001
-     │
-     ├───────────────────────────────────┐
-     │                                   │
-     ▼                                   ▼
-[unit1: 認証ドメイン]              [unit2: ユーザー管理]
-     │                                   │
-     ▼                                   ▼
-/design-domain unit1              /design-domain unit2
-     │                                   │
-     ▼                                   ▼
-/design-architecture unit1        /design-architecture unit2
-     │                                   │
-     ▼                                   ▼
-/design-test unit1                /design-test unit2
-     │                                   │
-     ▼                                   ▼
-/bolt unit1                       /bolt unit2
-     │                                   │
-     └───────────────┬───────────────────┘
-                     ▼
-              統合テスト実行
-                     │
-                     ▼
-            /commit-unit (両ユニット)
+```mermaid
+flowchart TB
+    units["/units 001"] --> unit1["unit1: 認証ドメイン"]
+    units --> unit2["unit2: ユーザー管理"]
+
+    subgraph Unit1Flow["Unit1 フロー"]
+        unit1 --> d1["/design-domain unit1"]
+        d1 --> a1["/design-architecture unit1"]
+        a1 --> t1["/design-test unit1"]
+        t1 --> b1["/bolt unit1"]
+    end
+
+    subgraph Unit2Flow["Unit2 フロー"]
+        unit2 --> d2["/design-domain unit2"]
+        d2 --> a2["/design-architecture unit2"]
+        a2 --> t2["/design-test unit2"]
+        t2 --> b2["/bolt unit2"]
+    end
+
+    b1 --> integration["統合テスト実行"]
+    b2 --> integration
+    integration --> commit["/commit-unit（両ユニット）"]
 ```
 
 **注意**: 依存関係があるユニット（例: unit3 → unit1）は順次実行が必要。
 
 ## SubAgent/Skill の使い分け
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    SubAgents（深い思考・対話型）              │
-│                                                             │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐         │
-│  │intent-definer│→│units-decomposer│→│domain-designer│       │
-│  └─────────────┘  └─────────────┘  └─────────────┘         │
-│         │                                    │              │
-│         │         ┌─────────────────┐       │              │
-│         │         │architecture-    │       │              │
-│         │         │designer         │←──────┘              │
-│         │         └─────────────────┘                      │
-│         │                  │                               │
-│         │         ┌─────────────┐                         │
-│         └────────→│test-designer │                         │
-│                   └─────────────┘                         │
-└─────────────────────────────────────────────────────────────┘
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────┐
-│                    Skills（コード生成型）                    │
-│                                                             │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐         │
-│  │api-generator │  │iac-generator │  │deploy-      │         │
-│  │              │  │              │  │generator    │         │
-│  └─────────────┘  └─────────────┘  └─────────────┘         │
-│         │                │                │                │
-│         └────────────────┼────────────────┘                │
-│                          ▼                                 │
-│                   実装コード生成                            │
-└─────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph SubAgents["SubAgents（深い思考・対話型）"]
+        intent["intent-definer"] --> units["units-decomposer"]
+        units --> domain["domain-designer"]
+        domain --> arch["architecture-designer"]
+        intent --> test["test-designer"]
+        arch --> test
+    end
+
+    subgraph Skills["Skills（コード生成型）"]
+        api["api-generator"]
+        iac["iac-generator"]
+        deploy["deploy-generator"]
+        api --> code["実装コード生成"]
+        iac --> code
+        deploy --> code
+    end
+
+    SubAgents --> Skills
 ```
 
 ## 実行順序の判断フローチャート
 
-```
-開始
-  │
-  ▼
-┌─────────────────┐
-│ プロジェクトは   │──No──→ /setup-aidlc
-│ セットアップ済み?│
-└────────┬────────┘
-        Yes
-         │
-         ▼
-┌─────────────────┐
-│ Intent は      │──No──→ /intent "概要"
-│ 定義済み?       │
-└────────┬────────┘
-        Yes
-         │
-         ▼
-┌─────────────────┐
-│ Unit に        │──No──→ /units {Intent番号}
-│ 分解済み?       │
-└────────┬────────┘
-        Yes
-         │
-         ▼
-┌─────────────────┐
-│ 設計3種は      │──No──→ /design-domain → /design-architecture → /design-test
-│ 完了?           │
-└────────┬────────┘
-        Yes
-         │
-         ▼
-┌─────────────────┐
-│ 実装は完了?     │──No──→ /bolt unit{N}
-└────────┬────────┘
-        Yes
-         │
-         ▼
-┌─────────────────┐
-│ API/IaC/Deploy │──No──→ /generate-api, /generate-iac, /generate-deploy
-│ が必要?         │
-└────────┬────────┘
-        Yes/Skip
-         │
-         ▼
-     /commit-unit
-         │
-         ▼
-┌─────────────────┐
-│ 次のUnitあり?   │──Yes──→ 設計フェーズへ戻る
-└────────┬────────┘
-         No
-         │
-         ▼
-       完了
+```mermaid
+flowchart TB
+    Start["開始"] --> Q1{"プロジェクトは<br/>セットアップ済み?"}
+    Q1 -->|No| setup["/setup-aidlc"]
+    setup --> Q1
+    Q1 -->|Yes| Q2{"Intent は<br/>定義済み?"}
+
+    Q2 -->|No| intent["/intent 概要"]
+    intent --> Q2
+    Q2 -->|Yes| Q3{"Unit に<br/>分解済み?"}
+
+    Q3 -->|No| units["/units {Intent番号}"]
+    units --> Q3
+    Q3 -->|Yes| Q4{"設計3種は<br/>完了?"}
+
+    Q4 -->|No| design["/design-domain → /design-architecture → /design-test"]
+    design --> Q4
+    Q4 -->|Yes| Q5{"実装は完了?"}
+
+    Q5 -->|No| bolt["/bolt unit{N}"]
+    bolt --> Q5
+    Q5 -->|Yes| Q6{"API/IaC/Deploy<br/>が必要?"}
+
+    Q6 -->|No| commit["/commit-unit"]
+    Q6 -->|Yes| generate["/generate-api, /generate-iac, /generate-deploy"]
+    generate --> commit
+
+    commit --> Q7{"次のUnitあり?"}
+    Q7 -->|Yes| Q4
+    Q7 -->|No| End["完了"]
 ```
 
 ## 補助コマンドの使用タイミング

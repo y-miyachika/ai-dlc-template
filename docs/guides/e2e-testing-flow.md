@@ -4,19 +4,19 @@
 
 ## テストピラミッド概要
 
-```
-            ┌───────────┐
-            │   E2E     │  ← 少数・高コスト・統合後に実行
-            │  Tests    │
-           ─┴───────────┴─
-          ┌───────────────┐
-          │ Integration   │  ← /bolt 内で実行
-          │   Tests       │
-         ─┴───────────────┴─
-        ┌───────────────────┐
-        │    Unit Tests     │  ← /bolt 内で実行
-        │                   │
-       ─┴───────────────────┴─
+```mermaid
+graph TB
+    subgraph Pyramid["テストピラミッド"]
+        E2E["E2E Tests<br/>← 少数・高コスト・統合後に実行"]
+        Integration["Integration Tests<br/>← /bolt 内で実行"]
+        Unit["Unit Tests<br/>← /bolt 内で実行"]
+    end
+
+    E2E -.-> Integration -.-> Unit
+
+    style E2E fill:#ffcccc
+    style Integration fill:#ffffcc
+    style Unit fill:#ccffcc
 ```
 
 | テスト種類 | 実行タイミング | 実行頻度 | 対象 |
@@ -31,19 +31,20 @@
 
 ### タイミング1: 複数Unit統合後
 
-```
-/bolt unit1 ──→ Unit/Integration テスト ✓
-      │
-/bolt unit2 ──→ Unit/Integration テスト ✓
-      │
-/bolt unit3 ──→ Unit/Integration テスト ✓
-      │
-      ▼
-┌─────────────────────────────────────┐
-│         E2E テスト実行              │
-│  - unit1 + unit2 + unit3 の統合    │
-│  - ユーザーシナリオの検証           │
-└─────────────────────────────────────┘
+```mermaid
+flowchart TB
+    bolt1["/bolt unit1"] --> test1["Unit/Integration テスト ✓"]
+    bolt2["/bolt unit2"] --> test2["Unit/Integration テスト ✓"]
+    bolt3["/bolt unit3"] --> test3["Unit/Integration テスト ✓"]
+
+    test1 --> e2e
+    test2 --> e2e
+    test3 --> e2e
+
+    subgraph e2e["E2E テスト実行"]
+        e2e1["unit1 + unit2 + unit3 の統合"]
+        e2e2["ユーザーシナリオの検証"]
+    end
 ```
 
 **実行コマンド例:**
@@ -57,38 +58,33 @@ pnpm test:e2e --grep "ユーザー認証フロー"
 
 ### タイミング2: API生成後
 
-```
-/bolt unit1
-      │
-      ▼
-/generate-api unit1
-      │
-      ▼
-┌─────────────────────────────────────┐
-│      API E2E テスト実行             │
-│  - HTTPエンドポイントの検証         │
-│  - リクエスト/レスポンスの検証      │
-└─────────────────────────────────────┘
+```mermaid
+flowchart TB
+    bolt["/bolt unit1"] --> api["/generate-api unit1"]
+    api --> apitest
+
+    subgraph apitest["API E2E テスト実行"]
+        a1["HTTPエンドポイントの検証"]
+        a2["リクエスト/レスポンスの検証"]
+    end
 ```
 
 ### タイミング3: デプロイ前
 
-```
-全Unit実装完了
-      │
-      ▼
-/generate-iac
-/generate-deploy
-      │
-      ▼
-┌─────────────────────────────────────┐
-│      デプロイ前 E2E テスト          │
-│  - 本番相当環境での検証             │
-│  - スモークテスト                   │
-└─────────────────────────────────────┘
-      │
-      ▼
-   デプロイ
+```mermaid
+flowchart TB
+    complete["全Unit実装完了"] --> iac["/generate-iac"]
+    complete --> deploy_gen["/generate-deploy"]
+
+    iac --> pretest
+    deploy_gen --> pretest
+
+    subgraph pretest["デプロイ前 E2E テスト"]
+        p1["本番相当環境での検証"]
+        p2["スモークテスト"]
+    end
+
+    pretest --> deploy["デプロイ"]
 ```
 
 ---
@@ -164,40 +160,25 @@ Feature: ユーザー設定
 
 ### E2Eテスト実行判断
 
-```
-Unit実装完了
-      │
-      ▼
-┌──────────────────────┐
-│ 他のUnitに依存あり？  │
-└──────────┬───────────┘
-           │
-     ┌─────┴─────┐
-    Yes         No
-     │           │
-     ▼           ▼
-依存Unit      ┌─────────────────┐
-実装待ち      │ Integration     │
-     │        │ テストのみ実行  │
-     │        └─────────────────┘
-     ▼
-全依存Unit完了
-     │
-     ▼
-┌──────────────────────┐
-│ E2E テスト実行       │
-└──────────────────────┘
-     │
-     ├──Pass──→ 次のフェーズへ
-     │
-     └──Fail──→ 原因調査
-                    │
-          ┌─────────┴─────────┐
-          │                   │
-     Unit側の問題        統合の問題
-          │                   │
-          ▼                   ▼
-     /bolt で修正      結合テスト追加
+```mermaid
+flowchart TB
+    complete["Unit実装完了"] --> Q1{"他のUnitに<br/>依存あり？"}
+
+    Q1 -->|Yes| wait["依存Unit実装待ち"]
+    Q1 -->|No| integration["Integrationテストのみ実行"]
+
+    wait --> alldone["全依存Unit完了"]
+    alldone --> e2e["E2E テスト実行"]
+    integration --> e2e
+
+    e2e -->|Pass| next["次のフェーズへ"]
+    e2e -->|Fail| investigate["原因調査"]
+
+    investigate --> unitissue["Unit側の問題"]
+    investigate --> integissue["統合の問題"]
+
+    unitissue --> boltfix["/bolt で修正"]
+    integissue --> addtest["結合テスト追加"]
 ```
 
 ---
@@ -367,40 +348,23 @@ jobs:
 
 ### 実行フロー
 
-```
-PR作成
-   │
-   ▼
-┌────────────────┐
-│ Unit Tests     │──Fail──→ PR ブロック
-└───────┬────────┘
-       Pass
-        │
-        ▼
-┌────────────────┐
-│ Integration    │──Fail──→ PR ブロック
-│ Tests          │
-└───────┬────────┘
-       Pass
-        │
-        ▼
-┌────────────────┐
-│ P0 E2E Tests   │──Fail──→ PR ブロック
-└───────┬────────┘
-       Pass
-        │
-        ▼
-    PR マージ可能
-        │
-        ▼
-┌────────────────┐
-│ Full E2E Tests │──Fail──→ アラート発報
-│ (main only)    │
-└───────┬────────┘
-       Pass
-        │
-        ▼
-    デプロイ可能
+```mermaid
+flowchart TB
+    pr["PR作成"] --> unit["Unit Tests"]
+
+    unit -->|Fail| block1["PR ブロック"]
+    unit -->|Pass| integration["Integration Tests"]
+
+    integration -->|Fail| block2["PR ブロック"]
+    integration -->|Pass| p0["P0 E2E Tests"]
+
+    p0 -->|Fail| block3["PR ブロック"]
+    p0 -->|Pass| mergeable["PR マージ可能"]
+
+    mergeable --> full["Full E2E Tests<br/>(main only)"]
+
+    full -->|Fail| alert["アラート発報"]
+    full -->|Pass| deployable["デプロイ可能"]
 ```
 
 ---
