@@ -33,15 +33,15 @@
 ```bash
 git add .
 git commit -m "$(cat <<'EOF'
-機能追加: commit-collectorの実装完了（Phase 1-3）
+機能追加: {unit名}の実装完了（Phase 1-3）
 
 ## 実装内容
-- ドメイン層: Repository, Commit, Branch集約
-- インフラ層: CodeCommitClient, DynamoDBRepository
-- テスト: Unit/Integration Test（カバレッジ85%）
+- ドメイン層: {エンティティ、集約}
+- インフラ層: {リポジトリ実装}
+- テスト: Unit/Integration Test（カバレッジ XX%）
 
 ## 次のステップ
-- unit2（shared-domain）の実装
+- 次のunitの実装
 - E2Eテスト追加（デプロイ後）
 
 🤖 Generated with [Claude Code](https://claude.com/claude-code)
@@ -304,8 +304,8 @@ jobs:
 
 ### 課題
 
-実際のプロジェクトで発生した問題：
-- `CodeCommitClient.fetchCommits` がTODOのまま完了報告
+実際のプロジェクトで発生しやすい問題：
+- 外部APIクライアントがTODOのまま完了報告
 - Lambda Handlers が未実装のまま `/generate-iac` 実行
 - X-Rayが有効なまま（POC環境で不要）
 
@@ -368,25 +368,30 @@ jobs:
 
 ### ドキュメント配置
 
-**課題**: IaC設計ドキュメントを `packages/{unit}/docs/infrastructure/` に配置 → unit間の依存関係が見えにくい
+**課題**: 設計ドキュメントを各パッケージに分散配置 → unit間の依存関係が見えにくい
 
-**改善**: `{infrastructure-root}/docs/` に統一
+**改善**: ルートの `docs/` に集約
 
 ```
-packages/
-└── infrastructure/
-    ├── terraform/
-    │   └── modules/
-    │       ├── unit1/
-    │       └── unit2/
-    └── docs/                    # ← ここに統一
-        ├── unit1_IaC設計.md
-        └── unit2_IaC設計.md
+project-root/
+├── docs/                        # ← ルートに集約
+│   ├── intents/
+│   ├── units/
+│   ├── design-artifacts/
+│   │   ├── domain/
+│   │   ├── architecture/        # IaC設計もここ
+│   │   ├── tests/
+│   │   └── adr/
+│   └── plans/
+└── packages/
+    └── infrastructure/
+        └── terraform/
 ```
 
 **理由**:
-- infrastructureパッケージは全unitのインフラを管理
-- unit間の依存関係（output参照）があるため、一元管理が必須
+- 横断的な参照が容易
+- unit間の依存関係を把握しやすい
+- 全体像を俯瞰できる
 
 ---
 

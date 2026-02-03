@@ -123,23 +123,11 @@ ai-dlc-template/
 - 動作: CLAUDE.mdへの追記提案、新規コマンド提案、既存コマンド改善提案
 - 例: `/retro`
 
-**`/commit-unit`**
-- 用途: Unit実装完了時のコミット支援
-- 引数: Unit番号またはパッケージ名
-- 動作: 変更内容確認 → コミットメッセージ生成 → ユーザー承認後にコミット
-- 例: `/commit-unit 2`
-
 **`/progress`**
 - 用途: プロジェクト/パッケージの現状確認
 - 引数: パッケージ名（省略時は全体）
 - 動作: Git状況 + 実装進捗 + ブロッカー確認
 - 例: `/progress collector`
-
-**`/blocker`**
-- 用途: ブロッカーを実装計画に記録
-- 引数: パッケージ名、ブロッカー概要
-- 動作: 対話形式で情報収集 → 実装計画に追記
-- 例: `/blocker collector IAM作成権限がない`
 
 ### インフラ・API生成
 
@@ -204,9 +192,11 @@ ai-dlc-template/
 
 1. **テンプレートから作成**
    ```bash
-   git clone codecommit::ap-northeast-1://devops@ai-dlc-template my-new-project
+   git clone https://github.com/y-miyachika/ai-dlc-template.git my-new-project
    cd my-new-project
+   rm -rf .git && git init  # 新規リポジトリとして初期化
    ```
+   または、GitHub上で「Use this template」ボタンから新規リポジトリを作成
 
 2. **AI-DLC環境のセットアップ**
    ```bash
@@ -319,7 +309,7 @@ docs/                      # AI-DLC成果物はルートに集約
 
 ### Unit完了チェックリスト
 
-Unit実装完了時（`/commit-unit`前）に確認：
+Unit実装完了時（コミット前）に確認：
 
 - [ ] テスト全パス
 - [ ] `docs/plans/{Intent}-{Unit}-*.md` 作成・更新済み

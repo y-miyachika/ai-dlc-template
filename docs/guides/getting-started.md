@@ -14,10 +14,13 @@
 ### このテンプレートから新規プロジェクトを作成
 
 ```bash
-# CodeCommitからクローン
-git clone codecommit::ap-northeast-1://devops@ai-dlc-template my-new-project
+# GitHubからクローン
+git clone https://github.com/y-miyachika/ai-dlc-template.git my-new-project
 cd my-new-project
+rm -rf .git && git init  # 新規リポジトリとして初期化
 ```
+
+または、GitHub上で「Use this template」ボタンから新規リポジトリを作成できます。
 
 ### AI-DLC環境のセットアップ
 

@@ -115,7 +115,7 @@ SubAgentは `.claude/agents/architecture-designer/prompt.md` に定義された�
 - **フロントエンド環境変数**: ビルド時埋め込み vs ランタイム取得の判断
 
 ### 外部API制約（External API Constraints）
-- **レート制限**: APIの呼び出し回数制限（例: CodeCommit 15req/sec）
+- **レート制限**: APIの呼び出し回数制限（例: GitHub API 5000req/hour）
 - **同時接続数制限**: 並列リクエストの上限
 - **クォータ**: 日次/月次の呼び出し上限
 - **対策パターン**: 同時実行数制限、Exponential Backoff、キュー + バッチ処理

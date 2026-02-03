@@ -19,10 +19,8 @@ AI-DLCは、AWSが提唱する**AI駆動型開発ライフサイクル**の方�
 
 - **AI-DLC準拠率 80%**: AWS論文の付録Aに対する準拠率（IaC生成追加）
 - **3つのフェーズをカバー**: Inception（要件定義）、Construction（設計・実装）、Operations（運用）
-- **Skill/SubAgentアーキテクチャ**: 再利用可能なSkill（コード生成）とSubAgent（深い思考・対話）
-  - 2つのSkills: `api-generator`, `iac-generator`
-  - 5つのSubAgents: `intent-definer`, `units-decomposer`, `domain-designer`, `architecture-designer`, `test-designer`
-- **スラッシュコマンド**: Claude Code用の9個の開発支援コマンド（+1個未実装）
+- **13個のAIエージェント**: コード生成型（3個）と対話・分析型（5個）+ ユーティリティ（5個）
+- **デュアルツール対応**: Claude Code と GitHub Copilot の両方で同じ13コマンドが利用可能
 - **自動セットアップ**: `/setup-aidlc`で必要な構成を自動生成
 - **TDD/BDD統合**: テストファーストの開発サイクル
 - **DDD原則**: ドメイン駆動設計に基づく設計フェーズ
@@ -41,21 +39,22 @@ AI-DLCは、AWSが提唱する**AI駆動型開発ライフサイクル**の方�
 ### 1. このテンプレートから新規プロジェクト作成
 
 ```bash
-# CodeCommitの場合
-git clone codecommit::ap-northeast-1://devops@ai-dlc-template my-new-project
+# GitHubからクローン
+git clone https://github.com/y-miyachika/ai-dlc-template.git my-new-project
 cd my-new-project
-
-# ローカルの場合
-cp -r ai-dlc-template my-new-project
-cd my-new-project
-git init
+rm -rf .git && git init  # 新規リポジトリとして初期化
 ```
+
+または、GitHub上で「Use this template」ボタンから新規リポジトリを作成できます。
 
 ### 2. AI-DLC環境のセットアップ
 
 ```bash
-# Claude Codeで /setup-aidlc を実行
+# Claude Code
 /setup-aidlc my-new-project
+
+# GitHub Copilot
+@setup-aidlc my-new-project
 ```
 
 このコマンドで以下が自動作成されます：
@@ -63,7 +62,7 @@ git init
 - pnpm-workspace.yaml
 - apps/ または packages/ ディレクトリ
 - docs/ 配下のAI-DLC成果物用ディレクトリ
-- CLAUDE.md、README.md、.gitignore
+- README.md、.gitignore、AI設定ファイル
 
 ### 3. 依存関係のインストール
 
@@ -73,109 +72,108 @@ pnpm install
 
 ### 4. 開発開始
 
-```bash
-# インテント定義から始める
-/intent <プロジェクト概要>
+Claude Code では `/コマンド名`、GitHub Copilot では `@エージェント名` で呼び出します。
 
-# ユニット分解
-/units
-
-# ドメイン設計
-/design-domain unit1
-
-# アーキテクチャ設計
-/design-architecture unit1
-
-# テスト設計
-/design-test unit1
-
-# 実装
-/bolt unit1
-
-# API生成（必要な場合）
-/generate-api unit1
-
-# インフラ生成（必要な場合）
-/generate-iac unit1
-```
+| フェーズ | Claude Code | GitHub Copilot |
+|---------|-------------|----------------|
+| インテント定義 | `/intent <概要>` | `@intent-definer <概要>` |
+| ユニット分解 | `/units` | `@units-decomposer` |
+| ドメイン設計 | `/design-domain unit1` | `@domain-designer unit1` |
+| アーキテクチャ設計 | `/design-architecture unit1` | `@architecture-designer unit1` |
+| テスト設計 | `/design-test unit1` | `@test-designer unit1` |
+| 実装 | `/bolt unit1` | `@bolt unit1` |
+| API生成 | `/generate-api unit1` | `@api-generator unit1` |
+| IaC生成 | `/generate-iac unit1` | `@iac-generator unit1` |
+| デプロイ設定 | `/generate-deploy unit1` | `@deploy-generator unit1` |
 
 ## 📁 テンプレート構造
 
 ```
 ai-dlc-template/
-├── .claude/
-│   ├── commands/               # AI-DLCスラッシュコマンド（9個）
-│   │   ├── setup-aidlc.md
-│   │   ├── intent.md
-│   │   ├── units.md
-│   │   ├── design-domain.md
-│   │   ├── design-architecture.md
-│   │   ├── design-test.md
-│   │   ├── bolt.md
-│   │   ├── generate-api.md
-│   │   └── generate-iac.md
-│   ├── agents/                 # SubAgents（深い思考・対話型）
-│   │   ├── intent-definer/     # インテント定義
-│   │   ├── units-decomposer/   # ユニット分解
-│   │   ├── domain-designer/    # ドメイン設計
-│   │   ├── architecture-designer/  # アーキテクチャ設計
-│   │   └── test-designer/      # テスト設計
-│   └── skills/                 # Skills（コード生成型）
-│       ├── api-generator/      # REST API生成
-│       └── iac-generator/      # IaC生成
+├── .claude/                    # Claude Code用
+│   ├── commands/               # スラッシュコマンド（13個）
+│   ├── agents/                 # 対話・分析型エージェント定義
+│   └── skills/                 # コード生成型エージェント定義
+├── .github/                    # GitHub Copilot用
+│   ├── copilot-instructions.md # プロジェクト全体設定
+│   ├── agents/                 # カスタムエージェント（13個）
+│   └── instructions/           # タスク別インストラクション
 ├── docs/                       # AI-DLC方法論ドキュメント
 │   ├── AI-DLC_日本語訳.md      # 論文完全翻訳
 │   ├── AI-DLC準拠状況.md       # 準拠率分析・実装状況
 │   └── guides/                 # 開発ガイド
-│       ├── getting-started.md
-│       └── workflow.md
 ├── .gitignore
-├── CLAUDE.md                   # AI-DLC開発ガイド
+├── CLAUDE.md                   # Claude Code設定
 └── README.md                   # このファイル
 ```
 
 **注**: `apps/`, `packages/`, `package.json`, `pnpm-workspace.yaml` は `/setup-aidlc` 実行時に自動生成されます。
 
-### Skill/SubAgentアーキテクチャ
+### エージェントの役割分類
 
-各コマンドは、再利用可能な**Skill**（コード生成）または**SubAgent**（深い思考・対話）を使用：
+13個のエージェントは、役割によって2種類に分類されます：
 
-**Skills（コード生成型）**:
+**コード生成型**（テンプレートベースで成果物を出力）:
 - `api-generator`: REST API実装生成（Hono RPC、OpenAPI）
 - `iac-generator`: Infrastructure as Code生成（Terraform/Terragrunt）
+- `deploy-generator`: デプロイ設定生成（GitHub Actions）
 
-**SubAgents（深い思考・対話型）**:
+**対話・分析型**（ユーザーとの対話で設計を深掘り）:
 - `intent-definer`: インテント定義（要件明確化）
 - `units-decomposer`: ユニット分解（DDD原則）
 - `domain-designer`: ドメイン設計（エンティティ、集約等）
 - `architecture-designer`: アーキテクチャ設計（NFR駆動、ADR生成）
 - `test-designer`: テスト設計（TDD/BDD統合）
 
-詳細は各Skill/SubAgentの `README.md` を参照してください。
+詳細は各エージェントの定義ファイルを参照してください。
 
-## 📖 利用可能なスラッシュコマンド
+## 📖 利用可能なコマンド（13個）
+
+Claude Code では `/コマンド名`、GitHub Copilot では `@エージェント名` で呼び出します。
 
 ### セットアップ
-- `/setup-aidlc` - プロジェクトのAI-DLC環境セットアップ
+
+| 用途 | Claude Code | GitHub Copilot |
+|------|-------------|----------------|
+| AI-DLC環境セットアップ | `/setup-aidlc` | `@setup-aidlc` |
 
 ### インセプションフェーズ（要件定義）
-- `/intent` → `intent-definer` SubAgent - インテント定義（要件の明確化）
-- `/units` → `units-decomposer` SubAgent - ユニット分解（疎結合・高凝集）
+
+| 用途 | Claude Code | GitHub Copilot |
+|------|-------------|----------------|
+| インテント定義 | `/intent` | `@intent-definer` |
+| ユニット分解 | `/units` | `@units-decomposer` |
 
 ### コンストラクションフェーズ（設計・実装）
-- `/design-domain` → `domain-designer` SubAgent - ドメイン設計（DDD戦術的設計）
-- `/design-architecture` → `architecture-designer` SubAgent - アーキテクチャ設計（NFR駆動、ADR生成）
-- `/design-test` → `test-designer` SubAgent - テスト設計（TDD/BDD統合）
-- `/bolt` - 実装（高速反復サイクル）
 
-### インフラ・API生成
-- `/generate-api` → `api-generator` Skill - REST API実装生成（Hono RPC、OpenAPI）
-- `/generate-iac` → `iac-generator` Skill - Infrastructure as Code生成（Terraform/Terragrunt）
+| 用途 | Claude Code | GitHub Copilot |
+|------|-------------|----------------|
+| ドメイン設計 | `/design-domain` | `@domain-designer` |
+| アーキテクチャ設計 | `/design-architecture` | `@architecture-designer` |
+| テスト設計 | `/design-test` | `@test-designer` |
+| 実装（TDDサイクル） | `/bolt` | `@bolt` |
+
+### インフラ・API・デプロイ生成
+
+| 用途 | Claude Code | GitHub Copilot |
+|------|-------------|----------------|
+| REST API生成 | `/generate-api` | `@api-generator` |
+| IaC生成 | `/generate-iac` | `@iac-generator` |
+| デプロイ設定生成 | `/generate-deploy` | `@deploy-generator` |
+
+### ユーティリティ
+
+| 用途 | Claude Code | GitHub Copilot |
+|------|-------------|----------------|
+| 進捗確認 | `/progress` | `@progress` |
+| 振り返り・改善提案 | `/retro` | `@retro` |
+| ドキュメント同期チェック | `/sync-docs` | `@sync-docs` |
 
 ### オペレーションフェーズ（未実装）
+
 - `/operate` - 運用サポート（テレメトリ分析等）
 
-詳細は [CLAUDE.md](CLAUDE.md) を参照してください。
+詳細は [CLAUDE.md](CLAUDE.md) または [.github/copilot-instructions.md](.github/copilot-instructions.md) を参照してください。
 
 ## 🔮 今後の拡張予定
 
