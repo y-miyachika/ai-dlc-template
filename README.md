@@ -19,7 +19,7 @@ AI-DLCは、AWSが提唱する**AI駆動型開発ライフサイクル**の方�
 
 - **AI-DLC準拠率 80%**: AWS論文の付録Aに対する準拠率（IaC生成追加）
 - **3つのフェーズをカバー**: Inception（要件定義）、Construction（設計・実装）、Operations（運用）
-- **13個のAIエージェント**: コード生成型（3個）と対話・分析型（5個）+ ユーティリティ（5個）
+- **13個のAIコマンド**: コード生成型（3個）と対話・分析型（5個）+ ユーティリティ（5個）
 - **デュアルツール対応**: Claude Code と GitHub Copilot の両方で同じ13コマンドが利用可能
 - **自動セットアップ**: `/setup-aidlc`で必要な構成を自動生成
 - **TDD/BDD統合**: テストファーストの開発サイクル
@@ -50,11 +50,8 @@ rm -rf .git && git init  # 新規リポジトリとして初期化
 ### 2. AI-DLC環境のセットアップ
 
 ```bash
-# Claude Code
+# Claude Code / GitHub Copilot 共通
 /setup-aidlc my-new-project
-
-# GitHub Copilot
-@setup-aidlc my-new-project
 ```
 
 このコマンドで以下が自動作成されます：
@@ -72,19 +69,19 @@ pnpm install
 
 ### 4. 開発開始
 
-Claude Code では `/コマンド名`、GitHub Copilot では `@エージェント名` で呼び出します。
+Claude Code と GitHub Copilot の両方で、同じ `/コマンド名` 形式で呼び出せます。
 
-| フェーズ | Claude Code | GitHub Copilot |
-|---------|-------------|----------------|
-| インテント定義 | `/intent <概要>` | `@intent-definer <概要>` |
-| ユニット分解 | `/units` | `@units-decomposer` |
-| ドメイン設計 | `/design-domain unit1` | `@domain-designer unit1` |
-| アーキテクチャ設計 | `/design-architecture unit1` | `@architecture-designer unit1` |
-| テスト設計 | `/design-test unit1` | `@test-designer unit1` |
-| 実装 | `/bolt unit1` | `@bolt unit1` |
-| API生成 | `/generate-api unit1` | `@api-generator unit1` |
-| IaC生成 | `/generate-iac unit1` | `@iac-generator unit1` |
-| デプロイ設定 | `/generate-deploy unit1` | `@deploy-generator unit1` |
+| フェーズ | コマンド |
+|---------|---------|
+| インテント定義 | `/intent <概要>` |
+| ユニット分解 | `/units` |
+| ドメイン設計 | `/design-domain unit1` |
+| アーキテクチャ設計 | `/design-architecture unit1` |
+| テスト設計 | `/design-test unit1` |
+| 実装 | `/bolt unit1` |
+| API生成 | `/generate-api unit1` |
+| IaC生成 | `/generate-iac unit1` |
+| デプロイ設定 | `/generate-deploy unit1` |
 
 ## 📁 テンプレート構造
 
@@ -92,12 +89,12 @@ Claude Code では `/コマンド名`、GitHub Copilot では `@エージェン�
 ai-dlc-template/
 ├── .claude/                    # Claude Code用
 │   ├── commands/               # スラッシュコマンド（13個）
-│   ├── agents/                 # 対話・分析型エージェント定義
-│   └── skills/                 # コード生成型エージェント定義
+│   ├── agents/                 # SubAgent定義（対話・深い思考型）
+│   └── skills/                 # Skill定義（コード生成型）
 ├── .github/                    # GitHub Copilot用
 │   ├── copilot-instructions.md # プロジェクト全体設定
-│   ├── agents/                 # カスタムエージェント（13個）
-│   └── instructions/           # タスク別インストラクション
+│   ├── prompts/                # プロンプトファイル（13個）
+│   └── instructions/           # ファイル種別ごとのコーディング規約
 ├── docs/                       # AI-DLC方法論ドキュメント
 │   ├── AI-DLC_日本語訳.md      # 論文完全翻訳
 │   ├── AI-DLC準拠状況.md       # 準拠率分析・実装状況
@@ -109,65 +106,65 @@ ai-dlc-template/
 
 **注**: `apps/`, `packages/`, `package.json`, `pnpm-workspace.yaml` は `/setup-aidlc` 実行時に自動生成されます。
 
-### エージェントの役割分類
+### コマンドの役割分類
 
-13個のエージェントは、役割によって2種類に分類されます：
+13個のコマンドは、役割によって2種類に分類されます：
 
 **コード生成型**（テンプレートベースで成果物を出力）:
-- `api-generator`: REST API実装生成（Hono RPC、OpenAPI）
-- `iac-generator`: Infrastructure as Code生成（Terraform/Terragrunt）
-- `deploy-generator`: デプロイ設定生成（GitHub Actions）
+- `/generate-api`: REST API実装生成（Hono RPC、OpenAPI）
+- `/generate-iac`: Infrastructure as Code生成（Terraform/Terragrunt）
+- `/generate-deploy`: デプロイ設定生成（GitHub Actions）
 
 **対話・分析型**（ユーザーとの対話で設計を深掘り）:
-- `intent-definer`: インテント定義（要件明確化）
-- `units-decomposer`: ユニット分解（DDD原則）
-- `domain-designer`: ドメイン設計（エンティティ、集約等）
-- `architecture-designer`: アーキテクチャ設計（NFR駆動、ADR生成）
-- `test-designer`: テスト設計（TDD/BDD統合）
+- `/intent`: インテント定義（要件明確化）
+- `/units`: ユニット分解（DDD原則）
+- `/design-domain`: ドメイン設計（エンティティ、集約等）
+- `/design-architecture`: アーキテクチャ設計（NFR駆動、ADR生成）
+- `/design-test`: テスト設計（TDD/BDD統合）
 
-詳細は各エージェントの定義ファイルを参照してください。
+詳細は各コマンドの定義ファイルを参照してください。
 
 ## 📖 利用可能なコマンド（13個）
 
-Claude Code では `/コマンド名`、GitHub Copilot では `@エージェント名` で呼び出します。
+Claude Code と GitHub Copilot の両方で、同じ `/コマンド名` 形式で呼び出せます。
 
 ### セットアップ
 
-| 用途 | Claude Code | GitHub Copilot |
-|------|-------------|----------------|
-| AI-DLC環境セットアップ | `/setup-aidlc` | `@setup-aidlc` |
+| 用途 | コマンド |
+|------|---------|
+| AI-DLC環境セットアップ | `/setup-aidlc` |
 
 ### インセプションフェーズ（要件定義）
 
-| 用途 | Claude Code | GitHub Copilot |
-|------|-------------|----------------|
-| インテント定義 | `/intent` | `@intent-definer` |
-| ユニット分解 | `/units` | `@units-decomposer` |
+| 用途 | コマンド |
+|------|---------|
+| インテント定義 | `/intent` |
+| ユニット分解 | `/units` |
 
 ### コンストラクションフェーズ（設計・実装）
 
-| 用途 | Claude Code | GitHub Copilot |
-|------|-------------|----------------|
-| ドメイン設計 | `/design-domain` | `@domain-designer` |
-| アーキテクチャ設計 | `/design-architecture` | `@architecture-designer` |
-| テスト設計 | `/design-test` | `@test-designer` |
-| 実装（TDDサイクル） | `/bolt` | `@bolt` |
+| 用途 | コマンド |
+|------|---------|
+| ドメイン設計 | `/design-domain` |
+| アーキテクチャ設計 | `/design-architecture` |
+| テスト設計 | `/design-test` |
+| 実装（TDDサイクル） | `/bolt` |
 
 ### インフラ・API・デプロイ生成
 
-| 用途 | Claude Code | GitHub Copilot |
-|------|-------------|----------------|
-| REST API生成 | `/generate-api` | `@api-generator` |
-| IaC生成 | `/generate-iac` | `@iac-generator` |
-| デプロイ設定生成 | `/generate-deploy` | `@deploy-generator` |
+| 用途 | コマンド |
+|------|---------|
+| REST API生成 | `/generate-api` |
+| IaC生成 | `/generate-iac` |
+| デプロイ設定生成 | `/generate-deploy` |
 
 ### ユーティリティ
 
-| 用途 | Claude Code | GitHub Copilot |
-|------|-------------|----------------|
-| 進捗確認 | `/progress` | `@progress` |
-| 振り返り・改善提案 | `/retro` | `@retro` |
-| ドキュメント同期チェック | `/sync-docs` | `@sync-docs` |
+| 用途 | コマンド |
+|------|---------|
+| 進捗確認 | `/progress` |
+| 振り返り・改善提案 | `/retro` |
+| ドキュメント同期チェック | `/sync-docs` |
 
 ### オペレーションフェーズ（未実装）
 
@@ -205,4 +202,4 @@ MIT License
 ---
 
 **作成日**: 2025-11-17
-**バージョン**: 1.0.0
+**バージョン**: 1.1.0（GitHub Copilot Prompt Files対応）

@@ -14,26 +14,43 @@
 
 ---
 
-## AI-DLCエージェント
+## AI-DLCプロンプト
 
-このプロジェクトでは、以下のカスタムエージェントが利用可能です。
+このプロジェクトでは、`.github/prompts/` にカスタムプロンプトが定義されています。
 
-### 利用可能なエージェント
+### 利用方法
+
+VS Code / Visual Studio / JetBrains IDEで、チャット欄に `/` を入力してプロンプト名を選択：
+
+```
+/intent ユーザー認証機能の実装
+/units 001
+/design-domain unit1
+/bolt unit1
+```
+
+### 利用可能なプロンプト
 
 **インセプションフェーズ（要件定義）**
-- `@intent-definer` - インテント定義（要件明確化）
-- `@units-decomposer` - ユニット分解（DDD原則）
+- `/intent` - インテント定義（要件明確化）
+- `/units` - ユニット分解（DDD原則）
+- `/setup-aidlc` - AI-DLCプロジェクトセットアップ
 
 **コンストラクションフェーズ（設計・実装）**
-- `@domain-designer` - ドメイン設計（エンティティ、集約等）
-- `@architecture-designer` - アーキテクチャ設計（NFR駆動、ADR生成）
-- `@test-designer` - テスト設計（TDD/BDD統合）
-- `@bolt` - 高速反復サイクル（計画→実装→テスト）
+- `/design-domain` - ドメイン設計（エンティティ、集約等）
+- `/design-architecture` - アーキテクチャ設計（NFR駆動、ADR生成）
+- `/design-test` - テスト設計（TDD/BDD統合）
+- `/bolt` - 高速反復サイクル（計画→実装→テスト）
 
 **インフラ・API生成**
-- `@api-generator` - REST API実装生成（Hono RPC）
-- `@iac-generator` - Infrastructure as Code生成（Terraform）
-- `@deploy-generator` - デプロイ設定生成（GitHub Actions）
+- `/generate-api` - REST API実装生成（Hono RPC）
+- `/generate-iac` - Infrastructure as Code生成（Terraform）
+- `/generate-deploy` - デプロイ設定生成（GitHub Actions）
+
+**ユーティリティ**
+- `/progress` - プロジェクト/パッケージの現状確認
+- `/sync-docs` - 設計ドキュメント同期チェック
+- `/retro` - 会話の振り返りと改善提案
 
 ---
 
@@ -41,28 +58,33 @@
 
 ### 新規プロジェクト開始時
 
-1. **インテント定義から開始**
+1. **プロジェクトセットアップ**
    ```
-   @intent-definer <プロジェクト概要>
-   ```
-
-2. **ユニット分解**
-   ```
-   @units-decomposer <Intent番号>
+   /setup-aidlc my-new-project
    ```
 
-3. **設計フェーズ**
+2. **インテント定義から開始**
    ```
-   @domain-designer unit1
-   @architecture-designer unit1
-   @test-designer unit1
+   /intent <プロジェクト概要>
    ```
 
-4. **実装フェーズ**
+3. **ユニット分解**
    ```
-   @bolt unit1
-   @api-generator unit1  # APIが必要な場合
-   @iac-generator unit1  # インフラが必要な場合
+   /units 001
+   ```
+
+4. **設計フェーズ**
+   ```
+   /design-domain unit1
+   /design-architecture unit1
+   /design-test unit1
+   ```
+
+5. **実装フェーズ**
+   ```
+   /bolt unit1
+   /generate-api unit1
+   /generate-iac unit1
    ```
 
 ---
@@ -131,5 +153,17 @@ docs/
 
 ---
 
+## プロンプトファイルについて
+
+`.github/prompts/*.prompt.md` ファイルは、GitHub Copilot の Prompt Files 機能を使用しています。
+
+- **agent: agent** モードでファイル操作が可能
+- 各プロンプトは詳細な指示を含み、AI-DLCワークフローを自動化
+- Claude Code の `/command` と同様の体験を提供
+
+詳細: [VS Code Prompt Files](https://code.visualstudio.com/docs/copilot/customization/prompt-files)
+
+---
+
 **テンプレートバージョン**: 1.0.0
-**GitHub Copilot対応**: 2025-02
+**GitHub Copilot対応**: 2025-02（Prompt Files対応）
