@@ -139,6 +139,21 @@ git diff --name-only HEAD
 /sync-docs 001
 ```
 
+## バックグラウンド実行
+
+`/sync-docs` はバックグラウンドで実行することで、メインの開発作業を止めずに乖離チェックが可能です。
+
+**手動でバックグラウンド実行する場合**:
+Task toolで `run_in_background: true` を指定して起動。結果は `output_file` パスから確認できます。
+
+```
+Task(subagent_type: "general-purpose", run_in_background: true, prompt: "/sync-docs を実行")
+```
+
+**`/bolt` 完了後の自動実行（推奨）**:
+`/bolt` のPhase 3（Refactor）完了時に、sync-docsをバックグラウンドで自動起動することを推奨します。
+リファクタリング後のドキュメント乖離を、次のタスクに取りかかりながら検出できます。
+
 ---
 
 ## 乖離パターンと対応

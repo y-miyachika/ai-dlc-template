@@ -190,6 +190,23 @@ AI-DLC準拠のワークフローガイド：
 
 ## 実行フロー
 
+**TaskCreate APIで進捗を可視化する:**
+
+セットアップ開始時に、以下のタスクを `TaskCreate` で一括登録する：
+
+```
+TaskCreate: subject="プロジェクト情報の収集", activeForm="プロジェクト情報を収集中"
+TaskCreate: subject="pnpm workspace設定の作成", activeForm="workspace設定を作成中"
+TaskCreate: subject="ディレクトリ構造の作成", activeForm="ディレクトリ構造を作成中"
+TaskCreate: subject="設定ファイルの作成", activeForm="設定ファイルを作成中"
+TaskCreate: subject="初期ガイドの作成", activeForm="初期ガイドを作成中"
+TaskCreate: subject="セットアップ完了確認", activeForm="セットアップを確認中"
+```
+
+各ステップ開始時に `TaskUpdate(status: "in_progress")`、完了時に `TaskUpdate(status: "completed")` を実行する。
+
+---
+
 1. **プロジェクト情報の収集**
    - 対話形式でプロジェクト情報を収集
    - 既存ディレクトリの確認

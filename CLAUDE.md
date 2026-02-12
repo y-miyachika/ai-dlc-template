@@ -331,6 +331,65 @@ AWS_REGION=ap-northeast-1
 
 **注意**: `.env`は`.gitignore`に含める
 
+## Claude Code新機能の活用
+
+### TaskCreate/TaskList/TaskUpdate（進捗管理）
+
+**対象コマンド**: `/bolt`, `/setup-aidlc`, `/progress`
+
+複数ステップのワークフローでは `TaskCreate` APIでタスクを登録し、進捗をリアルタイム表示する：
+
+```
+TaskCreate: subject="タスク名", description="詳細", activeForm="実行中の表示"
+TaskUpdate: taskId=1, status="in_progress"  # 開始時
+TaskUpdate: taskId=1, status="completed"    # 完了時
+```
+
+- `/bolt`: Phase 1-3の各ステップとサブタスクをTask APIで管理
+- `/setup-aidlc`: セットアップ手順をTask APIで進捗可視化
+- `/progress`: `TaskList` から現在のタスク状態を取得して表示
+
+### 並列Task Agent起動（高速化）
+
+**独立したコマンドは並列起動が可能**。以下の組み合わせは同時実行できる：
+
+| 並列パターン | 説明 |
+|---|---|
+| `/generate-api` + `/generate-iac` + `/generate-deploy` | 生成系は完全に独立 |
+| `/design-domain`（unit A） + `/design-domain`（unit B） | 異なるユニットの設計は独立 |
+
+**並列起動の方法**:
+```
+# 1つのメッセージで複数のTask toolを同時に呼び出す
+Task(subagent_type: "general-purpose", prompt: "/generate-api unit1")
+Task(subagent_type: "general-purpose", prompt: "/generate-iac unit1")
+Task(subagent_type: "general-purpose", prompt: "/generate-deploy unit1")
+```
+
+**注意**: 依存関係のあるコマンドは順次実行すること：
+- `/design-domain` → `/design-architecture` → `/design-test` は順序あり
+
+### SubAgentタイプの使い分け
+
+| タイプ | 推奨場面 | 対応コマンド |
+|---|---|---|
+| `Plan` | NFR駆動のアーキテクチャ設計 | `/design-architecture` |
+| `Explore` | 既存コードベースの探索・分析 | `/design-domain`（前段階）, `/sync-docs` |
+| `general-purpose` | 対話型の設計・生成 | `/intent`, `/units`, `/bolt` |
+
+### バックグラウンド実行
+
+**対象コマンド**: `/sync-docs`
+
+メインの開発作業を止めずにバックグラウンドで実行可能：
+```
+Task(subagent_type: "general-purpose", run_in_background: true, prompt: "/sync-docs")
+```
+
+`/bolt` のPhase 3完了後に `/sync-docs` をバックグラウンド起動するのが推奨パターン。
+
+---
+
 ## コーディング規約
 
 ### TypeScript

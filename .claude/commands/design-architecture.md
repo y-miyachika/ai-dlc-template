@@ -24,6 +24,14 @@
 
 ## SubAgent起動
 
+**推奨SubAgentタイプ: Plan**
+
+アーキテクチャ設計はNFR駆動で段階的に詳細化するため、`Plan` subagent_type が最適です。
+Task toolを使用する場合は `subagent_type: "Plan"` を指定してください。
+
+**既存コードベースがある場合**:
+アーキテクチャ調査の前段階で、`Explore` subagent_type を使って既存コード構造を探索することを推奨します。
+
 以下を実行します：
 
 1. **前提情報の収集**: Backlog/Intent、ユニット定義、ドメイン設計を読み込み

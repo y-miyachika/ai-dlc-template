@@ -19,6 +19,23 @@ AI-DLCにおける**最小の反復サイクル**です：
 
 ## 動作フロー
 
+### ステップ0: Boltサイクル全体のタスク登録
+
+`TaskCreate` APIを使って、Boltサイクルの主要ステップをタスク登録する：
+
+```
+TaskCreate: subject="テスト設計の確認", activeForm="テスト設計を確認中"
+TaskCreate: subject="実装計画の作成", activeForm="実装計画を作成中"
+TaskCreate: subject="Phase 1: Red（失敗テスト作成）", activeForm="失敗テストを作成中"
+TaskCreate: subject="Phase 2: Green（実装）", activeForm="実装中"
+TaskCreate: subject="Phase 3: Refactor", activeForm="リファクタリング中"
+```
+
+これにより、ユーザーに進捗スピナーが表示され、全体の見通しが明確になる。
+各ステップ開始時に `TaskUpdate(status: "in_progress")`、完了時に `TaskUpdate(status: "completed")` を実行する。
+
+---
+
 ### ステップ1: テスト設計の確認（TDD統合）✨NEW
 
 1. `docs/design-artifacts/tests/{Intent}-{Unit}-{名前}.md` が存在するか確認
@@ -129,13 +146,22 @@ AI-DLCにおける**最小の反復サイクル**です：
 
 #### Phase 2: Green（最小限の実装で通す）
 
-1. **TodoList作成**
+1. **TaskCreate APIでタスク登録**
    - テストを通すための最小限のタスクを抽出
-   - 優先順位順に並び替え
+   - `TaskCreate` で各タスクを登録（subject、description、activeForm を設定）
+   - タスク間の依存関係がある場合は `TaskUpdate` の `addBlockedBy` で設定
+   - 例:
+     ```
+     TaskCreate: subject="ドメイン層実装", activeForm="ドメイン層を実装中"
+     TaskCreate: subject="インフラ層実装", activeForm="インフラ層を実装中"
+     TaskUpdate: taskId=2, addBlockedBy=[1]  # ドメイン層完了後に開始
+     ```
 
-2. **段階的実装**
-   - 1タスクずつ実装
-   - 各タスク完了後にテスト実行
+2. **段階的実装（TaskUpdateで進捗管理）**
+   - 各タスクの開始時に `TaskUpdate(status: "in_progress")` で状態遷移
+   - ユーザーにリアルタイムでスピナー表示（activeForm）
+   - タスク完了時に `TaskUpdate(status: "completed")` で完了
+   - `TaskList` で全体進捗を確認しながら次のタスクへ
    - テストが Green になるまで実装
 
 3. **テスト実行（成功確認）**
