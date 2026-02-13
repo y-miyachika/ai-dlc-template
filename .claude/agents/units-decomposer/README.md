@@ -97,7 +97,7 @@ docs/units/
 └── 047_units.md
 ```
 
-**ファイル名**: `{インテント/Backlog番号}_units.md`
+**ファイル名**: `{Intent番号}_units.md`
 
 ## 出力例
 

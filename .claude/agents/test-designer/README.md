@@ -21,15 +21,15 @@ BDD受入基準をテストケースに変換し、テストピラミッドを�
 # AI-DLCテンプレートのスラッシュコマンドから
 /design-test unit1
 
-# または、Backlog番号 + ユニット番号
-/design-test 046-unit1
+# または、Intent番号 + Unit番号
+/design-test 002-001
 ```
 
 ### 生成されるファイル
 
 ```
 docs/design-artifacts/tests/
-└── {Backlog番号}_{ユニット名}_test_design.md
+└── {Intent番号}-{Unit番号}-{ユニット名}_test_design.md
 ```
 
 **例**: `docs/design-artifacts/tests/046_order-management_test_design.md`

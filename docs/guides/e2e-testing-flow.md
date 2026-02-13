@@ -424,4 +424,4 @@ expect(await page.textContent('h1')).toBe('完了');
 
 - [ワークフローDAG](./workflow-dag.md) - コマンド間の依存関係
 - [実装スコープ](./implementation-scope.md) - 各コマンドの完了条件
-- [テスト設計SubAgent](./.claude/agents/test-designer/README.md) - テスト設計詳細
+- [テスト設計SubAgent](../../.claude/agents/test-designer/README.md) - テスト設計詳細

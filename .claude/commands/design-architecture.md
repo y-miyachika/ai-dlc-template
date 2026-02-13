@@ -172,9 +172,9 @@ SubAgentは `.claude/agents/architecture-designer/prompt.md` に定義された�
 
 ### アーキテクチャ設計ドキュメント
 
-- `docs/design-artifacts/architecture/{Backlog番号}_{ユニット名}_architecture.md` - アーキテクチャ設計
+- `docs/design-artifacts/architecture/{Intent番号}-{Unit番号}-{ユニット名}_architecture.md` - アーキテクチャ設計
 
-**ファイル名例**: `046_order-management_architecture.md`
+**ファイル名例**: `002-001-order-management_architecture.md`
 
 ### ADR（Architecture Decision Record）
 

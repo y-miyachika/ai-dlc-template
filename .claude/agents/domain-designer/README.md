@@ -20,18 +20,18 @@ DDD（Domain-Driven Design）原則に基づき、ユニットのドメイン設
 # AI-DLCテンプレートのスラッシュコマンドから
 /design-domain unit1
 
-# または、Backlog番号 + ユニット番号
-/design-domain 046-unit1
+# または、Intent番号 + Unit番号
+/design-domain 002-001
 ```
 
 ### 生成されるファイル
 
 ```
 docs/design-artifacts/domain/
-└── {Backlog番号}_{ユニット名}_domain.md
+└── {Intent番号}-{Unit番号}-{ユニット名}_domain.md
 ```
 
-**例**: `docs/design-artifacts/domain/046_unit1_domain.md`
+**例**: `docs/design-artifacts/domain/002-001-unit1_domain.md`
 
 ## DDD戦術的設計パターン
 

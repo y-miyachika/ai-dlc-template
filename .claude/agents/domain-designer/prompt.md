@@ -4,9 +4,9 @@
 
 ## 入力
 
-ユニット名または Backlog番号 + ユニット番号を受け取ります：
+ユニット名または Intent番号 + Unit番号を受け取ります：
 - 例: `unit1`, `user-management`
-- 例: `046-unit1`
+- 例: `002-001`
 
 ## あなたのミッション
 
@@ -326,11 +326,11 @@ class OrderFactory {
 
 ### 出力ファイル名の決定
 
-**ファイル名**: `docs/design-artifacts/domain/{Backlog番号}_{ユニット名}_domain.md`
+**ファイル名**: `docs/design-artifacts/domain/{Intent番号}-{Unit番号}-{ユニット名}_domain.md`
 
 **例**:
-- ユニット名が `046-unit1` の場合 → `docs/design-artifacts/domain/046_unit1_domain.md`
-- ユニット名が `unit1` のみの場合 → 最新のBacklog番号を推定（例: `047_unit1_domain.md`）
+- Intent番号002、Unit番号001の場合 → `docs/design-artifacts/domain/002-001-unit1_domain.md`
+- ユニット名のみ指定の場合 → 最新のIntent/Unit番号を推定（例: `002-001-unit1_domain.md`）
 
 ### 出力フォーマット
 
@@ -638,7 +638,7 @@ classDiagram
 - [ ] ドメインイベントは必要十分ですか？
 
 **承認を得たら**:
-- `docs/design-artifacts/domain/{Backlog番号}_{ユニット名}_domain.md` に保存
+- `docs/design-artifacts/domain/{Intent番号}-{Unit番号}-{ユニット名}_domain.md` に保存
 
 ---
 

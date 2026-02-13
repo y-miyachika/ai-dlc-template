@@ -142,9 +142,9 @@ interface OrderRepository {
 
 ## 生成されるファイル
 
-- `docs/design-artifacts/domain/{Backlog番号}_{ユニット名}_domain.md` - ドメイン設計ドキュメント
+- `docs/design-artifacts/domain/{Intent番号}-{Unit番号}-{ユニット名}_domain.md` - ドメイン設計ドキュメント
 
-**ファイル名例**: `046_order-management_domain.md`
+**ファイル名例**: `002-001-order-management_domain.md`
 
 ---
 

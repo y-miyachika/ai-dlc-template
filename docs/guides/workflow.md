@@ -191,7 +191,7 @@ cat docs/design-artifacts/domain/001-unit1_認証ドメイン.md
 
 **移行後のアクション**:
 ```bash
-# 運用フェーズ開始
+# 運用フェーズ開始（未実装）
 /operate
 
 # または、継続的モニタリング

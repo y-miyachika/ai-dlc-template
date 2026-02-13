@@ -4,9 +4,9 @@
 
 ## 入力
 
-ユニット名または Backlog番号 + ユニット番号を受け取ります：
+ユニット名または Intent番号 + Unit番号を受け取ります：
 - 例: `unit1`, `order-management`
-- 例: `046-unit1`
+- 例: `002-001`
 
 ## あなたのミッション
 
@@ -669,9 +669,9 @@ src/
 
 ### 9.1. アーキテクチャ設計ドキュメント
 
-**ファイル名**: `docs/design-artifacts/architecture/{Backlog番号}_{ユニット名}_architecture.md`
+**ファイル名**: `docs/design-artifacts/architecture/{Intent番号}-{Unit番号}-{ユニット名}_architecture.md`
 
-**例**: `docs/design-artifacts/architecture/046_order-management_architecture.md`
+**例**: `docs/design-artifacts/architecture/002-001-order-management_architecture.md`
 
 **内容**:
 - NFR分析

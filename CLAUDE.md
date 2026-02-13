@@ -13,7 +13,7 @@
 ```
 ai-dlc-template/
 ├── .claude/
-│   ├── commands/          # AI-DLCスラッシュコマンド（15個）
+│   ├── commands/          # AI-DLCスラッシュコマンド（13個）
 │   ├── agents/            # SubAgents（深い思考・対話型）
 │   │   ├── intent-definer/
 │   │   ├── units-decomposer/

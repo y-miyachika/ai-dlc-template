@@ -233,7 +233,7 @@ AI-DLC（AI-Driven Development Lifecycle）の原則に基づいて、インテ�
 docs/units/{番号}_units.md
 ```
 
-**ファイル名**: `{インテント/Backlog番号}_units.md`
+**ファイル名**: `{Intent番号}_units.md`
 
 ---
 

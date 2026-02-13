@@ -20,8 +20,8 @@ NFRを満たす最適なアーキテクチャパターンを選択し、トレ�
 # AI-DLCテンプレートのスラッシュコマンドから
 /design-architecture unit1
 
-# または、Backlog番号 + ユニット番号
-/design-architecture 046-unit1
+# または、Intent番号 + Unit番号
+/design-architecture 002-001
 ```
 
 ### 生成されるファイル
@@ -29,7 +29,7 @@ NFRを満たす最適なアーキテクチャパターンを選択し、トレ�
 ```
 docs/design-artifacts/
 ├── architecture/
-│   └── {Backlog番号}_{ユニット名}_architecture.md
+│   └── {Intent番号}-{Unit番号}-{ユニット名}_architecture.md
 └── adr/
     └── ADR-{連番}_{タイトル}.md
 ```

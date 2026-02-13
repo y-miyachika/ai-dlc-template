@@ -209,9 +209,9 @@ it("Scenario: 注文の作成", async () => {
 
 ### テスト設計ドキュメント
 
-- `docs/design-artifacts/tests/{Backlog番号}_{ユニット名}_test_design.md` - テスト設計
+- `docs/design-artifacts/tests/{Intent番号}-{Unit番号}-{ユニット名}_test_design.md` - テスト設計
 
-**ファイル名例**: `046_order-management_test_design.md`
+**ファイル名例**: `002-001-order-management_test_design.md`
 
 ### テスト実装の配置
 

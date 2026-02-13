@@ -4,9 +4,9 @@
 
 ## 入力
 
-ユニット名または Backlog番号 + ユニット番号を受け取ります：
+ユニット名または Intent番号 + Unit番号を受け取ります：
 - 例: `unit1`, `order-management`
-- 例: `046-unit1`
+- 例: `002-001`
 
 ## あなたのミッション
 
@@ -620,9 +620,9 @@ jobs:
 
 ### 12.1. テスト設計ドキュメント
 
-**ファイル名**: `docs/design-artifacts/tests/{Backlog番号}_{ユニット名}_test_design.md`
+**ファイル名**: `docs/design-artifacts/tests/{Intent番号}-{Unit番号}-{ユニット名}_test_design.md`
 
-**例**: `docs/design-artifacts/tests/046_order-management_test_design.md`
+**例**: `docs/design-artifacts/tests/002-001-order-management_test_design.md`
 
 **内容**:
 - BDD受入基準のテストケース変換
