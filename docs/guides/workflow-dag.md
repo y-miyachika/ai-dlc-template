@@ -32,7 +32,6 @@ graph TD
     end
 
     subgraph "管理・同期"
-        commit["/commit-unit"]
         progress["/progress"]
         sync["/sync-docs"]
         retro["/retro"]
@@ -50,10 +49,6 @@ graph TD
     bolt --> api
     arch --> iac
     arch --> deploy
-    bolt --> commit
-    api --> commit
-    iac --> commit
-    deploy --> commit
 ```
 
 ## コマンド別依存関係
@@ -136,11 +131,9 @@ flowchart TB
     bolt --> iac["/generate-iac unit1"]
     bolt --> deploy["/generate-deploy unit1"]
 
-    api --> commit["/commit-unit 1"]
-    iac --> commit
-    deploy --> commit
-
-    commit --> next["次のユニット（unit2）へ"]
+    api --> next["次のユニット（unit2）へ"]
+    iac --> next
+    deploy --> next
 ```
 
 ### マルチユニット並列開発フロー
@@ -168,7 +161,7 @@ flowchart TB
 
     b1 --> integration["統合テスト実行"]
     b2 --> integration
-    integration --> commit["/commit-unit（両ユニット）"]
+    integration --> done["コミット・次フェーズへ"]
 ```
 
 **注意**: 依存関係があるユニット（例: unit3 → unit1）は順次実行が必要。
@@ -222,11 +215,10 @@ flowchart TB
     bolt --> Q5
     Q5 -->|Yes| Q6{"API/IaC/Deploy<br/>が必要?"}
 
-    Q6 -->|No| commit["/commit-unit"]
+    Q6 -->|No| Q7{"次のUnitあり?"}
     Q6 -->|Yes| generate["/generate-api, /generate-iac, /generate-deploy"]
-    generate --> commit
+    generate --> Q7
 
-    commit --> Q7{"次のUnitあり?"}
     Q7 -->|Yes| Q4
     Q7 -->|No| End["完了"]
 ```
@@ -236,7 +228,6 @@ flowchart TB
 | コマンド | 使用タイミング | 依存関係 |
 |---------|---------------|---------|
 | `/progress` | いつでも | なし |
-| `/blocker` | 実装中にブロッカー発生時 | `/bolt` 実行中 |
 | `/sync-docs` | 実装後、コミット前 | `/bolt` 完了後 |
 | `/retro` | 会話終了時、フェーズ完了時 | なし |
 
