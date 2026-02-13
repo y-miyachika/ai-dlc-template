@@ -24,20 +24,33 @@
 
 ## Skill起動
 
-以下を実行します：
+### EnterPlanMode統合
 
-1. **プロジェクト構成の判定**: packages/ または apps/ の存在を確認し、配置先を決定
-2. **アーキテクチャ設計の読み込み**: docs/design-artifacts/architecture/ から設計ドキュメントを読み込み
-3. **Terraformモジュール生成**: unit単位でモジュール化（terraform/modules/{unit}/）
-4. **環境設定生成**: dev/staging/production の設定ファイル生成
-5. **package.json生成**: モノレポの場合、npm scriptsを含むpackage.json生成
-6. **IaC設計ドキュメント生成**: {infrastructure-root}/docs/{unit}_IaC設計.md を生成
+インフラコード生成の前に **`EnterPlanMode` で Plan Mode に入り、生成計画を立てる**。
+
+**Plan Mode内で実行する内容：**
+
+1. **プロジェクト構成の判定**（Glob/Read）
+   - packages/ または apps/ の存在を確認し、配置先を決定
+   - 既存のTerraformモジュール/環境設定があれば確認
+2. **アーキテクチャ設計の読み込み**
+   - `docs/design-artifacts/architecture/` から設計ドキュメントを読み込み
+   - 必要なAWSリソース、NFR要件を抽出
+3. **Terraformモジュール構成計画**
+   - unit単位のモジュール分割方針
+   - 環境別（dev/staging/production）のデフォルト設定方針
+   - 既存モジュールとの依存関係・統合方針
+4. **生成ファイル一覧の提示**
+   - 新規作成/上書きされるファイルのリスト
+   - 既存の `environments/dev/main.tf` への追加内容
+
+**`ExitPlanMode` で生成計画の承認を得る** → 承認後にコード生成を実行。
 
 ---
 
 **実行する処理**:
 
-引数として受け取ったユニット名をもとに、iac-generator Skillを起動します。
+承認後、引数として受け取ったユニット名をもとに、iac-generator Skillを起動します。
 
 **ユニット名**: {{ARGS}}
 

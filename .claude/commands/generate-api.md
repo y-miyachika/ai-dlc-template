@@ -23,18 +23,31 @@
 
 ## Skill起動
 
-以下を実行します：
+### EnterPlanMode統合
 
-1. **services層の読み込み**: `packages/api/src/services/` 配下のサービスを分析
-2. **HTTP層の生成**: routes/, schemas/, types/, index.ts を生成
-3. **OpenAPI仕様の生成**: docs/api/openapi.yaml を生成
-4. **API設計ドキュメントの生成**: docs/api/{unit}_API設計.md を生成
+コード生成の前に **`EnterPlanMode` で Plan Mode に入り、生成計画を立てる**。
+
+**Plan Mode内で実行する内容：**
+
+1. **services層の探索**（Glob/Grep/Read）
+   - `packages/api/src/services/` 配下のサービスファイルを読み込み
+   - 公開メソッド、引数の型、戻り値の型を抽出
+   - 既存のroutes/schemas/があれば確認（上書き範囲の把握）
+2. **エンドポイントマッピング計画**
+   - 各サービスメソッド → HTTPエンドポイントの対応表を作成
+   - HTTPメソッド（GET/POST/PUT/DELETE）の選定
+   - パスパラメータ、クエリパラメータの設計
+3. **生成ファイル一覧の提示**
+   - 新規作成/上書きされるファイルのリスト
+   - 既存ファイルへの影響範囲
+
+**`ExitPlanMode` で生成計画の承認を得る** → 承認後にコード生成を実行。
 
 ---
 
 **実行する処理**:
 
-引数として受け取ったユニット名をもとに、api-generator Skillを起動します。
+承認後、引数として受け取ったユニット名をもとに、api-generator Skillを起動します。
 
 **ユニット名**: {{ARGS}}
 

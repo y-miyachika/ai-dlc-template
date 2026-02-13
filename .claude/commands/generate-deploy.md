@@ -23,20 +23,31 @@
 
 ## Skill起動
 
-以下を実行します：
+### EnterPlanMode統合
 
-1. **インフラ構成の検出**: Terraform、設定ファイル等を解析
-2. **環境変数の分析**: 機密情報と公開情報を分類
-3. **GitHub Actions ワークフロー生成**: CI/CDパイプライン
-4. **デプロイスクリプト生成**: ローカル実行用
-5. **デプロイドキュメント生成**: 手順書とチェックリスト
-6. **ユーザー承認**: 生成内容を確認後、ファイル保存
+デプロイ設定生成の前に **`EnterPlanMode` で Plan Mode に入り、デプロイ戦略を計画する**。
+
+**Plan Mode内で実行する内容：**
+
+1. **インフラ構成の検出**（Glob/Grep/Read）
+   - Terraform設定、Dockerfile、package.json等を解析
+   - デプロイ対象のインフラパターンを判定（S3+CloudFront/Vercel/Lambda/ECS等）
+   - 既存のGitHub Actionsワークフローがあれば確認
+2. **環境変数の分析**
+   - 機密情報と公開情報を分類
+   - GitHub Secrets/Variablesへの配置計画
+3. **デプロイ戦略の提示**
+   - 検出されたインフラパターンに基づくCI/CD構成
+   - 生成されるファイル一覧（新規/上書き）
+   - 環境分岐（dev/staging/production）の方針
+
+**`ExitPlanMode` でデプロイ戦略の承認を得る** → 承認後にコード生成を実行。
 
 ---
 
 **実行する処理**:
 
-引数として受け取ったユニット名をもとに、Deploy Generator Skillを起動します。
+承認後、引数として受け取ったユニット名をもとに、Deploy Generator Skillを起動します。
 
 **ユニット名**: {{ARGS}}
 
