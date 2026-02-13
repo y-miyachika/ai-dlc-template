@@ -11,7 +11,7 @@ DDD（Domain-Driven Design）原則に基づき、ユニットのドメイン設
 ### 前提条件
 
 - ユニット分解が完了している（`/units` 実行済み）
-- `docs/units/` にユニット定義が存在する
+- `docs/intents/{Intent番号}_{Intent名}/units.md` にユニット定義が存在する
 - 元のBacklogまたはIntentが存在する
 
 ### 実行
@@ -27,11 +27,11 @@ DDD（Domain-Driven Design）原則に基づき、ユニットのドメイン設
 ### 生成されるファイル
 
 ```
-docs/design-artifacts/domain/
-└── {Intent番号}-{Unit番号}-{ユニット名}_domain.md
+docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/
+└── domain.md
 ```
 
-**例**: `docs/design-artifacts/domain/002-001-unit1_domain.md`
+**例**: `docs/intents/002_ユーザー認証/001_unit1/domain.md`
 
 ## DDD戦術的設計パターン
 
@@ -242,12 +242,12 @@ class OrderFactory {
 
 ### ドメイン設計ドキュメント
 
-**ファイル**: `docs/design-artifacts/domain/046_order-management_domain.md`
+**ファイル**: `docs/intents/046_order-management/001_order-management/domain.md`
 
 ```markdown
 # ドメイン設計: order-management
 
-**元のユニット定義**: `docs/units/046_units.md`
+**元のユニット定義**: `docs/intents/046_order-management/units.md`
 **対応するユーザーストーリー**: US-001, US-002, US-003
 
 ---

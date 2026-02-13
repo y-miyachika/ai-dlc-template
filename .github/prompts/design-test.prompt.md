@@ -17,8 +17,8 @@ argument-hint: ユニット名（例: unit1, 001-unit1）
 
 ### 1. 前提情報の収集
 
-- `docs/intents/` から受入基準（Given/When/Then）を読み込み
-- `docs/design-artifacts/architecture/` からアーキテクチャ設計を読み込み
+- `docs/intents/{Intent番号}_{Intent名}/intent.md` から受入基準（Given/When/Then）を読み込み
+- `docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/architecture.md` からアーキテクチャ設計を読み込み
 
 ### 2. BDD受入基準をテストケースに変換
 
@@ -69,7 +69,7 @@ it("注文が作成される", async () => {
 
 ### 8. ファイル保存
 
-`docs/design-artifacts/tests/{Intent番号}-{Unit番号}-{名前}.md` に保存。
+`docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/tests.md` に保存。
 
 ## 次のステップ
 

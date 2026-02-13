@@ -15,7 +15,7 @@
 **このコマンドは `/design-architecture` の後に実行してください**
 
 - `/design-architecture unit1` でアーキテクチャ設計が完了している
-- `docs/design-artifacts/architecture/` にアーキテクチャ設計ドキュメントが存在する
+- `docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/architecture.md` にアーキテクチャ設計ドキュメントが存在する
 - NFR（非機能要件）が定義されている
 
 ## 入力内容
@@ -34,7 +34,7 @@
    - packages/ または apps/ の存在を確認し、配置先を決定
    - 既存のTerraformモジュール/環境設定があれば確認
 2. **アーキテクチャ設計の読み込み**
-   - `docs/design-artifacts/architecture/` から設計ドキュメントを読み込み
+   - `docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/architecture.md` から設計ドキュメントを読み込み
    - 必要なAWSリソース、NFR要件を抽出
 3. **Terraformモジュール構成計画**
    - unit単位のモジュール分割方針
@@ -54,7 +54,7 @@
 
 **ユニット名**: {{ARGS}}
 
-**アーキテクチャ設計パス**: `docs/design-artifacts/architecture/`
+**アーキテクチャ設計パス**: `docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/architecture.md`
 
 **出力先**: 自動判定（packages/infrastructure/ または infrastructure/）
 

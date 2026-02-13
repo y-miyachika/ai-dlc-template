@@ -85,26 +85,29 @@
    ↓
 7. ユーザー承認
    ↓
-8. ファイル保存（docs/units/）
+8. ファイル保存（docs/intents/{Intent番号}_{Intent名}/units.md）
 ```
 
 ## 生成されるファイル
 
 ```
-docs/units/
-├── 001_units.md
-├── 002_units.md
-└── 047_units.md
+docs/intents/
+├── 001_ユーザー認証機能/
+│   └── units.md
+├── 002_REST_API最適化/
+│   └── units.md
+└── 047_REST_API最適化/
+    └── units.md
 ```
 
-**ファイル名**: `{Intent番号}_units.md`
+**保存先**: `docs/intents/{Intent番号}_{Intent名}/units.md`
 
 ## 出力例
 
 ```markdown
 # ユニット分解: REST API最適化
 
-**元のインテント**: `docs/intents/047_REST_API最適化.md`
+**元のインテント**: `docs/intents/047_REST_API最適化/intent.md`
 
 ---
 

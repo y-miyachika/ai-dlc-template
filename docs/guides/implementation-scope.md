@@ -22,12 +22,12 @@
 - [ ] 受入基準が BDD 形式で記述されている
 - [ ] NFR が具体的な数値で定義されている
 - [ ] リスクが識別され、対策が検討されている
-- [ ] `docs/intents/{番号}_{タイトル}.md` が生成されている
+- [ ] `docs/intents/{Intent番号}_{Intent名}/intent.md` が生成されている
 
 #### 出力例
 
 ```
-docs/intents/001_ユーザー認証機能.md
+docs/intents/001_ユーザー認証機能/intent.md
 ```
 
 ---
@@ -50,12 +50,12 @@ docs/intents/001_ユーザー認証機能.md
 - [ ] 依存関係が図示されている
 - [ ] 循環依存がない
 - [ ] 実装順序が決定している
-- [ ] `docs/units/{Intent番号}_ユニット分解.md` が生成されている
+- [ ] `docs/intents/{Intent番号}_{Intent名}/units.md` が生成されている
 
 #### 出力例
 
 ```
-docs/units/001_ユニット分解.md
+docs/intents/001_ユーザー認証機能/units.md
 ```
 
 ---
@@ -80,12 +80,12 @@ docs/units/001_ユニット分解.md
 - [ ] 集約境界が明確
 - [ ] ドメインルール（不変条件）が記述されている
 - [ ] リポジトリインターフェースが定義されている
-- [ ] `docs/design-artifacts/domain/{Intent}-{Unit}-{名前}.md` が生成されている
+- [ ] `docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/domain.md` が生成されている
 
 #### 出力例
 
 ```
-docs/design-artifacts/domain/001-001-認証ドメイン.md
+docs/intents/001_ユーザー認証機能/001_認証ドメイン/domain.md
 ```
 
 ---
@@ -110,14 +110,14 @@ docs/design-artifacts/domain/001-001-認証ドメイン.md
 - [ ] NFRへの対応策が具体的
 - [ ] コンポーネント図が作成されている
 - [ ] ADRが生成されている
-- [ ] `docs/design-artifacts/architecture/{Intent}-{Unit}-{名前}.md` が生成されている
-- [ ] `docs/design-artifacts/adr/{番号}-{タイトル}.md` が生成されている
+- [ ] `docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/architecture.md` が生成されている
+- [ ] `docs/adr/ADR-{連番}_{タイトル}.md` が生成されている
 
 #### 出力例
 
 ```
-docs/design-artifacts/architecture/001-001-認証ドメイン.md
-docs/design-artifacts/adr/001-認証パターン選択.md
+docs/intents/001_ユーザー認証機能/001_認証ドメイン/architecture.md
+docs/adr/ADR-001_認証パターン選択.md
 ```
 
 ---
@@ -140,12 +140,12 @@ docs/design-artifacts/adr/001-認証パターン選択.md
 - [ ] テストピラミッド（Unit/Integration/E2E）が定義されている
 - [ ] 各テストケースに優先度が付与されている
 - [ ] モック/スタブ戦略が決定している
-- [ ] `docs/design-artifacts/tests/{Intent}-{Unit}-{名前}_テスト設計.md` が生成されている
+- [ ] `docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/tests.md` が生成されている
 
 #### 出力例
 
 ```
-docs/design-artifacts/tests/001-001-認証ドメイン_テスト設計.md
+docs/intents/001_ユーザー認証機能/001_認証ドメイン/tests.md
 ```
 
 ---
@@ -161,7 +161,7 @@ docs/design-artifacts/tests/001-001-認証ドメイン_テスト設計.md
 | リポジトリ実装 | デプロイ設定 |
 | ユニットテスト | E2Eテスト |
 | インテグレーションテスト | 運用ドキュメント |
-| 実装計画（docs/plans/） | |
+| 実装計画（Intent階層内のplan.md） | |
 
 #### 完了条件チェックリスト
 
@@ -171,7 +171,7 @@ docs/design-artifacts/tests/001-001-認証ドメイン_テスト設計.md
 - [ ] ユニットテストが全てパス
 - [ ] インテグレーションテストが全てパス
 - [ ] 型エラーがない
-- [ ] `docs/plans/{Intent}-{Unit}-{名前}.md` が生成/更新されている
+- [ ] `docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/plan.md` が生成/更新されている
 - [ ] `src/` または `packages/` に実装コードがある
 - [ ] `tests/` にテストコードがある
 
@@ -188,7 +188,7 @@ tests/
 ├── unit/
 └── integration/
 
-docs/plans/001-001-認証ドメイン.md
+docs/intents/001_ユーザー認証機能/001_認証ドメイン/plan.md
 ```
 
 ---
@@ -287,7 +287,7 @@ docs/plans/001-001-認証ドメイン.md
   - [ ] ドメイン層実装済み
   - [ ] サービス層実装済み
   - [ ] リポジトリ層実装済み
-  - [ ] 実装計画（docs/plans/）更新済み
+  - [ ] 実装計画（Intent階層内のplan.md）更新済み
 
 - [ ] **テスト完了**
   - [ ] ユニットテスト全パス

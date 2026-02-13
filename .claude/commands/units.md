@@ -28,13 +28,13 @@
 
 以下を実行します：
 
-1. **インテントの読み込み**: `docs/intents/` から読み込み
+1. **インテントの読み込み**: `docs/intents/{Intent番号}_{Intent名}/intent.md` から読み込み
 2. **ドメイン分析**: サブドメイン、境界コンテキスト、技術的境界を特定
 3. **ユニット分解**: 疎結合・高凝集の原則でユニットを定義
 4. **依存関係の可視化**: ユニット間の依存関係を図示
 5. **実装順序の推奨**: 依存関係、ビジネス価値、リスクを考慮
 6. **ユーザー承認**: 分解案を提示し、承認を得る
-7. **ファイル保存**: `docs/units/{番号}_units.md` に保存
+7. **ファイル保存**: `docs/intents/{Intent番号}_{Intent名}/units.md` に保存
 
 ---
 
@@ -73,9 +73,9 @@ SubAgentは `.claude/agents/units-decomposer/prompt.md` に定義された手順
 
 ## 生成されるファイル
 
-- `docs/units/{番号}_units.md` - ユニット分解ドキュメント
+- `docs/intents/{Intent番号}_{Intent名}/units.md` - ユニット分解ドキュメント
 
-**ファイル名例**: `047_units.md`
+**パス例**: `docs/intents/047_REST_API最適化/units.md`
 
 ---
 

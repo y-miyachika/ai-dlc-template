@@ -34,7 +34,7 @@
 
 ### 必須
 - **ユニット名**: 対象のユニット（例: `unit1`, `001-unit1`）
-- **アーキテクチャ設計**: `docs/design-artifacts/architecture/` 内の設計ドキュメント
+- **アーキテクチャ設計**: `docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/architecture.md` 内の設計ドキュメント
 
 ### オプション
 - **NFR定義**: パフォーマンス、セキュリティ、可用性要件
@@ -63,7 +63,7 @@
 
 ### ステップ1: アーキテクチャ設計の読み込み
 
-`docs/design-artifacts/architecture/` 配下の設計ドキュメントを読み込み、以下を抽出：
+`docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/architecture.md` の設計ドキュメントを読み込み、以下を抽出：
 
 - **インフラコンポーネント**: RDS, S3, Lambda, VPC等
 - **NFR**: パフォーマンス、セキュリティ、可用性、スケーラビリティ

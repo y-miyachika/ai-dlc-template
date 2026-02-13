@@ -26,7 +26,7 @@ Terraform + Terragrunt + AWS Provider
 
 ### 2. アーキテクチャ設計の読み込み
 
-`docs/design-artifacts/architecture/` から設計ドキュメントを読み込み。
+`docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/architecture.md` から設計ドキュメントを読み込み。
 
 ### 3. Terraformモジュール生成
 

@@ -23,11 +23,11 @@ git diff --name-only HEAD     # 未コミット
 
 | 変更ファイル | 関連ドキュメント |
 |------------|----------------|
-| `src/domain/**` | `docs/design-artifacts/domain/*.md` |
-| `src/services/**` | `docs/design-artifacts/domain/*.md` |
+| `src/domain/**` | `docs/intents/*/*/domain.md` |
+| `src/services/**` | `docs/intents/*/*/domain.md` |
 | `src/routes/**` | `docs/api/openapi.yaml` |
-| `terraform/**` | `docs/design-artifacts/architecture/*.md` |
-| `*.test.ts` | `docs/design-artifacts/tests/*.md` |
+| `terraform/**` | `docs/intents/*/*/architecture.md` |
+| `*.test.ts` | `docs/intents/*/*/tests.md` |
 
 ### 3. 乖離チェック
 

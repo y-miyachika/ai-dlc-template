@@ -15,8 +15,8 @@
 **このコマンドは `/design-domain` の後に実行してください**
 
 - `/design-domain` でドメイン設計が完了している
-- `docs/design-artifacts/domain/` にドメイン設計が存在する
-- `docs/intents/` にNFRが定義されている
+- `docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/domain.md` にドメイン設計が存在する
+- `docs/intents/{Intent番号}_{Intent名}/intent.md` にNFRが定義されている
 
 ## 入力内容
 
@@ -48,8 +48,8 @@ Task toolを使用する場合は `subagent_type: "Plan"` を指定してくだ�
 8. **ADR生成**: Architecture Decision Recordを作成
 
 **`ExitPlanMode` で設計案の承認を得る** → 承認後にファイル保存：
-- `docs/design-artifacts/architecture/` にアーキテクチャ設計
-- `docs/design-artifacts/adr/` にADR
+- `docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/architecture.md` にアーキテクチャ設計
+- `docs/adr/` にADR
 
 ---
 
@@ -59,11 +59,11 @@ Task toolを使用する場合は `subagent_type: "Plan"` を指定してくだ�
 
 **ユニット名**: {{ARGS}}
 
-**ドメイン設計パス**: `docs/design-artifacts/domain/`
+**ドメイン設計パス**: `docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/domain.md`
 
 **出力先**:
-- `docs/design-artifacts/architecture/`
-- `docs/design-artifacts/adr/`
+- `docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/architecture.md`
+- `docs/adr/`
 
 ---
 
@@ -172,13 +172,13 @@ SubAgentは `.claude/agents/architecture-designer/prompt.md` に定義された�
 
 ### アーキテクチャ設計ドキュメント
 
-- `docs/design-artifacts/architecture/{Intent番号}-{Unit番号}-{ユニット名}_architecture.md` - アーキテクチャ設計
+- `docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/architecture.md` - アーキテクチャ設計
 
-**ファイル名例**: `002-001-order-management_architecture.md`
+**パス例**: `docs/intents/002_注文管理/001_order-management/architecture.md`
 
 ### ADR（Architecture Decision Record）
 
-- `docs/design-artifacts/adr/ADR-{連番}_{タイトル}.md` - アーキテクチャ決定記録
+- `docs/adr/ADR-{連番}_{タイトル}.md` - アーキテクチャ決定記録
 
 **ファイル名例**: `ADR-001_クリーンアーキテクチャの採用.md`
 

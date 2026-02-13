@@ -53,7 +53,7 @@
 
 **services層のパス**: `packages/api/src/services/`
 
-**ドメイン設計パス**: `docs/design-artifacts/domain/` （存在する場合）
+**ドメイン設計パス**: `docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/domain.md` （存在する場合）
 
 **出力先**: `packages/api/`
 

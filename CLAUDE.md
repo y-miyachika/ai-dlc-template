@@ -77,14 +77,14 @@ ai-dlc-template/
 **`/intent`** → `intent-definer` SubAgent
 - 用途: AI-DLC準拠のインテント定義（要件明確化）
 - 引数: タスクの概要（自由記述）
-- 出力: docs/intents/に連番付きMarkdownファイル
+- 出力: docs/intents/{Intent番号}_{Intent名}/intent.md
 - 例: `/intent ユーザー認証機能の実装`
 - 詳細: `.claude/agents/intent-definer/README.md`
 
 **`/units`** → `units-decomposer` SubAgent
 - 用途: インテント/Backlogをユニットに分解（疎結合・高凝集）
 - 引数: Intent番号（省略時は最新）
-- 出力: docs/units/に分解結果を保存
+- 出力: docs/intents/{Intent番号}_{Intent名}/units.md
 - 例: `/units 001` または `/units`
 - 詳細: `.claude/agents/units-decomposer/README.md`
 
@@ -93,21 +93,21 @@ ai-dlc-template/
 **`/design-domain`** → `domain-designer` SubAgent
 - 用途: ユニットのドメイン設計（DDD戦術的設計パターン）
 - 引数: ユニット名（例: `unit1`, `001-unit1`）
-- 出力: docs/design-artifacts/domain/にドメインモデルを保存
+- 出力: docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/domain.md
 - 例: `/design-domain unit1`
 - 詳細: `.claude/agents/domain-designer/README.md`
 
 **`/design-architecture`** → `architecture-designer` SubAgent
 - 用途: NFR考慮のアーキテクチャ設計（NFR駆動、ADR生成）
 - 引数: ユニット名（例: `unit1`, `001-unit1`）
-- 出力: docs/design-artifacts/architecture/にアーキテクチャ設計、docs/design-artifacts/adr/にADR
+- 出力: docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/architecture.md、docs/adr/にADR
 - 例: `/design-architecture unit1`
 - 詳細: `.claude/agents/architecture-designer/README.md`
 
 **`/design-test`** → `test-designer` SubAgent
 - 用途: テスト設計（TDD/BDD統合、テストピラミッド構築）
 - 引数: ユニット名（例: `unit1`, `001-unit1`）
-- 出力: docs/design-artifacts/tests/にテスト設計を保存
+- 出力: docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/tests.md
 - 例: `/design-test unit1`
 - 詳細: `.claude/agents/test-designer/README.md`
 
@@ -268,52 +268,66 @@ docs/
 **appの場合:**
 ```
 <project-name>/docs/
-├── intents/            # インテント定義（AI-DLC準拠版）
-├── units/             # ユニット分解
-├── design-artifacts/  # 設計ドキュメント
-│   ├── domain/        # ドメイン設計
-│   ├── architecture/  # アーキテクチャ設計
-│   ├── tests/         # テスト設計
-│   └── adr/          # アーキテクチャ決定記録
-└── plans/            # 実装計画
+├── intents/                          # Intent階層（成果物集約）
+│   └── {Intent番号}_{Intent名}/
+│       ├── intent.md                 # インテント定義
+│       ├── units.md                  # ユニット分解
+│       ├── 000_shared/               # 共通（オプション）
+│       └── {Unit番号}_{Unit名}/
+│           ├── domain.md             # ドメイン設計
+│           ├── architecture.md       # アーキテクチャ設計
+│           ├── tests.md              # テスト設計
+│           └── plan.md              # 実装計画
+└── adr/                              # アーキテクチャ決定記録（横断的）
 ```
 
 **monorepoの場合:**
 ```
-docs/                      # AI-DLC成果物はルートに集約
-├── intents/              # インテント定義
-├── units/                # ユニット分解
-├── design-artifacts/     # 全ユニットの設計ドキュメント
-│   ├── domain/           # 001〜
-│   ├── architecture/     # 001〜
-│   ├── tests/            # 001〜
-│   └── adr/              # ADR
-└── plans/                # 実装計画
+docs/                                  # AI-DLC成果物はルートに集約
+├── intents/                          # Intent階層（成果物集約）
+│   └── {Intent番号}_{Intent名}/
+│       ├── intent.md                 # インテント定義
+│       ├── units.md                  # ユニット分解
+│       ├── 000_shared/               # 共通（オプション）
+│       └── {Unit番号}_{Unit名}/
+│           ├── domain.md             # ドメイン設計
+│           ├── architecture.md       # アーキテクチャ設計
+│           ├── tests.md              # テスト設計
+│           └── plan.md              # 実装計画
+└── adr/                              # アーキテクチャ決定記録（横断的）
 ```
 
-**理由**: 横断的な参照が容易、ユニット間の依存関係を把握しやすい
+**理由**: Intent→Unit単位で成果物を集約し、1ユニットの全成果物を1ディレクトリで参照可能
 
 ### AI-DLCドキュメント命名規則
 
-**Intent.Unit形式を使用**（例: `002-001-strivo-effect-visualizer.md`）
+**Intent階層構造を使用**（例: `docs/intents/002_ユーザー認証/001_login-api/domain.md`）
 
-| 種類 | 命名パターン | 例 |
-|------|-------------|-----|
-| Intent | `{Intent番号}_タイトル.md` | `002_ユーザー認証.md` |
-| Units | `{Intent番号}_ユニット分解.md` | `002_ユニット分解.md` |
-| design-artifacts | `{Intent番号}-{Unit番号}-名前.md` | `002-001-login-api.md` |
-| plans | `{Intent番号}-{Unit番号}-名前.md` | `002-001-login-api.md` |
+```
+docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/
+```
+
+| 種類 | パス | 例 |
+|------|------|-----|
+| Intent定義 | `docs/intents/{Intent番号}_{Intent名}/intent.md` | `docs/intents/002_ユーザー認証/intent.md` |
+| ユニット分解 | `docs/intents/{Intent番号}_{Intent名}/units.md` | `docs/intents/002_ユーザー認証/units.md` |
+| ドメイン設計 | `docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/domain.md` | `docs/intents/002_ユーザー認証/001_login-api/domain.md` |
+| アーキテクチャ設計 | `docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/architecture.md` | 同上パターン |
+| テスト設計 | `docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/tests.md` | 同上パターン |
+| 実装計画 | `docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/plan.md` | 同上パターン |
+| ADR | `docs/adr/ADR-{連番}_{タイトル}.md` | `docs/adr/ADR-001_技術選定.md` |
 
 - Intent番号・Unit番号は3桁ゼロ埋め
-- Unit番号`000`はshared/共通拡張用（例: `002-000-shared-domain.md`）
+- Unit番号`000`はshared/共通拡張用（例: `002_ユーザー認証/000_shared/`）
+- ファイル名は固定: intent.md, units.md, domain.md, architecture.md, tests.md, plan.md
 
 ### Unit完了チェックリスト
 
 Unit実装完了時（コミット前）に確認：
 
 - [ ] テスト全パス
-- [ ] `docs/plans/{Intent}-{Unit}-*.md` 作成・更新済み
-- [ ] `docs/design-artifacts/` の関連ドキュメント確認
+- [ ] `docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/plan.md` 作成・更新済み
+- [ ] `docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/` の関連ドキュメント確認
 - [ ] 型エラーなし
 
 ### ローカル開発環境（プロジェクト固有）

@@ -51,9 +51,9 @@ argument-hint: タスクの概要を入力（例: ユーザー認証機能の実
 
 ### 5. ファイル保存
 
-`docs/intents/{番号}_{タイトル}.md` に保存してください。
+`docs/intents/{番号}_{Intent名}/intent.md` に保存してください。
 
-**ファイル名例**: `001_ユーザー認証.md`
+**ファイル名例**: `docs/intents/001_ユーザー認証/intent.md`
 
 ## 次のステップ
 

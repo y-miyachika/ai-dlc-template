@@ -19,7 +19,7 @@ argument-hint: Intent番号（例: 001）省略時は最新
 
 ### 1. インテントの読み込み
 
-`docs/intents/` から対象のインテントを読み込んでください。
+`docs/intents/{Intent番号}_{Intent名}/intent.md` から対象のインテントを読み込んでください。
 引数がない場合は最新のインテントを使用。
 
 ### 2. 分解の種類を決定
@@ -55,7 +55,7 @@ argument-hint: Intent番号（例: 001）省略時は最新
 
 ### 6. ファイル保存
 
-`docs/units/{番号}_units.md` に保存してください。
+`docs/intents/{Intent番号}_{Intent名}/units.md` に保存してください。
 
 ## 次のステップ
 

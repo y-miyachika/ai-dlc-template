@@ -29,14 +29,19 @@
 ```
 <project-name>/
 ├── docs/
-│   ├── intents/            # インテント定義
-│   ├── units/              # ユニット分解
-│   ├── design-artifacts/   # 設計ドキュメント
-│   │   ├── domain/         # ドメイン設計
-│   │   ├── architecture/   # アーキテクチャ設計
-│   │   ├── tests/          # テスト設計
-│   │   └── adr/            # アーキテクチャ決定記録
-│   └── plans/              # 実装計画
+│   ├── intents/            # インテント定義（Intent階層構造）
+│   │   └── {Intent番号}_{Intent名}/
+│   │       ├── intent.md           # インテント定義
+│   │       ├── units.md            # ユニット分解
+│   │       ├── 000_shared/         # 共通（オプション）
+│   │       │   └── domain.md
+│   │       └── {Unit番号}_{Unit名}/
+│   │           ├── domain.md       # ドメイン設計
+│   │           ├── architecture.md # アーキテクチャ設計
+│   │           ├── tests.md        # テスト設計
+│   │           └── plan.md         # 実装計画
+│   ├── adr/                # アーキテクチャ決定記録（横断的）
+│   └── guides/             # 開発ガイド
 ├── src/                    # ソースコード
 ├── tests/                  # テストコード
 └── .claude/
@@ -48,14 +53,18 @@
 ```
 <project-name>/
 ├── docs/                   # AI-DLC成果物はルートに集約
-│   ├── intents/            # インテント定義
-│   ├── units/              # ユニット分解
-│   ├── design-artifacts/   # 設計ドキュメント（全ユニット）
-│   │   ├── domain/         # 001〜
-│   │   ├── architecture/   # 001〜
-│   │   ├── tests/          # 001〜
-│   │   └── adr/            # ADR
-│   ├── plans/              # 実装計画
+│   ├── intents/            # インテント定義（Intent階層構造）
+│   │   └── {Intent番号}_{Intent名}/
+│   │       ├── intent.md           # インテント定義
+│   │       ├── units.md            # ユニット分解
+│   │       ├── 000_shared/         # 共通（オプション）
+│   │       │   └── domain.md
+│   │       └── {Unit番号}_{Unit名}/
+│   │           ├── domain.md       # ドメイン設計
+│   │           ├── architecture.md # アーキテクチャ設計
+│   │           ├── tests.md        # テスト設計
+│   │           └── plan.md         # 実装計画
+│   ├── adr/                # アーキテクチャ決定記録（横断的）
 │   └── guides/             # 共通開発ガイド
 ├── apps/
 │   └── <app-name>/         # アプリケーション
@@ -146,9 +155,7 @@ out/
 
 # AI-DLC成果物はコミットする（チーム共有のためコメントアウト）
 # docs/intents/
-# docs/units/
-# docs/design-artifacts/
-# docs/plans/
+# docs/adr/
 
 # 一時ファイル
 *.tmp
@@ -252,9 +259,8 @@ TaskCreate: subject="セットアップ完了確認", activeForm="セットア�
 
 - package.json - pnpm workspace設定
 - pnpm-workspace.yaml - workspace定義
-- docs/intents/ - インテント定義
-- docs/units/ - ユニット分解
-- docs/design-artifacts/ - 設計ドキュメント
+- docs/intents/ - インテント定義（Intent階層構造）
+- docs/adr/ - アーキテクチャ決定記録
 - CLAUDE.md - Claude Code設定
 - README.md - プロジェクト概要
 - .gitignore - Git除外設定

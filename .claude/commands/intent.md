@@ -33,7 +33,7 @@
 2. **4つの質問で明確化**: AIが質問を主導し、ユーザーが回答
 3. **インテント定義の生成**: AI-DLC準拠の詳細なドキュメントを生成
 4. **レビューと確認**: ユーザー承認を得る
-5. **ファイル保存**: `docs/intents/{番号}_{タイトル}.md` に保存
+5. **ファイル保存**: `docs/intents/{番号}_{Intent名}/intent.md` に保存
 
 ---
 
@@ -79,7 +79,7 @@ SubAgentは `.claude/agents/intent-definer/prompt.md` に定義された手順�
 4. 受入基準の生成（BDD形式: Given/When/Then）
 5. NFR、リスク、成功指標の定義
 6. ユーザー承認を得る
-7. `docs/intents/{番号}_{タイトル}.md` に保存
+7. `docs/intents/{番号}_{Intent名}/intent.md` に保存
 
 **テンプレート詳細**: `.claude/agents/intent-definer/prompt.md` を参照
 
@@ -87,9 +87,9 @@ SubAgentは `.claude/agents/intent-definer/prompt.md` に定義された手順�
 
 ## 生成されるファイル
 
-- `docs/intents/{番号}_{タイトル}.md` - インテント定義ドキュメント
+- `docs/intents/{番号}_{Intent名}/intent.md` - インテント定義ドキュメント
 
-**ファイル名例**: `047_REST_API最適化.md`
+**パス例**: `docs/intents/047_REST_API最適化/intent.md`
 
 ---
 

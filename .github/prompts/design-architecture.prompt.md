@@ -17,9 +17,9 @@ argument-hint: ユニット名（例: unit1, 001-unit1）
 
 ### 1. 前提情報の収集
 
-- `docs/intents/` からNFRを読み込み
-- `docs/units/` からユニット定義を読み込み
-- `docs/design-artifacts/domain/` からドメイン設計を読み込み
+- `docs/intents/{Intent番号}_{Intent名}/intent.md` からNFRを読み込み
+- `docs/intents/{Intent番号}_{Intent名}/units.md` からユニット定義を読み込み
+- `docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/domain.md` からドメイン設計を読み込み
 
 ### 2. NFR分析
 
@@ -69,8 +69,8 @@ Architecture Decision Recordを作成：
 
 ### 9. ファイル保存
 
-- `docs/design-artifacts/architecture/{Intent番号}-{Unit番号}-{名前}.md`
-- `docs/design-artifacts/adr/ADR-{連番}_{タイトル}.md`
+- `docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/architecture.md`
+- `docs/adr/ADR-{連番}_{タイトル}.md`
 
 ## 次のステップ
 

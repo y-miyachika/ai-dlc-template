@@ -50,14 +50,16 @@ aidlc-docs/
 ├── pnpm-workspace.yaml   # workspace定義
 ├── apps/ または packages/
 ├── docs/
-│   ├── intents/          # ≒ requirements/
-│   ├── units/            # AI-DLCにはない（新規）
-│   ├── design-artifacts/ # ✅ 一致
-│   │   ├── domain/       # ✅ 一致
-│   │   ├── architecture/ # ✅ 一致
-│   │   ├── tests/        # AI-DLCにはない（独自追加）
-│   │   └── adr/          # AI-DLCにはない（独自追加）
-│   └── plans/            # ✅ 一致
+│   ├── intents/          # ≒ requirements/（Intent階層化）
+│   │   └── {Intent番号}_{Intent名}/
+│   │       ├── intent.md       # インテント定義
+│   │       ├── units.md        # ユニット分解（AI-DLCにはない、新規）
+│   │       └── {Unit番号}_{Unit名}/
+│   │           ├── domain.md       # ✅ 一致（design-artifacts/domain/ 相当）
+│   │           ├── architecture.md # ✅ 一致（design-artifacts/architecture/ 相当）
+│   │           ├── tests.md        # AI-DLCにはない（独自追加）
+│   │           └── plan.md         # ✅ 一致（plans/ 相当）
+│   └── adr/              # AI-DLCにはない（独自追加）
 ├── CLAUDE.md
 ├── README.md
 └── .gitignore
@@ -100,7 +102,7 @@ aidlc-docs/
 3. NFR定義
 4. リスク定義
 
-出力: docs/intents/NNN_タイトル.md
+出力: docs/intents/NNN_タイトル/intent.md
 ```
 
 **準拠度**: ✅ 80%
@@ -137,7 +139,7 @@ aidlc-docs/
 3. 依存関係図（Mermaid）作成
 4. 各ユニットの責務明確化
 
-出力: docs/units/NNN-units.md
+出力: docs/intents/NNN_タイトル/units.md
 ```
 
 **準拠度**: ✅ 90%
@@ -171,7 +173,7 @@ aidlc-docs/
 2. ドメインイベント、リポジトリ、ファクトリー設計
 3. Mermaid図で可視化
 
-出力: docs/design-artifacts/domain/unitN-domain.md
+出力: docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/domain.md
 ```
 
 **準拠度**: ✅ 85%
@@ -204,8 +206,8 @@ aidlc-docs/
 3. トレードオフ分析
 4. ADR生成
 
-出力: docs/design-artifacts/architecture/unitN-architecture.md
-     docs/design-artifacts/adr/unitN-adr.md
+出力: docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/architecture.md
+     docs/adr/ADR-{連番}_{タイトル}.md
 ```
 
 **準拠度**: ✅ 85%
@@ -273,7 +275,7 @@ aidlc-docs/
 5. モック・フィクスチャ設計
 6. テストカバレッジ目標設定
 
-出力: docs/design-artifacts/tests/[番号]_[ユニット名]_test_design.md
+出力: docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/tests.md
 ```
 
 **準拠度**: ✅ 75%（AI-DLCにない独自機能）
@@ -333,7 +335,7 @@ aidlc-docs/
 あなたはインフラストラクチャ設計とTerraformの専門家です。
 
 ## タスク
-1. アーキテクチャ設計を読み込み（docs/design-artifacts/architecture/）
+1. アーキテクチャ設計を読み込み（docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/architecture.md）
 2. unit単位でTerraformモジュールを生成
 3. 環境ごとに全unitをまとめて呼び出し（dev/staging/production）
 4. unit間の依存関係をmodule outputで解決
@@ -449,7 +451,7 @@ aidlc-docs/
    - ユニット間の依存関係の明示化
 
 4. **ドキュメント構造の拡張**
-   - `docs/tests/` フォルダ追加
+   - Intent階層内のtests.md追加
    - `docs/adr/` フォルダ追加
 
 ### Phase 3完了項目（2025-11-26）
@@ -489,17 +491,19 @@ aidlc-docs/
 
 ## 📈 準拠度の詳細
 
-### フォルダ構造（0%）
+### フォルダ構造（70%）
+
+AI-DLCのフラット構造をIntent階層構造に再編成。機能的には同等以上だが、ディレクトリ名・構造が異なる。
 
 | 要素 | AI-DLC | 本実装 | 一致 |
 |-----|--------|-----------------|------|
-| plans/ | ✅ | ✅ | ✅ |
-| requirements/ | ✅ | intents/で代替 | △ |
-| story-artifacts/ | ✅ | intents/に統合 | △ |
-| design-artifacts/ | ✅ | ✅ | ✅ |
-| prompts/ | ✅ | .claude/commands/で代替 | △ |
-| tests/ | ❌ | ✅（独自追加） | ➕ |
-| adr/ | ❌ | ✅（独自追加） | ➕ |
+| plans/ | ✅ | ✅（Intent階層内のplan.mdとして配置） | ✅ 名称異 |
+| requirements/ | ✅ | ✅（intents/で代替） | ✅ 名称異 |
+| story-artifacts/ | ✅ | ✅（intents/に統合） | ✅ 名称異 |
+| design-artifacts/ | ✅ | ✅（Intent階層内のdomain.md/architecture.mdとして配置） | ✅ 構造異 |
+| prompts/ | ✅ | ✅（.claude/commands/で代替） | ✅ 名称異 |
+| tests/ | ❌ | ✅（Intent階層内のtests.mdとして独自追加） | ➕ |
+| adr/ | ❌ | ✅（docs/adr/として独自追加） | ➕ |
 
 ### インセプション（85%）
 

@@ -18,7 +18,7 @@ BDD受入基準をテストケースに変換し、テストピラミッドを�
 
 ### 1.1. インテント/Backlogの読み込み
 
-`docs/intents/` から、対応するインテントを読み込みます。
+`docs/intents/{Intent番号}_{Intent名}/intent.md` から、対応するインテントを読み込みます。
 
 **抽出内容**:
 - ユーザーストーリー
@@ -27,7 +27,7 @@ BDD受入基準をテストケースに変換し、テストピラミッドを�
 
 ### 1.2. ユニット分解の読み込み
 
-`docs/units/` から、対応するユニット定義を読み込みます。
+`docs/intents/{Intent番号}_{Intent名}/units.md` から、対応するユニット定義を読み込みます。
 
 **抽出内容**:
 - ユニットの責務
@@ -35,7 +35,7 @@ BDD受入基準をテストケースに変換し、テストピラミッドを�
 
 ### 1.3. ドメイン設計の読み込み
 
-`docs/design-artifacts/domain/` から、対応するドメイン設計を読み込みます。
+`docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/domain.md` から、対応するドメイン設計を読み込みます。
 
 **抽出内容**:
 - エンティティ、値オブジェクト、集約
@@ -44,7 +44,7 @@ BDD受入基準をテストケースに変換し、テストピラミッドを�
 
 ### 1.4. アーキテクチャ設計の読み込み
 
-`docs/design-artifacts/architecture/` から、対応するアーキテクチャ設計を読み込みます。
+`docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/architecture.md` から、対応するアーキテクチャ設計を読み込みます。
 
 **抽出内容**:
 - コンポーネント構成
@@ -620,9 +620,9 @@ jobs:
 
 ### 12.1. テスト設計ドキュメント
 
-**ファイル名**: `docs/design-artifacts/tests/{Intent番号}-{Unit番号}-{ユニット名}_test_design.md`
+**保存先**: `docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/tests.md`
 
-**例**: `docs/design-artifacts/tests/002-001-order-management_test_design.md`
+**例**: `docs/intents/002_ユーザー認証/001_order-management/tests.md`
 
 **内容**:
 - BDD受入基準のテストケース変換

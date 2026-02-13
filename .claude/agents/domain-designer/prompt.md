@@ -18,11 +18,11 @@
 
 ### 1.1. ユニット定義の読み込み
 
-`docs/units/` から対応するユニット定義を読み込みます。
+`docs/intents/{Intent番号}_{Intent名}/units.md` から対応するユニット定義を読み込みます。
 
 **読み込み対象**:
-- ユニット名が `046-unit1` の場合 → `docs/units/046_units.md` を読み込み、`unit1` の定義を抽出
-- ユニット名が `unit1` のみの場合 → 最新の `docs/units/` から該当するユニットを検索
+- ユニット名が `046-unit1` の場合 → `docs/intents/046_*/units.md` を読み込み、`unit1` の定義を抽出
+- ユニット名が `unit1` のみの場合 → 最新の `docs/intents/*/units.md` から該当するユニットを検索
 
 ### 1.2. 元のBacklogの読み込み
 
@@ -326,18 +326,18 @@ class OrderFactory {
 
 ### 出力ファイル名の決定
 
-**ファイル名**: `docs/design-artifacts/domain/{Intent番号}-{Unit番号}-{ユニット名}_domain.md`
+**保存先**: `docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/domain.md`
 
 **例**:
-- Intent番号002、Unit番号001の場合 → `docs/design-artifacts/domain/002-001-unit1_domain.md`
-- ユニット名のみ指定の場合 → 最新のIntent/Unit番号を推定（例: `002-001-unit1_domain.md`）
+- Intent番号002、Unit番号001の場合 → `docs/intents/002_ユーザー認証/001_unit1/domain.md`
+- ユニット名のみ指定の場合 → 最新のIntent/Unit番号を推定（例: `docs/intents/002_ユーザー認証/001_unit1/domain.md`）
 
 ### 出力フォーマット
 
 ```markdown
 # ドメイン設計: [ユニット名]
 
-**元のユニット定義**: `docs/units/[番号]_units.md`
+**元のユニット定義**: `docs/intents/[番号]_[Intent名]/units.md`
 **対応するユーザーストーリー**: [リスト]
 
 ---
@@ -638,7 +638,7 @@ classDiagram
 - [ ] ドメインイベントは必要十分ですか？
 
 **承認を得たら**:
-- `docs/design-artifacts/domain/{Intent番号}-{Unit番号}-{ユニット名}_domain.md` に保存
+- `docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/domain.md` に保存
 
 ---
 

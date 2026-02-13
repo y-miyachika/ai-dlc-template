@@ -26,7 +26,7 @@ argument-hint: ユニット名（例: unit1, 001-unit1）
 
 ### 1. コンテキストの読み込み
 
-`docs/units/` からユニット定義を読み込んでください。
+`docs/intents/{Intent番号}_{Intent名}/units.md` からユニット定義を読み込んでください。
 
 ### 2. ドメイン分析
 
@@ -64,9 +64,9 @@ interface UserRepository {
 
 ### 5. ファイル保存
 
-`docs/design-artifacts/domain/{Intent番号}-{Unit番号}-{名前}.md` に保存。
+`docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/domain.md` に保存。
 
-**例**: `001-001-user-domain.md`
+**例**: `docs/intents/001_ユーザー認証/001_user/domain.md`
 
 ## 次のステップ
 

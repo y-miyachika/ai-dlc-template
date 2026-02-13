@@ -34,11 +34,11 @@ git diff --name-only HEAD
 
 | 変更ファイル | 関連ドキュメント |
 |------------|----------------|
-| `packages/{pkg}/src/domain/**` | `docs/design-artifacts/domain/{unit}_domain.md` |
-| `packages/{pkg}/src/services/**` | `docs/design-artifacts/domain/{unit}_domain.md` |
+| `packages/{pkg}/src/domain/**` | `docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/domain.md` |
+| `packages/{pkg}/src/services/**` | `docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/domain.md` |
 | `packages/{pkg}/src/routes/**` | `docs/api/openapi.yaml` |
-| `terraform/**` | `docs/design-artifacts/architecture/{unit}_architecture.md` |
-| `*.test.ts` | `docs/design-artifacts/tests/{unit}_test-design.md` |
+| `terraform/**` | `docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/architecture.md` |
+| `*.test.ts` | `docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/tests.md` |
 
 ### 3. 乖離チェック
 
@@ -78,13 +78,13 @@ git diff --name-only HEAD
 
 | ドキュメント | ステータス | 必要なアクション |
 |------------|----------|----------------|
-| `docs/design-artifacts/domain/001_user_domain.md` | ⚠️ 更新推奨 | UserProfile エンティティを追加 |
-| `docs/design-artifacts/tests/001_user_test-design.md` | ⚠️ 更新推奨 | UserProfile のテストケースを追加 |
+| `docs/intents/001_ユーザー管理/001_user/domain.md` | ⚠️ 更新推奨 | UserProfile エンティティを追加 |
+| `docs/intents/001_ユーザー管理/001_user/tests.md` | ⚠️ 更新推奨 | UserProfile のテストケースを追加 |
 | `docs/api/openapi.yaml` | ✅ 同期済み | - |
 
 ### 更新提案
 
-#### 1. `docs/design-artifacts/domain/001_user_domain.md`
+#### 1. `docs/intents/001_ユーザー管理/001_user/domain.md`
 
 **追加が必要な内容**:
 
@@ -98,7 +98,7 @@ git diff --name-only HEAD
 | avatarUrl | string | アバター画像URL |
 ```
 
-#### 2. `docs/design-artifacts/tests/001_user_test-design.md`
+#### 2. `docs/intents/001_ユーザー管理/001_user/tests.md`
 
 **追加が必要な内容**:
 

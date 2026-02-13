@@ -15,8 +15,8 @@
 **このコマンドは `/design-architecture` の後に実行してください**
 
 - `/design-architecture` でアーキテクチャ設計が完了している
-- `docs/design-artifacts/architecture/` にアーキテクチャ設計が存在する
-- `docs/intents/` に受入基準（Given/When/Then形式）が定義されている
+- `docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/architecture.md` にアーキテクチャ設計が存在する
+- `docs/intents/{Intent番号}_{Intent名}/intent.md` に受入基準（Given/When/Then形式）が定義されている
 
 ## 入力内容
 
@@ -47,9 +47,9 @@
 
 **ユニット名**: {{ARGS}}
 
-**アーキテクチャ設計パス**: `docs/design-artifacts/architecture/`
+**アーキテクチャ設計パス**: `docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/architecture.md`
 
-**出力先**: `docs/design-artifacts/tests/`
+**出力先**: `docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/tests.md`
 
 ---
 
@@ -209,9 +209,9 @@ it("Scenario: 注文の作成", async () => {
 
 ### テスト設計ドキュメント
 
-- `docs/design-artifacts/tests/{Intent番号}-{Unit番号}-{ユニット名}_test_design.md` - テスト設計
+- `docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/tests.md` - テスト設計
 
-**ファイル名例**: `002-001-order-management_test_design.md`
+**パス例**: `docs/intents/002_注文管理/001_order-management/tests.md`
 
 ### テスト実装の配置
 

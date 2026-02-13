@@ -28,11 +28,11 @@ BDD受入基準をテストケースに変換し、テストピラミッドを�
 ### 生成されるファイル
 
 ```
-docs/design-artifacts/tests/
-└── {Intent番号}-{Unit番号}-{ユニット名}_test_design.md
+docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/
+└── tests.md
 ```
 
-**例**: `docs/design-artifacts/tests/046_order-management_test_design.md`
+**例**: `docs/intents/046_order-management/001_order-management/tests.md`
 
 ## TDD/BDD統合の流れ
 
@@ -309,14 +309,14 @@ it("注文が作成される", async () => {
 
 ### テスト設計ドキュメント
 
-**ファイル**: `docs/design-artifacts/tests/046_order-management_test_design.md`
+**ファイル**: `docs/intents/046_order-management/001_order-management/tests.md`
 
 ```markdown
 # テスト設計: order-management
 
-**元のユニット定義**: `docs/units/046_units.md`
-**ドメイン設計**: `docs/design-artifacts/domain/046_order-management_domain.md`
-**アーキテクチャ設計**: `docs/design-artifacts/architecture/046_order-management_architecture.md`
+**元のユニット定義**: `docs/intents/046_order-management/units.md`
+**ドメイン設計**: `docs/intents/046_order-management/001_order-management/domain.md`
+**アーキテクチャ設計**: `docs/intents/046_order-management/001_order-management/architecture.md`
 
 ---
 

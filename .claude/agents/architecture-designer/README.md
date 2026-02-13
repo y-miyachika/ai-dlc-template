@@ -27,16 +27,16 @@ NFRを満たす最適なアーキテクチャパターンを選択し、トレ�
 ### 生成されるファイル
 
 ```
-docs/design-artifacts/
-├── architecture/
-│   └── {Intent番号}-{Unit番号}-{ユニット名}_architecture.md
-└── adr/
-    └── ADR-{連番}_{タイトル}.md
+docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/
+└── architecture.md
+
+docs/adr/
+└── ADR-{連番}_{タイトル}.md
 ```
 
 **例**:
-- `docs/design-artifacts/architecture/046_order-management_architecture.md`
-- `docs/design-artifacts/adr/ADR-001_クリーンアーキテクチャの採用.md`
+- `docs/intents/046_order-management/001_order-management/architecture.md`
+- `docs/adr/ADR-001_クリーンアーキテクチャの採用.md`
 
 ## アーキテクチャ設計の流れ
 
@@ -181,13 +181,13 @@ docs/design-artifacts/
 
 ### アーキテクチャ設計ドキュメント
 
-**ファイル**: `docs/design-artifacts/architecture/046_order-management_architecture.md`
+**ファイル**: `docs/intents/046_order-management/001_order-management/architecture.md`
 
 ```markdown
 # アーキテクチャ設計: order-management
 
-**元のユニット定義**: `docs/units/046_units.md`
-**ドメイン設計**: `docs/design-artifacts/domain/046_order-management_domain.md`
+**元のユニット定義**: `docs/intents/046_order-management/units.md`
+**ドメイン設計**: `docs/intents/046_order-management/001_order-management/domain.md`
 
 ---
 
@@ -236,7 +236,7 @@ docs/design-artifacts/
 
 ### ADR
 
-**ファイル**: `docs/design-artifacts/adr/ADR-001_クリーンアーキテクチャの採用.md`
+**ファイル**: `docs/adr/ADR-001_クリーンアーキテクチャの採用.md`
 
 ```markdown
 # ADR-001: クリーンアーキテクチャの採用

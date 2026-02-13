@@ -37,7 +37,7 @@
 - **ユニット名**: 対象のユニット（例: `unit1`, `001-unit1`）
 
 ### オプション
-- **ドメイン設計**: `docs/design-artifacts/domain/` 内のドメインモデル
+- **ドメイン設計**: `docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/domain.md` 内のドメインモデル
 - **出力先**: 設定ファイルまたはデフォルト値を使用
 
 ---

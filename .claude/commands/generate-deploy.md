@@ -51,7 +51,7 @@
 
 **ユニット名**: {{ARGS}}
 
-**アーキテクチャ設計パス**: `docs/design-artifacts/architecture/`
+**アーキテクチャ設計パス**: `docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/architecture.md`
 
 **出力先**:
 - `.github/workflows/deploy.yml`

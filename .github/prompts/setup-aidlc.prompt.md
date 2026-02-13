@@ -34,13 +34,15 @@ argument-hint: プロジェクト名（省略時は対話形式）
 <project-name>/
 ├── docs/
 │   ├── intents/
-│   ├── units/
-│   ├── design-artifacts/
-│   │   ├── domain/
-│   │   ├── architecture/
-│   │   ├── tests/
-│   │   └── adr/
-│   └── plans/
+│   │   └── {Intent番号}_{Intent名}/
+│   │       ├── intent.md
+│   │       ├── units.md
+│   │       └── {Unit番号}_{Unit名}/
+│   │           ├── domain.md
+│   │           ├── architecture.md
+│   │           ├── tests.md
+│   │           └── plan.md
+│   └── adr/
 ├── src/
 └── tests/
 ```
@@ -50,9 +52,15 @@ argument-hint: プロジェクト名（省略時は対話形式）
 <project-name>/
 ├── docs/              # AI-DLC成果物はルートに集約
 │   ├── intents/
-│   ├── units/
-│   ├── design-artifacts/
-│   └── plans/
+│   │   └── {Intent番号}_{Intent名}/
+│   │       ├── intent.md
+│   │       ├── units.md
+│   │       └── {Unit番号}_{Unit名}/
+│   │           ├── domain.md
+│   │           ├── architecture.md
+│   │           ├── tests.md
+│   │           └── plan.md
+│   └── adr/
 ├── apps/
 ├── packages/
 └── pnpm-workspace.yaml

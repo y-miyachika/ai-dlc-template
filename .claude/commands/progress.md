@@ -36,7 +36,7 @@ TaskList → 全タスクのid, subject, status, owner, blockedByを取得
 TaskListにタスクがない場合は、この手順をスキップする。
 
 ### 3. 実装計画の進捗確認
-- `docs/plans/` 配下の実装計画を読み込む
+- `docs/intents/*/*/plan.md` 配下の実装計画を読み込む
 - 進捗状況（完了/進行中/未着手）をサマリー表示
 - ブロッカーがあれば強調表示
 

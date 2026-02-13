@@ -375,14 +375,16 @@ jobs:
 ```
 project-root/
 ├── docs/                        # ← ルートに集約
-│   ├── intents/
-│   ├── units/
-│   ├── design-artifacts/
-│   │   ├── domain/
-│   │   ├── architecture/        # IaC設計もここ
-│   │   ├── tests/
-│   │   └── adr/
-│   └── plans/
+│   ├── intents/                 # Intent階層化
+│   │   └── {Intent番号}_{Intent名}/
+│   │       ├── intent.md
+│   │       ├── units.md
+│   │       └── {Unit番号}_{Unit名}/
+│   │           ├── domain.md
+│   │           ├── architecture.md  # IaC設計もここ
+│   │           ├── tests.md
+│   │           └── plan.md
+│   └── adr/
 └── packages/
     └── infrastructure/
         └── terraform/

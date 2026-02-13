@@ -62,14 +62,16 @@ my-app/
 │   ├── integration/
 │   └── e2e/
 ├── docs/
-│   ├── intents/           # AI-DLC成果物
-│   ├── units/
-│   ├── design-artifacts/
-│   │   ├── domain/
-│   │   ├── architecture/
-│   │   ├── tests/
-│   │   └── adr/
-│   └── plans/
+│   ├── intents/           # AI-DLC成果物（Intent階層化）
+│   │   └── {Intent番号}_{Intent名}/
+│   │       ├── intent.md
+│   │       ├── units.md
+│   │       └── {Unit番号}_{Unit名}/
+│   │           ├── domain.md
+│   │           ├── architecture.md
+│   │           ├── tests.md
+│   │           └── plan.md
+│   └── adr/
 ├── terraform/             # IaC（必要な場合）
 │   ├── modules/
 │   └── environments/
@@ -149,14 +151,16 @@ my-project/
 │       ├── environments/
 │       └── package.json
 ├── docs/                  # AI-DLC成果物（ルートに集約）
-│   ├── intents/
-│   ├── units/
-│   ├── design-artifacts/
-│   │   ├── domain/
-│   │   ├── architecture/
-│   │   ├── tests/
-│   │   └── adr/
-│   └── plans/
+│   ├── intents/           # Intent階層化
+│   │   └── {Intent番号}_{Intent名}/
+│   │       ├── intent.md
+│   │       ├── units.md
+│   │       └── {Unit番号}_{Unit名}/
+│   │           ├── domain.md
+│   │           ├── architecture.md
+│   │           ├── tests.md
+│   │           └── plan.md
+│   └── adr/
 ├── tests/
 │   └── e2e/               # E2Eテスト（クロスパッケージ）
 ├── package.json           # ルートpackage.json
@@ -275,13 +279,16 @@ my-platform/
 │   │   └── environments/
 │   └── kubernetes/        # K8s設定（使用する場合）
 ├── docs/
-│   ├── intents/           # プラットフォーム全体のIntent
-│   ├── units/
-│   ├── design-artifacts/
-│   │   ├── domain/
-│   │   ├── architecture/
-│   │   ├── tests/
-│   │   └── adr/
+│   ├── intents/           # プラットフォーム全体のIntent（階層化）
+│   │   └── {Intent番号}_{Intent名}/
+│   │       ├── intent.md
+│   │       ├── units.md
+│   │       └── {Unit番号}_{Unit名}/
+│   │           ├── domain.md
+│   │           ├── architecture.md
+│   │           ├── tests.md
+│   │           └── plan.md
+│   ├── adr/
 │   └── api-contracts/     # サービス間API仕様
 ├── tests/
 │   └── contract/          # 契約テスト

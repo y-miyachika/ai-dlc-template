@@ -15,7 +15,7 @@
 **このコマンドは `/units` の後に実行してください**
 
 - `/units` でユニット分解が完了している
-- `docs/units/` にユニット定義が存在する
+- `docs/intents/{Intent番号}_{Intent名}/units.md` にユニット定義が存在する
 - 元のBacklogまたはIntentが存在する
 
 ## 入力内容
@@ -30,12 +30,12 @@
 
 以下を実行します：
 
-1. **コンテキストの読み込み**: docs/units/ からユニット定義を読み込み
+1. **コンテキストの読み込み**: `docs/intents/{Intent番号}_{Intent名}/units.md` からユニット定義を読み込み
 2. **ドメイン分析**: コアドメイン、ユビキタス言語、境界コンテキストを特定
 3. **DDD戦術的設計パターンの適用**: エンティティ、値オブジェクト、集約等を設計
 4. **ドメインモデルの定義**: TypeScriptインターフェースで明確に定義
 5. **ユーザー承認**: 設計案を提示し、承認を得る
-6. **ファイル保存**: `docs/design-artifacts/domain/{番号}_{ユニット名}_domain.md` に保存
+6. **ファイル保存**: `docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/domain.md` に保存
 
 ---
 
@@ -45,9 +45,9 @@
 
 **ユニット名**: {{ARGS}}
 
-**ユニット定義パス**: `docs/units/`
+**ユニット定義パス**: `docs/intents/{Intent番号}_{Intent名}/units.md`
 
-**出力先**: `docs/design-artifacts/domain/`
+**出力先**: `docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/domain.md`
 
 ---
 
@@ -142,9 +142,9 @@ interface OrderRepository {
 
 ## 生成されるファイル
 
-- `docs/design-artifacts/domain/{Intent番号}-{Unit番号}-{ユニット名}_domain.md` - ドメイン設計ドキュメント
+- `docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/domain.md` - ドメイン設計ドキュメント
 
-**ファイル名例**: `002-001-order-management_domain.md`
+**パス例**: `docs/intents/002_注文管理/001_order-management/domain.md`
 
 ---
 

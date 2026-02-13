@@ -21,8 +21,8 @@ graph LR
 - 初期リスク評価
 
 **成果物**:
-- `docs/intents/` - インテント定義
-- `docs/units/` - ユニット分解
+- `docs/intents/{Intent番号}_{Intent名}/intent.md` - インテント定義
+- `docs/intents/{Intent番号}_{Intent名}/units.md` - ユニット分解
 - `docs/requirements/` - 要件定義
 
 ### 2. Construction（コンストラクション）フェーズ
@@ -36,10 +36,10 @@ graph LR
 - 実装（/bolt）
 
 **成果物**:
-- `docs/design-artifacts/domain/` - ドメインモデル
-- `docs/design-artifacts/architecture/` - アーキテクチャ設計
-- `docs/design-artifacts/tests/` - テスト設計
-- `docs/design-artifacts/adr/` - アーキテクチャ決定記録
+- `docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/domain.md` - ドメインモデル
+- `docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/architecture.md` - アーキテクチャ設計
+- `docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/tests.md` - テスト設計
+- `docs/adr/` - アーキテクチャ決定記録
 - `src/` - 実装コード
 - `tests/` - テストコード
 
@@ -110,7 +110,7 @@ pnpm build
 
 # 3. 既存設計の確認と更新
 # 既存のドメイン設計を確認
-cat docs/design-artifacts/domain/001-unit1_認証ドメイン.md
+cat docs/intents/001_ユーザー認証機能/001_認証ドメイン/domain.md
 
 # アーキテクチャ設計を更新（必要に応じて）
 /design-architecture unit1
@@ -150,7 +150,7 @@ cat docs/design-artifacts/domain/001-unit1_認証ドメイン.md
 /bolt unit1
 
 # 5. 結果の評価とADR作成
-# docs/design-artifacts/adr/ に決定事項を記録
+# docs/adr/ に決定事項を記録
 ```
 
 **特徴**:

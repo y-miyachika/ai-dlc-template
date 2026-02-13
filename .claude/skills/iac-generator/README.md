@@ -11,7 +11,7 @@ Terraform / Terragrunt ベースの Infrastructure as Code 生成 Skill
 ### 前提条件
 
 - アーキテクチャ設計が完了している（`/design-architecture`実行済み）
-- `docs/design-artifacts/architecture/` に設計ドキュメントが存在する
+- `docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/architecture.md` に設計ドキュメントが存在する
 - NFR（非機能要件）が定義されている
 
 ### 実行

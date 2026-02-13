@@ -39,9 +39,9 @@ TaskCreate: subject="Phase 3: Refactor", activeForm="リファクタリング中
 
 ### ステップ1: テスト設計の確認（TDD統合）✨NEW
 
-1. `docs/design-artifacts/tests/{Intent}-{Unit}-{名前}.md` が存在するか確認
-   - 例: `docs/design-artifacts/tests/002-001-login-api.md`
-   - 命名規則: Intent番号3桁-Unit番号3桁-ユニット名
+1. `docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/tests.md` が存在するか確認
+   - 例: `docs/intents/002_ユーザー認証/001_login-api/tests.md`
+   - 命名規則: Intent階層内の固定ファイル名
 2. **存在しない場合**: `/design-test` 相当の処理を実行
    - 受入基準（BDD）をテストケースに変換
    - テストレベル分類（Unit/Integration/E2E）
@@ -57,9 +57,9 @@ Claude Codeの **Plan Mode** を活用して、コードベース探索と計画
 
 #### 2a. 既存計画の確認
 
-`docs/plans/{Intent}-{Unit}-{名前}.md` が存在するか確認：
-- 例: `docs/plans/002-001-login-api.md`
-- 命名規則: Intent番号3桁-Unit番号3桁-ユニット名
+`docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/plan.md` が存在するか確認：
+- 例: `docs/intents/002_ユーザー認証/001_login-api/plan.md`
+- 命名規則: Intent階層内の固定ファイル名
 
 #### 2b. 計画が存在しない場合 → EnterPlanMode
 
@@ -78,7 +78,7 @@ Plan Mode内で以下を実行：
    - 実装スコープの明確化
 
 3. **計画ファイルに書き出し**
-   計画の出力先を `docs/plans/{Intent}-{Unit}-{名前}.md` に設定し、以下の必須項目を含める：
+   計画の出力先を `docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/plan.md` に設定し、以下の必須項目を含める：
    - 対象ユニット、見積もり、関連ドキュメント
    - Phase分割と各Phaseのタスク一覧（チェックリスト形式）
    - 実装スコープ（下記参照）

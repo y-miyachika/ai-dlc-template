@@ -19,13 +19,13 @@ AI-DLCにおける**最小の反復サイクル**：
 
 ### ステップ1: テスト設計の確認
 
-`docs/design-artifacts/tests/{Intent}-{Unit}-*.md` を確認。
+`docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/tests.md` を確認。
 - 存在しない場合: テスト設計を作成
 - 存在する場合: 読み込み
 
 ### ステップ2: 実装計画の作成
 
-`docs/plans/{Intent}-{Unit}-*.md` を確認。
+`docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/plan.md` を確認。
 - 存在しない場合: **必ず作成**（スキップ禁止）
 - 存在する場合: 読み込み、必要に応じて更新
 

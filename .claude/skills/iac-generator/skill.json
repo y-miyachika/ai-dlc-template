@@ -5,7 +5,7 @@
   "author": "AI-DLC Template",
   "tags": ["infrastructure", "terraform", "terragrunt", "iac", "aws", "codegen"],
   "requires": {
-    "architecture": "Architecture design (docs/design-artifacts/architecture/) must exist"
+    "architecture": "Architecture design (docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/architecture.md) must exist"
   },
   "generates": [
     "terraform/modules/{unit}/ - Terraform modules per unit",

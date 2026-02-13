@@ -95,21 +95,26 @@ VS Code / Visual Studio / JetBrains IDEで、チャット欄に `/` を入力し
 
 ```
 docs/
-├── intents/              # インテント定義
-├── units/                # ユニット分解
-├── design-artifacts/     # 設計ドキュメント
-│   ├── domain/           # ドメイン設計
-│   ├── architecture/     # アーキテクチャ設計
-│   ├── tests/            # テスト設計
-│   └── adr/              # アーキテクチャ決定記録
-└── plans/                # 実装計画
+├── intents/                          # Intent階層（成果物集約）
+│   └── {Intent番号}_{Intent名}/
+│       ├── intent.md                 # インテント定義
+│       ├── units.md                  # ユニット分解
+│       ├── 000_shared/               # 共通（オプション）
+│       └── {Unit番号}_{Unit名}/
+│           ├── domain.md             # ドメイン設計
+│           ├── architecture.md       # アーキテクチャ設計
+│           ├── tests.md              # テスト設計
+│           └── plan.md              # 実装計画
+├── adr/                              # アーキテクチャ決定記録（横断的）
+└── guides/                           # 開発ガイド
 ```
 
 ### ドキュメント命名規則
 
-- Intent: `{Intent番号}_タイトル.md` 例: `002_ユーザー認証.md`
-- Units: `{Intent番号}_ユニット分解.md`
-- Design Artifacts: `{Intent番号}-{Unit番号}-名前.md` 例: `002-001-login-api.md`
+- Intent番号・Unit番号は3桁ゼロ埋め（001, 002, ...）
+- Unit番号`000`はshared/共通拡張用
+- ファイル名は固定: intent.md, units.md, domain.md, architecture.md, tests.md, plan.md
+- 例: `docs/intents/002_ユーザー認証/001_login-api/domain.md`
 
 ---
 

@@ -87,7 +87,7 @@ Claudeが以下の4つの質問で要件を明確化します：
 
 ### 出力例
 
-`docs/intents/001_ユーザー認証機能.md` が生成されます：
+`docs/intents/001_ユーザー認証機能/intent.md` が生成されます：
 
 ```markdown
 # Intent 001: ユーザー認証機能の実装
@@ -138,7 +138,7 @@ Claudeがインテントを分析し、疎結合・高凝集なユニットに�
 - **unit2**: ユーザー管理ドメイン
 - **unit3**: セッション管理
 
-出力例: `docs/units/001_ユニット分解.md`
+出力例: `docs/intents/001_ユーザー認証機能/units.md`
 
 ```markdown
 # ユニット分解: Intent 001 - ユーザー認証機能
@@ -181,7 +181,7 @@ graph TD
 
 DDD（ドメイン駆動設計）の原則に基づき、エンティティ、値オブジェクト、集約などを設計します。
 
-出力: `docs/design-artifacts/domain/001-unit1_認証ドメイン.md`
+出力: `docs/intents/001_ユーザー認証機能/001_認証ドメイン/domain.md`
 
 ### 4.2 アーキテクチャ設計
 
@@ -191,10 +191,10 @@ DDD（ドメイン駆動設計）の原則に基づき、エンティティ、�
 
 NFRを考慮したアーキテクチャパターンを選択し、トレードオフを分析します。
 
-出力: `docs/design-artifacts/architecture/001-unit1_認証ドメイン.md`
+出力: `docs/intents/001_ユーザー認証機能/001_認証ドメイン/architecture.md`
 
 ADR（Architecture Decision Record）も自動生成されます：
-`docs/design-artifacts/adr/001-unit1_認証パターン選択.md`
+`docs/adr/001-unit1_認証パターン選択.md`
 
 ### 4.3 テスト設計
 
@@ -204,7 +204,7 @@ ADR（Architecture Decision Record）も自動生成されます：
 
 BDD受入基準からTDDテストケースを生成し、テスト実装計画を立てます。
 
-出力: `docs/design-artifacts/tests/001-unit1_認証ドメイン_テスト設計.md`
+出力: `docs/intents/001_ユーザー認証機能/001_認証ドメイン/tests.md`
 
 ## 5. 実装フェーズ（Boltサイクル）
 

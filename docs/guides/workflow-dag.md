@@ -63,16 +63,16 @@ graph TD
 
 | コマンド | 前提条件 | 出力 |
 |---------|---------|------|
-| `/intent` | `/setup-aidlc` 完了 | docs/intents/{番号}_{タイトル}.md |
-| `/units` | `/intent` で Intent 作成済み | docs/units/{Intent番号}_ユニット分解.md |
+| `/intent` | `/setup-aidlc` 完了 | docs/intents/{Intent番号}_{Intent名}/intent.md |
+| `/units` | `/intent` で Intent 作成済み | docs/intents/{Intent番号}_{Intent名}/units.md |
 
 ### 3. コンストラクションフェーズ - 設計
 
 | コマンド | 前提条件 | 出力 | 並列実行 |
 |---------|---------|------|---------|
-| `/design-domain` | `/units` 完了 | docs/design-artifacts/domain/ | 可能* |
-| `/design-architecture` | `/units` 完了 | docs/design-artifacts/architecture/, adr/ | 可能* |
-| `/design-test` | `/units` 完了 | docs/design-artifacts/tests/ | 可能* |
+| `/design-domain` | `/units` 完了 | docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/domain.md | 可能* |
+| `/design-architecture` | `/units` 完了 | docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/architecture.md, docs/adr/ | 可能* |
+| `/design-test` | `/units` 完了 | docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/tests.md | 可能* |
 
 **\*注意**: 3つの設計コマンドは**同一ユニットに対しては順次実行を推奨**。異なるユニット間では並列実行可能。
 
@@ -95,7 +95,7 @@ flowchart TB
 
 | コマンド | 前提条件 | 出力 |
 |---------|---------|------|
-| `/bolt` | 3つの設計コマンド完了 | src/, tests/, docs/plans/ |
+| `/bolt` | 3つの設計コマンド完了 | src/, tests/, docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/plan.md |
 
 ### 5. コード生成
 

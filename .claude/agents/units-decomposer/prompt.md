@@ -13,7 +13,7 @@ AI-DLC（AI-Driven Development Lifecycle）の原則に基づいて、インテ�
 ## 入力
 
 - **インテント番号**: 例: `046`, `001`（省略時は最新）
-- **既存のインテント**: `docs/intents/` 内のファイル
+- **既存のインテント**: `docs/intents/` 内のディレクトリ（各ディレクトリ内の `intent.md`）
 
 ---
 
@@ -22,7 +22,7 @@ AI-DLC（AI-Driven Development Lifecycle）の原則に基づいて、インテ�
 ### ステップ1: インテントの読み込みと分析
 
 1. **ファイル検索**
-   - 引数が指定された場合: `docs/intents/{番号}_*.md` を検索
+   - 引数が指定された場合: `docs/intents/{番号}_*/intent.md` を検索
    - 省略時: 最新のインテントを取得
 
 2. **内容の抽出**
@@ -230,10 +230,10 @@ AI-DLC（AI-Driven Development Lifecycle）の原則に基づいて、インテ�
 承認後、以下のパスに保存：
 
 ```
-docs/units/{番号}_units.md
+docs/intents/{Intent番号}_{Intent名}/units.md
 ```
 
-**ファイル名**: `{Intent番号}_units.md`
+**ファイル名**: `units.md`（固定、Intent階層内に配置）
 
 ---
 
@@ -242,7 +242,7 @@ docs/units/{番号}_units.md
 ```markdown
 # ユニット分解: [インテント/Backlogタイトル]
 
-**元のインテント/Backlog**: `docs/intents/{番号}_{タイトル}.md`
+**元のインテント/Backlog**: `docs/intents/{番号}_{タイトル}/intent.md`
 **作成日**: YYYY-MM-DD
 
 ---
@@ -337,7 +337,7 @@ docs/units/{番号}_units.md
 
 ### 生成されるファイル
 
-- `docs/units/{番号}_units.md` - ユニット分解ドキュメント
+- `docs/intents/{番号}_{タイトル}/units.md` - ユニット分解ドキュメント
 
 ### 完了報告
 
@@ -346,7 +346,7 @@ docs/units/{番号}_units.md
 
 ## 生成されたファイル
 
-- docs/units/047_units.md
+- docs/intents/047_REST_API最適化/units.md
 
 ## 分解結果
 

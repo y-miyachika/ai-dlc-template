@@ -18,7 +18,7 @@ NFR（非機能要件）を満たす最適なアーキテクチャパターン�
 
 ### 1.1. インテントの読み込み
 
-`docs/intents/` から、対応するインテントを読み込みます。
+`docs/intents/{Intent番号}_{Intent名}/intent.md` から、対応するインテントを読み込みます。
 
 **抽出内容**:
 - ユーザーストーリー
@@ -27,7 +27,7 @@ NFR（非機能要件）を満たす最適なアーキテクチャパターン�
 
 ### 1.2. ユニット分解の読み込み
 
-`docs/units/` から、対応するユニット定義を読み込みます。
+`docs/intents/{Intent番号}_{Intent名}/units.md` から、対応するユニット定義を読み込みます。
 
 **抽出内容**:
 - ユニットの責務
@@ -36,7 +36,7 @@ NFR（非機能要件）を満たす最適なアーキテクチャパターン�
 
 ### 1.3. ドメイン設計の読み込み
 
-`docs/design-artifacts/domain/` から、対応するドメイン設計を読み込みます。
+`docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/domain.md` から、対応するドメイン設計を読み込みます。
 
 **抽出内容**:
 - エンティティ、値オブジェクト、集約
@@ -533,11 +533,11 @@ src/
 
 ### 8.1. ADR番号の決定
 
-`docs/design-artifacts/adr/` に既存のADRがあれば、連番を確認してください。
+`docs/adr/` に既存のADRがあれば、連番を確認してください。
 
 **ファイル名**: `ADR-{連番}_{タイトル}.md`
 
-**例**: `ADR-001_クリーンアーキテクチャの採用.md`
+**例**: `docs/adr/ADR-001_クリーンアーキテクチャの採用.md`
 
 ### 8.2. ADRテンプレート
 
@@ -669,9 +669,9 @@ src/
 
 ### 9.1. アーキテクチャ設計ドキュメント
 
-**ファイル名**: `docs/design-artifacts/architecture/{Intent番号}-{Unit番号}-{ユニット名}_architecture.md`
+**保存先**: `docs/intents/{Intent番号}_{Intent名}/{Unit番号}_{Unit名}/architecture.md`
 
-**例**: `docs/design-artifacts/architecture/002-001-order-management_architecture.md`
+**例**: `docs/intents/002_ユーザー認証/001_order-management/architecture.md`
 
 **内容**:
 - NFR分析
@@ -684,9 +684,9 @@ src/
 
 ### 9.2. ADR
 
-**ファイル名**: `docs/design-artifacts/adr/ADR-{連番}_{タイトル}.md`
+**ファイル名**: `docs/adr/ADR-{連番}_{タイトル}.md`
 
-**例**: `docs/design-artifacts/adr/ADR-001_クリーンアーキテクチャの採用.md`
+**例**: `docs/adr/ADR-001_クリーンアーキテクチャの採用.md`
 
 ---
 
