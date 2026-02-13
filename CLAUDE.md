@@ -333,11 +333,24 @@ AWS_REGION=ap-northeast-1
 
 ## Claude Code新機能の活用
 
+### バージョン要件とフォールバック
+
+各機能の最低バージョンとフォールバック：
+
+| 機能 | 最低バージョン | フォールバック | 使用コマンド |
+|------|-------------|-------------|------------|
+| `EnterPlanMode`/`ExitPlanMode` | 安定版（2025年12月〜） | なし（広く利用可能） | `/bolt`, `/design-architecture`, `/generate-*` |
+| `TaskCreate`/`TaskList`/`TaskUpdate` | v2.1.16（2026-01-22） | `TodoWrite`/`TodoRead` | `/bolt`, `/setup-aidlc`, `/progress` |
+| `run_in_background` | v2.1.19（2026-01-23） | 通常（フォアグラウンド）実行 | `/sync-docs` |
+| `Explore`/`Plan` subagent_type | v2.1.32（2026-02-05） | `general-purpose` で代替 | `/design-architecture`, `/design-domain` |
+
+**運用指針**: 各コマンドのMarkdown内にフォールバック記述を含めているため、古いバージョンでも動作します。
+
 ### TaskCreate/TaskList/TaskUpdate（進捗管理）
 
 **対象コマンド**: `/bolt`, `/setup-aidlc`, `/progress`
 
-複数ステップのワークフローでは `TaskCreate` APIでタスクを登録し、進捗をリアルタイム表示する：
+複数ステップのワークフローでは `TaskCreate` API（v2.1.16+、未対応の場合は `TodoWrite` で代替）でタスクを登録し、進捗をリアルタイム表示する：
 
 ```
 TaskCreate: subject="タスク名", description="詳細", activeForm="実行中の表示"
@@ -371,17 +384,19 @@ Task(subagent_type: "general-purpose", prompt: "/generate-deploy unit1")
 
 ### SubAgentタイプの使い分け
 
+v2.1.32+で `Explore`/`Plan` タイプが利用可能。**未対応の場合は `general-purpose` で代替。**
+
 | タイプ | 推奨場面 | 対応コマンド |
 |---|---|---|
 | `Plan` | NFR駆動のアーキテクチャ設計 | `/design-architecture` |
 | `Explore` | 既存コードベースの探索・分析 | `/design-domain`（前段階）, `/sync-docs` |
-| `general-purpose` | 対話型の設計・生成 | `/intent`, `/units`, `/bolt` |
+| `general-purpose` | 対話型の設計・生成（フォールバック兼用） | `/intent`, `/units`, `/bolt` |
 
 ### バックグラウンド実行
 
 **対象コマンド**: `/sync-docs`
 
-メインの開発作業を止めずにバックグラウンドで実行可能：
+メインの開発作業を止めずにバックグラウンドで実行可能（v2.1.19+、**未対応の場合は通常実行で代替**）：
 ```
 Task(subagent_type: "general-purpose", run_in_background: true, prompt: "/sync-docs")
 ```

@@ -142,9 +142,10 @@ git diff --name-only HEAD
 ## バックグラウンド実行
 
 `/sync-docs` はバックグラウンドで実行することで、メインの開発作業を止めずに乖離チェックが可能です。
+**`run_in_background` が未対応の場合（v2.1.19未満）は、通常実行（フォアグラウンド）で代替してください。**
 
 **手動でバックグラウンド実行する場合**:
-Task toolで `run_in_background: true` を指定して起動。結果は `output_file` パスから確認できます。
+Task toolで `run_in_background: true`（v2.1.19+）を指定して起動。結果は `output_file` パスから確認できます。
 
 ```
 Task(subagent_type: "general-purpose", run_in_background: true, prompt: "/sync-docs を実行")

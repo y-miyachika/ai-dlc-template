@@ -24,13 +24,13 @@
 
 ## SubAgent起動
 
-**推奨SubAgentタイプ: Plan**
+**推奨SubAgentタイプ: Plan**（v2.1.32+、未対応の場合は `general-purpose` で代替）
 
 アーキテクチャ設計はNFR駆動で段階的に詳細化するため、`Plan` subagent_type が最適です。
 Task toolを使用する場合は `subagent_type: "Plan"` を指定してください。
 
 **既存コードベースがある場合**:
-アーキテクチャ調査の前段階で、`Explore` subagent_type を使って既存コード構造を探索することを推奨します。
+アーキテクチャ調査の前段階で、`Explore` subagent_type（v2.1.32+、未対応の場合は `general-purpose` で代替）を使って既存コード構造を探索することを推奨します。
 
 ### EnterPlanMode統合
 
