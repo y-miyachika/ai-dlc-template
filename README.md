@@ -202,4 +202,4 @@ MIT License
 ---
 
 **作成日**: 2025-11-17
-**バージョン**: 1.1.0（GitHub Copilot Prompt Files対応）
+**バージョン**: 1.2.0（Intent階層化対応）
