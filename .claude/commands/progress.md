@@ -16,8 +16,7 @@ git log --oneline -5
 
 ### 2. TaskList APIによる現在の進捗確認（優先）
 
-`TaskList`（v2.1.16+）を呼び出し、現在のセッションのタスク状態を確認する。
-**TaskListが利用できない場合（v2.1.16未満）は、この手順をスキップしてステップ3に進む。**
+`TaskList` を呼び出し、現在のセッションのタスク状態を確認する。
 
 ```
 TaskList → 全タスクのid, subject, status, owner, blockedByを取得

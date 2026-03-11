@@ -21,8 +21,7 @@ AI-DLCにおける**最小の反復サイクル**です：
 
 ### ステップ0: Boltサイクル全体のタスク登録
 
-`TaskCreate` API（v2.1.16+）を使って、Boltサイクルの主要ステップをタスク登録する。
-**v2.1.16未満の場合は `TodoWrite` で代替する。**
+`TaskCreate` APIを使って、Boltサイクルの主要ステップをタスク登録する。
 
 ```
 TaskCreate: subject="テスト設計の確認", activeForm="テスト設計を確認中"
@@ -141,7 +140,7 @@ Plan Mode承認後、以下をTDDサイクルで実行：
 
 #### Phase 2: Green（最小限の実装で通す）
 
-1. **TaskCreate APIでタスク登録**（v2.1.16+、古い場合はTodoWrite）
+1. **TaskCreate APIでタスク登録**
    - テストを通すための最小限のタスクを抽出
    - `TaskCreate` で各タスクを登録（subject、description、activeForm を設定）
    - タスク間の依存関係がある場合は `TaskUpdate` の `addBlockedBy` で設定
@@ -193,7 +192,7 @@ Plan Mode承認後、以下をTDDサイクルで実行：
 
 2. **Lint/ビルド確認**
    ```bash
-   pnpm lint
+   pnpm lint --fix
    pnpm build
    ```
    - エラーがあれば修正

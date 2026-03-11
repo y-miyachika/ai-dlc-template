@@ -1,3 +1,8 @@
+---
+name: api-generator
+description: "REST API実装生成（Hono RPC）。既存のservices層からHTTP層（routes, schemas, types）とOpenAPI仕様を自動生成する。引数: ユニット名（例: unit1）"
+---
+
 # API Generator Skill
 
 あなたはREST API設計とTypeScript実装の専門家です。既存のビジネスロジック（services層）をHTTPエンドポイントとして公開するAPI層を生成します。
@@ -116,27 +121,22 @@ packages/api/
 ```typescript
 import { z } from 'zod'
 
-// エンティティスキーマ
 export const {Entity}Schema = z.object({
   id: z.string().uuid(),
-  // ドメインモデルのプロパティから生成
   name: z.string().min(1).max(100),
   email: z.string().email(),
   createdAt: z.date(),
   updatedAt: z.date(),
 })
 
-// 作成時のスキーマ（IDなし）
 export const Create{Entity}Schema = {Entity}Schema.omit({
   id: true,
   createdAt: true,
   updatedAt: true,
 })
 
-// 更新時のスキーマ（部分的）
 export const Update{Entity}Schema = Create{Entity}Schema.partial()
 
-// 型エクスポート
 export type {Entity} = z.infer<typeof {Entity}Schema>
 export type Create{Entity} = z.infer<typeof Create{Entity}Schema>
 export type Update{Entity} = z.infer<typeof Update{Entity}Schema>
@@ -149,58 +149,41 @@ export type Update{Entity} = z.infer<typeof Update{Entity}Schema>
 ```typescript
 import { Hono } from 'hono'
 import { zValidator } from '@hono/zod-validator'
-import { {Entity}Schema, Create{Entity}Schema, Update{Entity}Schema } from '../schemas/{entity}'
+import { Create{Entity}Schema, Update{Entity}Schema } from '../schemas/{entity}'
 import { {entity}Service } from '../services/{entity}.service'
 
 const app = new Hono()
 
-// 一覧取得
 app.get('/', async (c) => {
   const items = await {entity}Service.findAll()
   return c.json(items)
 })
 
-// 単一取得
 app.get('/:id', async (c) => {
   const id = c.req.param('id')
   const item = await {entity}Service.findById(id)
-
-  if (!item) {
-    return c.json({ error: 'Not found' }, 404)
-  }
-
+  if (!item) return c.json({ error: 'Not found' }, 404)
   return c.json(item)
 })
 
-// 作成
 app.post('/', zValidator('json', Create{Entity}Schema), async (c) => {
   const data = c.req.valid('json')
   const item = await {entity}Service.create(data)
   return c.json(item, 201)
 })
 
-// 更新
 app.put('/:id', zValidator('json', Update{Entity}Schema), async (c) => {
   const id = c.req.param('id')
   const data = c.req.valid('json')
   const item = await {entity}Service.update(id, data)
-
-  if (!item) {
-    return c.json({ error: 'Not found' }, 404)
-  }
-
+  if (!item) return c.json({ error: 'Not found' }, 404)
   return c.json(item)
 })
 
-// 削除
 app.delete('/:id', async (c) => {
   const id = c.req.param('id')
   const deleted = await {entity}Service.delete(id)
-
-  if (!deleted) {
-    return c.json({ error: 'Not found' }, 404)
-  }
-
+  if (!deleted) return c.json({ error: 'Not found' }, 404)
   return c.json({ success: true })
 })
 
@@ -215,20 +198,13 @@ export default app
 import { Hono } from 'hono'
 import { logger } from 'hono/logger'
 import { cors } from 'hono/cors'
-
-// ルートのインポート
 import {entity}Routes from './routes/{entity}'
 
 const app = new Hono()
 
-// ミドルウェア
 app.use('*', logger())
 app.use('*', cors())
-
-// ルート登録
 app.route('/api/{entity}', {entity}Routes)
-
-// ヘルスチェック
 app.get('/health', (c) => c.json({ status: 'ok' }))
 
 export default app
@@ -240,7 +216,6 @@ export type AppType = typeof app
 #### テンプレート4: 型エクスポート (`src/types/index.ts`)
 
 ```typescript
-// フロントエンドから参照可能な型をエクスポート
 export type { {Entity}, Create{Entity}, Update{Entity} } from '../schemas/{entity}'
 ```
 
@@ -277,130 +252,21 @@ export type { {Entity}, Create{Entity}, Update{Entity} } from '../schemas/{entit
 
 ### ステップ4: OpenAPI仕様生成
 
-`docs/api/openapi.yaml` を生成：
-
-```yaml
-openapi: 3.0.0
-info:
-  title: {Unit Name} API
-  version: 1.0.0
-  description: Generated from domain model
-
-servers:
-  - url: http://localhost:3000
-    description: Development server
-
-paths:
-  /api/{entity}:
-    get:
-      summary: Get all {entity} items
-      responses:
-        '200':
-          description: Successful response
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/{Entity}'
-
-    post:
-      summary: Create {entity}
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Create{Entity}'
-      responses:
-        '201':
-          description: Created
-
-  /api/{entity}/{id}:
-    get:
-      summary: Get {entity} by ID
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        '200':
-          description: Successful response
-        '404':
-          description: Not found
-
-components:
-  schemas:
-    {Entity}:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        # ドメインモデルから生成
-```
+`docs/api/openapi.yaml` にOpenAPI 3.0仕様を生成。エンドポイント一覧、リクエスト/レスポンススキーマを含む。
 
 ---
 
 ### ステップ5: ドキュメント生成
 
-`docs/api/{unit}_API設計.md` を生成：
-
-```markdown
-# {Unit} - API設計
-
-## 概要
-
-{ユニットの説明}
-
-## エンドポイント一覧
-
-| エンドポイント | メソッド | 説明 | 認証 |
-|--------------|---------|------|------|
-| /api/{entity} | GET | 一覧取得 | 不要 |
-| /api/{entity}/:id | GET | 単一取得 | 不要 |
-| /api/{entity} | POST | 作成 | 必要 |
-| /api/{entity}/:id | PUT | 更新 | 必要 |
-| /api/{entity}/:id | DELETE | 削除 | 必要 |
-
-## 使用例
-
-### フロントエンドからの利用（Hono RPC）
-
-\`\`\`typescript
-import { hc } from 'hono/client'
-import type { AppType } from '@{project}/api'
-
-const client = hc<AppType>('http://localhost:3000')
-
-// 型安全なAPIコール
-const res = await client.api.{entity}.$get()
-const data = await res.json() // 型推論が効く
-\`\`\`
-```
+`docs/api/{unit}_API設計.md` にエンドポイント一覧、使用例（Hono RPCクライアント）を生成。
 
 ---
 
 ## 出力
 
-### 生成されるファイル
-
-1. **HTTP層**
-   - `packages/api/src/routes/` - Honoルート定義
-   - `packages/api/src/schemas/` - Zodスキーマ
-   - `packages/api/src/index.ts` - Honoアプリケーション
-   - `packages/api/src/types/index.ts` - 型エクスポート
-
-2. **設定ファイル**（存在しなければ）
-   - `packages/api/package.json`
-   - `packages/api/tsconfig.json`
-
-3. **ドキュメント**
-   - `docs/api/openapi.yaml` - OpenAPI仕様
-   - `docs/api/{unit}_API設計.md` - API設計ドキュメント
+1. **HTTP層**: routes/, schemas/, index.ts, types/index.ts
+2. **設定ファイル**（存在しなければ）: package.json, tsconfig.json
+3. **ドキュメント**: openapi.yaml, {unit}_API設計.md
 
 ---
 
@@ -414,21 +280,11 @@ const data = await res.json() // 型推論が効く
 
 ## フロントエンド連携
 
-Hono RPCクライアントを使用することで、型安全なAPI呼び出しが可能：
-
 ```typescript
-// apps/web/src/lib/api.ts
 import { hc } from 'hono/client'
 import type { AppType } from '@{project}/api'
 
 const client = hc<AppType>('http://localhost:3000')
-
-// 型推論が効く
 const res = await client.api.{entity}.$get()
-const data = await res.json()
+const data = await res.json() // 型推論が効く
 ```
-
----
-
-**Skill Version**: 1.0.0
-**Last Updated**: 2025-11-19

@@ -197,7 +197,7 @@ AI-DLC準拠のワークフローガイド：
 
 ## 実行フロー
 
-**TaskCreate API（v2.1.16+）で進捗を可視化する（古い場合はTodoWriteで代替）:**
+**TaskCreate APIで進捗を可視化する:**
 
 セットアップ開始時に、以下のタスクを `TaskCreate` で一括登録する：
 

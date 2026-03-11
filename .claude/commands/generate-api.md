@@ -61,7 +61,7 @@
 
 ## Skill処理の詳細
 
-Skillは `.claude/skills/api-generator/prompt.md` に定義された手順に従って処理を実行します。
+Skillは `.claude/skills/api-generator/SKILL.md` に定義された手順に従って処理を実行します。
 
 **主要な処理**:
 
@@ -74,7 +74,7 @@ Skillは `.claude/skills/api-generator/prompt.md` に定義された手順に従
 7. OpenAPI仕様の生成（docs/api/openapi.yaml）
 8. API設計ドキュメントの生成（docs/api/{unit}_API設計.md）
 
-**コード生成テンプレート詳細**: `.claude/skills/api-generator/prompt.md` を参照
+**コード生成テンプレート詳細**: `.claude/skills/api-generator/SKILL.md` を参照
 
 ---
 

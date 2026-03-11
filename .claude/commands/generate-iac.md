@@ -62,7 +62,7 @@
 
 ## Skill処理の詳細
 
-Skillは `.claude/skills/iac-generator/prompt.md` に定義された手順に従って処理を実行します。
+Skillは `.claude/skills/iac-generator/SKILL.md` に定義された手順に従って処理を実行します。
 
 **主要な処理**:
 
@@ -76,7 +76,7 @@ Skillは `.claude/skills/iac-generator/prompt.md` に定義された手順に従
 8. セキュリティベストプラクティス適用（暗号化、バックアップ、IAM最小権限等）
 9. IaC設計ドキュメント生成
 
-**コード生成テンプレート詳細**: `.claude/skills/iac-generator/prompt.md` を参照
+**コード生成テンプレート詳細**: `.claude/skills/iac-generator/SKILL.md` を参照
 
 ---
 
